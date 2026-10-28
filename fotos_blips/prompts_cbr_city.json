@@ -1,0 +1,107 @@
+{
+  "tool": "image_gen (ferramenta integrada)",
+  "reference": "D:\\NightStoreEvolutionTP\\branding\\logo.png",
+  "note": "Cenários fictícios autorizados pela dona do servidor; não representam fotos dos mapas instalados.",
+  "images": [
+    {
+      "card": "Aeronaves",
+      "name": "aeronaves",
+      "prompt": "Use case: stylized-concept. Asset type: fictional location image for CBR City FiveM native map blip card. Create ONE landscape 2:1 full bleed image of a civilian helicopter on a rooftop helipad, green landing lights and city skyline beyond, fictional Southern California city at blue hour. CBR City identity: black and deep forest-green base, vivid emerald / neon green architectural accent lights, polished metallic details, sophisticated urban nightlife, clear photographic realism, balanced readable contrast. Reference logo only for its black/emerald palette and urban mood; do not draw the logo or add lettering. Realistic cinematic GTA Online inspired environment screenshot, recognizable centered subject at 512x256, retain natural object colors with tasteful green lights. No collage, no borders, no labels, no text, no watermark. Keep the upper 15 percent visually quiet and dark for the native game title overlay."
+    },
+    {
+      "card": "Auto Escola",
+      "name": "auto_escola",
+      "prompt": "Use case: stylized-concept. Asset type: fictional location image for CBR City FiveM native map blip card. Create ONE landscape 2:1 full bleed image of a driving school training yard with a black compact learner car, green accent trim, traffic cones and a low classroom building, fictional Southern California city at blue hour. CBR City identity: black and deep forest-green base, vivid emerald / neon green architectural accent lights, polished metallic details, sophisticated urban nightlife, clear photographic realism, balanced readable contrast. Reference logo only for its black/emerald palette and urban mood; do not draw the logo or add lettering. Realistic cinematic GTA Online inspired environment screenshot, recognizable centered subject at 512x256, retain natural object colors with tasteful green lights. No collage, no borders, no labels, no text, no watermark. Keep the upper 15 percent visually quiet and dark for the native game title overlay."
+    },
+    {
+      "card": "Banco",
+      "name": "banco",
+      "prompt": "Use case: stylized-concept. Asset type: fictional location image for CBR City FiveM native map blip card. Create ONE landscape 2:1 full bleed image of an elegant bank interior with teller windows, dark stone counter, emerald glass partitions and ATM area, fictional Southern California city at blue hour. CBR City identity: black and deep forest-green base, vivid emerald / neon green architectural accent lights, polished metallic details, sophisticated urban nightlife, clear photographic realism, balanced readable contrast. Reference logo only for its black/emerald palette and urban mood; do not draw the logo or add lettering. Realistic cinematic GTA Online inspired environment screenshot, recognizable centered subject at 512x256, retain natural object colors with tasteful green lights. No collage, no borders, no labels, no text, no watermark. Keep the upper 15 percent visually quiet and dark for the native game title overlay."
+    },
+    {
+      "card": "Barbearia",
+      "name": "barbearia",
+      "prompt": "Use case: stylized-concept. Asset type: fictional location image for CBR City FiveM native map blip card. Create ONE landscape 2:1 full bleed image of a stylish neighborhood barbershop interior with leather barber chairs, wall mirrors and tidy grooming tools, fictional Southern California city at blue hour. CBR City identity: black and deep forest-green base, vivid emerald / neon green architectural accent lights, polished metallic details, sophisticated urban nightlife, clear photographic realism, balanced readable contrast. Reference logo only for its black/emerald palette and urban mood; do not draw the logo or add lettering. Realistic cinematic GTA Online inspired environment screenshot, recognizable centered subject at 512x256, retain natural object colors with tasteful green lights. No collage, no borders, no labels, no text, no watermark. Keep the upper 15 percent visually quiet and dark for the native game title overlay."
+    },
+    {
+      "card": "Bennys",
+      "name": "bennys",
+      "prompt": "Use case: stylized-concept. Asset type: fictional location image for CBR City FiveM native map blip card. Create ONE landscape 2:1 full bleed image of a custom car tuning workshop with a modified black and green sports car, hydraulic lifts and tool cabinets, fictional Southern California city at blue hour. CBR City identity: black and deep forest-green base, vivid emerald / neon green architectural accent lights, polished metallic details, sophisticated urban nightlife, clear photographic realism, balanced readable contrast. Reference logo only for its black/emerald palette and urban mood; do not draw the logo or add lettering. Realistic cinematic GTA Online inspired environment screenshot, recognizable centered subject at 512x256, retain natural object colors with tasteful green lights. No collage, no borders, no labels, no text, no watermark. Keep the upper 15 percent visually quiet and dark for the native game title overlay."
+    },
+    {
+      "card": "Cat Cafe",
+      "name": "cat_cafe",
+      "prompt": "Use case: stylized-concept. Asset type: fictional location image for CBR City FiveM native map blip card. Create ONE landscape 2:1 full bleed image of a cozy cat cafe interior with relaxed cats on soft green seats, espresso counter, dark wooden tables and warm accent lamps, fictional Southern California city at blue hour. CBR City identity: black and deep forest-green base, vivid emerald / neon green architectural accent lights, polished metallic details, sophisticated urban nightlife, clear photographic realism, balanced readable contrast. Reference logo only for its black/emerald palette and urban mood; do not draw the logo or add lettering. Realistic cinematic GTA Online inspired environment screenshot, recognizable centered subject at 512x256, retain natural object colors with tasteful green lights. No collage, no borders, no labels, no text, no watermark. Keep the upper 15 percent visually quiet and dark for the native game title overlay."
+    },
+    {
+      "card": "Central de Empregos",
+      "name": "central_de_empregos",
+      "prompt": "Use case: stylized-concept. Asset type: fictional location image for CBR City FiveM native map blip card. Create ONE landscape 2:1 full bleed image of a welcoming city employment office lobby with reception counter, waiting chairs and a bulletin board with indistinct papers, fictional Southern California city at blue hour. CBR City identity: black and deep forest-green base, vivid emerald / neon green architectural accent lights, polished metallic details, sophisticated urban nightlife, clear photographic realism, balanced readable contrast. Reference logo only for its black/emerald palette and urban mood; do not draw the logo or add lettering. Realistic cinematic GTA Online inspired environment screenshot, recognizable centered subject at 512x256, no collage, no borders, no labels, no text, no watermark. Keep the upper 15 percent visually quiet and dark for the native game title overlay."
+    },
+    {
+      "card": "Concessionária",
+      "name": "concessionaria",
+      "prompt": "Use case: stylized-concept. Asset type: fictional location image for CBR City FiveM native map blip card. Create ONE landscape 2:1 full bleed image of a premium car dealership showroom with two modern sports cars, polished floor and glass frontage, fictional Southern California city at blue hour. CBR City identity: black and deep forest-green base, vivid emerald / neon green architectural accent lights, polished metallic details, sophisticated urban nightlife, clear photographic realism, balanced readable contrast. Reference logo only for its black/emerald palette and urban mood; do not draw the logo or add lettering. Realistic cinematic GTA Online inspired environment screenshot, recognizable centered subject at 512x256, no collage, no borders, no labels, no text, no watermark. Keep the upper 15 percent visually quiet and dark for the native game title overlay."
+    },
+    {
+      "card": "Embarcações",
+      "name": "embarcacoes",
+      "prompt": "Use case: stylized-concept. Asset type: fictional location image for CBR City FiveM native map blip card. Create ONE landscape 2:1 full bleed image of a marina with a sleek motorboat and a jet ski moored beside a wooden dock, city skyline beyond, fictional Southern California city at blue hour. CBR City identity: black and deep forest-green base, vivid emerald / neon green architectural accent lights, polished metallic details, sophisticated urban nightlife, clear photographic realism, balanced readable contrast. Reference logo only for its black/emerald palette and urban mood; do not draw the logo or add lettering. Realistic cinematic GTA Online inspired environment screenshot, recognizable centered subject at 512x256, no collage, no borders, no labels, no text, no watermark. Keep the upper 15 percent visually quiet and dark for the native game title overlay."
+    },
+    {
+      "card": "Garagem",
+      "name": "garagem",
+      "prompt": "Use case: stylized-concept. Asset type: fictional location image for CBR City FiveM native map blip card. Create ONE landscape 2:1 full bleed image of a modern public parking garage interior with neatly parked cars, concrete pillars and a vehicle exit ramp, fictional Southern California city at blue hour. CBR City identity: black and deep forest-green base, vivid emerald / neon green architectural accent lights, polished metallic details, sophisticated urban nightlife, clear photographic realism, balanced readable contrast. Reference logo only for its black/emerald palette and urban mood; do not draw the logo or add lettering. Realistic cinematic GTA Online inspired environment screenshot, recognizable centered subject at 512x256, no collage, no borders, no labels, no text, no watermark. Keep the upper 15 percent visually quiet and dark for the native game title overlay."
+    },
+    {
+      "card": "Hotel",
+      "name": "hotel",
+      "prompt": "Use case: stylized-concept. Asset type: fictional location image for CBR City FiveM native map blip card. Create ONE landscape 2:1 full bleed image of a boutique city hotel reception lobby with a service counter, luggage trolley and elegant seating, fictional Southern California city at blue hour. CBR City identity: black and deep forest-green base, vivid emerald / neon green architectural accent lights, polished metallic details, sophisticated urban nightlife, clear photographic realism, balanced readable contrast. Reference logo only for its black/emerald palette and urban mood; do not draw the logo or add lettering. Realistic cinematic GTA Online inspired environment screenshot, recognizable centered subject at 512x256, no collage, no borders, no labels, no text, no watermark. Keep the upper 15 percent visually quiet and dark for the native game title overlay."
+    },
+    {
+      "card": "Loja de Armas",
+      "name": "loja_de_armas",
+      "prompt": "Use case: stylized-concept. Asset type: fictional location image for CBR City FiveM native map blip card. Create ONE landscape 2:1 full bleed image of a legal firearms retail store interior with glass display counter, securely mounted sporting rifles on the rear wall and organized equipment, no people, fictional Southern California city at blue hour. CBR City identity: black and deep forest-green base, vivid emerald / neon green architectural accent lights, polished metallic details, sophisticated urban nightlife, clear photographic realism, balanced readable contrast. Reference logo only for its black/emerald palette and urban mood; do not draw the logo or add lettering. Realistic cinematic GTA Online inspired environment screenshot, recognizable centered subject at 512x256, retain natural object colors with tasteful green lights. No collage, no borders, no labels, no text, no watermark. Keep the upper 15 percent visually quiet and dark for the native game title overlay."
+    },
+    {
+      "card": "Loja de Departamento",
+      "name": "loja_de_departamento",
+      "prompt": "Use case: stylized-concept. Asset type: fictional location image for CBR City FiveM native map blip card. Create ONE landscape 2:1 full bleed image of a neighborhood convenience store interior with stocked snack aisles, drinks refrigerators and checkout counter, fictional Southern California city at blue hour. CBR City identity: black and deep forest-green base, vivid emerald / neon green architectural accent lights, polished metallic details, sophisticated urban nightlife, clear photographic realism, balanced readable contrast. Reference logo only for its black/emerald palette and urban mood; do not draw the logo or add lettering. Realistic cinematic GTA Online inspired environment screenshot, recognizable centered subject at 512x256, retain natural object colors with tasteful green lights. No collage, no borders, no labels, no text, no watermark. Keep the upper 15 percent visually quiet and dark for the native game title overlay."
+    },
+    {
+      "card": "Loja de Eletronicos",
+      "name": "loja_de_eletronicos",
+      "prompt": "Use case: stylized-concept. Asset type: fictional location image for CBR City FiveM native map blip card. Create ONE landscape 2:1 full bleed image of an electronics boutique interior with smartphones and handheld radios arranged on dark display counters, fictional Southern California city at blue hour. CBR City identity: black and deep forest-green base, vivid emerald / neon green architectural accent lights, polished metallic details, sophisticated urban nightlife, clear photographic realism, balanced readable contrast. Reference logo only for its black/emerald palette and urban mood; do not draw the logo or add lettering. Realistic cinematic GTA Online inspired environment screenshot, recognizable centered subject at 512x256, retain natural object colors with tasteful green lights. No collage, no borders, no labels, no text, no watermark. Keep the upper 15 percent visually quiet and dark for the native game title overlay."
+    },
+    {
+      "card": "Loja de Penhores",
+      "name": "loja_de_penhores",
+      "prompt": "Use case: stylized-concept. Asset type: fictional location image for CBR City FiveM native map blip card. Create ONE landscape 2:1 full bleed image of a pawn shop interior with secondhand watches and jewelry in a glass counter, musical instruments on rear shelves, fictional Southern California city at blue hour. CBR City identity: black and deep forest-green base, vivid emerald / neon green architectural accent lights, polished metallic details, sophisticated urban nightlife, clear photographic realism, balanced readable contrast. Reference logo only for its black/emerald palette and urban mood; do not draw the logo or add lettering. Realistic cinematic GTA Online inspired environment screenshot, recognizable centered subject at 512x256, retain natural object colors with tasteful green lights. No collage, no borders, no labels, no text, no watermark. Keep the upper 15 percent visually quiet and dark for the native game title overlay."
+    },
+    {
+      "card": "Loja de Roupas",
+      "name": "loja_de_roupas",
+      "prompt": "Use case: stylized-concept. Asset type: fictional location image for CBR City FiveM native map blip card. Create ONE landscape 2:1 full bleed image of a fashionable clothing store interior with garment rails, dressed mannequins and fitting room mirrors, fictional Southern California city at blue hour. CBR City identity: black and deep forest-green base, vivid emerald / neon green architectural accent lights, polished metallic details, sophisticated urban nightlife, clear photographic realism, balanced readable contrast. Reference logo only for its black/emerald palette and urban mood; do not draw the logo or add lettering. Realistic cinematic GTA Online inspired environment screenshot, recognizable centered subject at 512x256, retain natural object colors with tasteful green lights. No collage, no borders, no labels, no text, no watermark. Keep the upper 15 percent visually quiet and dark for the native game title overlay."
+    },
+    {
+      "card": "Loja de Tatuagem",
+      "name": "loja_de_tatuagem",
+      "prompt": "Use case: stylized-concept. Asset type: fictional location image for CBR City FiveM native map blip card. Create ONE landscape 2:1 full bleed image of a professional tattoo studio interior with tattoo chair, ink bottles, equipment and tasteful framed flash art, fictional Southern California city at blue hour. CBR City identity: black and deep forest-green base, vivid emerald / neon green architectural accent lights, polished metallic details, sophisticated urban nightlife, clear photographic realism, balanced readable contrast. Reference logo only for its black/emerald palette and urban mood; do not draw the logo or add lettering. Realistic cinematic GTA Online inspired environment screenshot, recognizable centered subject at 512x256, retain natural object colors with tasteful green lights. No collage, no borders, no labels, no text, no watermark. Keep the upper 15 percent visually quiet and dark for the native game title overlay."
+    },
+    {
+      "card": "Manicure",
+      "name": "manicure",
+      "prompt": "Use case: stylized-concept. Asset type: fictional location image for CBR City FiveM native map blip card. Create ONE landscape 2:1 full bleed image of an elegant nail salon interior with manicure tables, nail polish displays and comfortable green upholstered seats, fictional Southern California city at blue hour. CBR City identity: black and deep forest-green base, vivid emerald / neon green architectural accent lights, polished metallic details, sophisticated urban nightlife, clear photographic realism, balanced readable contrast. Reference logo only for its black/emerald palette and urban mood; do not draw the logo or add lettering. Realistic cinematic GTA Online inspired environment screenshot, recognizable centered subject at 512x256, retain natural object colors with tasteful green lights. No collage, no borders, no labels, no text, no watermark. Keep the upper 15 percent visually quiet and dark for the native game title overlay."
+    },
+    {
+      "card": "Mercado Central",
+      "name": "mercado_central",
+      "prompt": "Use case: stylized-concept. Asset type: fictional location image for CBR City FiveM native map blip card. Create ONE landscape 2:1 full bleed image of a covered urban fresh food market with colorful fruit and vegetable stalls beneath green canopies, fictional Southern California city at blue hour. CBR City identity: black and deep forest-green base, vivid emerald / neon green architectural accent lights, polished metallic details, sophisticated urban nightlife, clear photographic realism, balanced readable contrast. Reference logo only for its black/emerald palette and urban mood; do not draw the logo or add lettering. Realistic cinematic GTA Online inspired environment screenshot, recognizable centered subject at 512x256, retain natural object colors with tasteful green lights. No collage, no borders, no labels, no text, no watermark. Keep the upper 15 percent visually quiet and dark for the native game title overlay."
+    },
+    {
+      "card": "Moo Moo Cafe",
+      "name": "moo_moo_cafe",
+      "prompt": "Use case: stylized-concept. Asset type: fictional location image for CBR City FiveM native map blip card. Create ONE landscape 2:1 full bleed image of a playful milkshake and dessert cafe interior with black and white cow-pattern seating, green neon accents, a milkshake and a slice of cake on the foreground table, fictional Southern California city at blue hour. CBR City identity: black and deep forest-green base, vivid emerald / neon green architectural accent lights, polished metallic details, sophisticated urban nightlife, clear photographic realism, balanced readable contrast. Reference logo only for its black/emerald palette and urban mood; do not draw the logo or add lettering. Realistic cinematic GTA Online inspired environment screenshot, recognizable centered subject at 512x256, retain natural object colors with tasteful green lights. No collage, no borders, no labels, no text, no watermark. Keep the upper 15 percent visually quiet and dark for the native game title overlay."
+    }
+  ]
+}

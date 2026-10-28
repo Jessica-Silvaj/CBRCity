@@ -1,0 +1,10 @@
+{
+  "images": [
+    {
+      "name": "posto_de_combustivel",
+      "card": "Posto de Combustível",
+      "source": "C:\\Users\\jessi\\.codex\\generated_images\\01a17976-46ea-7ae0-bbc7-504d679e4508\\exec-10821f27-2b38-43aa-9e31-b8cbc958e054.png",
+      "prompt": "Use case: stylized-concept. Asset type: fictional gas station location image for CBR City FiveM native map blip card, matching its existing location cards. Create ONE landscape 2:1 full bleed image of a modern gasoline station in a fictional Southern California city at blue hour, recognizable fuel pumps under a large canopy, dark modern shop facade, a car fueling, palm trees and city skyline beyond. CBR City identity: black and deep forest-green base with vivid emerald/neon green architectural lighting and polished metallic details. Realistic cinematic GTA Online inspired environment screenshot with clear readable subject at 512x256. Reference logo only for black/emerald palette and urban mood, do not draw the logo. No text, no labels, no prices, no real company logos, no watermarks, no collage, no border. Keep upper 15 percent subdued and dark for native game title overlay."
+    }
+  ]
+}

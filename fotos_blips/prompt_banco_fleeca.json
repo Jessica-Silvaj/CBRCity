@@ -1,0 +1,10 @@
+{
+  "images": [
+    {
+      "name": "banco",
+      "card": "Banco Fleeca",
+      "source": "C:\\Users\\jessi\\.codex\\generated_images\\01a17976-46ea-7ae0-bbc7-504d679e4508\\exec-be74e912-d18f-4196-8f0a-db7a5ecb9c8b.png",
+      "prompt": "Use case: stylized-concept. Asset type: fictional bank location image for CBR City FiveM map blip card. Create ONE landscape 2:1 image of a recognizable Fleeca Bank branch exterior inspired by GTA Los Santos, glass entrance, green FLEECA BANK sign readable on facade, a nearby ATM and green awning, street level view showing a modest retail bank rather than a luxury lobby. Blue hour in fictional Southern California, dark storefront, tasteful emerald neon accent lights matching CBR City black and green style, a few palm trees. Cinematic realistic videogame environment screenshot, centered bank entrance readable at 512x256. No people, no collage, no border, no watermark, no extra text beyond FLEECA BANK sign. Keep upper 15 percent visually quiet for game overlay. Reference CBR logo only for palette; do not draw that logo."
+    }
+  ]
+}

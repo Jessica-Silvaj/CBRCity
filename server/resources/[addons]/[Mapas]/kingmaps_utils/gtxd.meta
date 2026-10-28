@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CMapParentTxds>
+  <txdRelationships>
+    <Item>
+      <parent>km_ls_customs_txd_01</parent>
+      <child>km_ls_customs_txd</child>
+    </Item>
+    <Item>
+      <parent>km_ls_customs_txd_02</parent>
+      <child>km_ls_customs_txd_01</child>
+    </Item>
+  </txdRelationships>
+</CMapParentTxds>

@@ -1,0 +1,17 @@
+# FXServer (artifact) - baixar de novo em runtime.fivem.net
+/build/
+
+# Gerado pelo servidor
+/server/cache/
+/server/server.log
+*.log
+/.replxx_history
+
+# Dependências node (reinstaláveis com npm install)
+node_modules/
+# o upload do lb-phone usa estas em runtime
+!/server/resources/\[smartphone\]/lb-phone-upload/server/backend/node_modules/
+
+# Arquivos compactados soltos
+*.rar
+*.zip

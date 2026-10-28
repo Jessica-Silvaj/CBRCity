@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CMapParentTxds>
+  <txdRelationships>
+    <Item>
+      <parent>horizon_bennys_editable</parent>
+      <child>horizon_bennys_props</child>
+    </Item>
+    <Item>
+      <parent>horizon_bennys_editable</parent>
+      <child>horizon_bennys_shell</child>
+    </Item>
+  </txdRelationships>
+</CMapParentTxds>
