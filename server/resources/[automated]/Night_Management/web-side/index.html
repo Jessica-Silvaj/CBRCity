@@ -1,0 +1,2803 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Night Admin Panel</title>
+    <link href="style.css?v=2" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+</head>
+
+<body>
+    <div id="ui-wrapper"
+        style="display: none; position: absolute; width: 100vw; height: 100vh; top: 0; left: 0; overflow: hidden; pointer-events: none; z-index: 1;">
+        <div class="bg-shadow-1 bg-shadow-circle-grayscale"></div>
+        <svg class="scribble-1" viewBox="0 0 256 194.3" xmlns="http://www.w3.org/2000/svg">
+            <path fill="currentColor"
+                d="M2.4,88.7c0.2,1-0.1,1.1,0.2,0.8c16-20.1,34.7-43.7,50.3-57.1C34.3,63.7,15.3,94.7,0.2,126.3c-0.8,1.7,0.6,2.1,2.9,2.2c1.8,0.1,3.4,2.9,4.7,5.8c0.9,2.1,2.2,2.8,3.6,1.1C28,114.1,43.9,94,60,75.8c-18.4,24.9-35.3,49.9-48.7,75.2c-1,1.8,0.3,2.9,2.7,3.4c2,0.4,4.1,1.7,5.2,5.2c0.6,1.9,1.9,3.5,3.1,2.1c18.9-19.9,35.3-42.4,54.4-61.3c-4.1,5.9-8.2,11.6-11.7,17.5c-0.7,1.2,0.7,1.7,2.3,1.9c2.1,0.3,3.2,2.9,4.5,5.4c0.7,1.4,2.2,1.4,3.3,0.2c11.4-12,22.7-23.7,35-34.8c-8.6,11.7-17,23.2-24.1,35.5c-1.1,1.9,0.4,3.3,2.4,3.9c2.1,0.6,3.4,1.8,4.4,4.6c0.6,1.7,2.6,2.9,4.3,1.5c11.6-9.5,22.3-19.7,34.7-29.6c-10.9,17.2-21.2,34-28.4,51.9c-0.9,2.3,0.9,3.1,2.6,3.4c2.1,0.4,3.4,2.5,4.6,5.1c1.1,2.3,4.2,2.1,7.5-1.2c15.1-14.9,44.5-58.8,92.3-106.4c-32.6,44.4-59.4,85.6-74.6,121.9c-1.4,3.4-0.6,5.1,2.2,5.4c1.9,0.2,3.9,1.6,4.9,5c0.8,2.8,3.9,3.6,6.2,0.7c11.3-13.9,23.5-27.1,35.7-40c-2.4,3.8-4.7,7.6-6.9,11.4c-1.3,2.2,0.2,2.7,2.3,3.1c2.4,0.5,3.3,2.2,4.6,5.1c1.2,2.5,2.9,2.3,4.1,1c10.8-11.2,21.5-21.2,34.2-28.5c-5,12-10.6,24.6-16.2,36.6c-0.3,0.7,0.4,0.9,1.8,0c11.6-7.3,23.9-23.9,26.9-35.3c1.4-5.3,0.3-10-2.6-12.8c-2.5-2.5-8-1.9-12.1-0.4c-5,1.8-7.7,3.8-12.6,6.8c5.5-8.9,11.8-16.4,17.9-25.3c2.2-3.2,1.8-7.6-0.7-9.8c-2.2-2-7.2-1.9-12,2.1c-19.5,16.6-36.9,34.5-54.3,54.8c28.5-49.8,60.1-94.6,94.1-138.4c3.2-4.1,2.9-9,0.1-11.2c-3.7-2.8-8.1-1.8-13.3,2.8c-41.4,36.6-78.1,76.9-112.6,121.6c6.6-12.2,15.2-23.9,21.8-37.6c2.1-4.4,1.3-8.9-0.8-10.6c-2.8-2.4-7.8-2-12.8,1.5c-9.3,6.5-17.9,13.8-26.4,21.3C120.8,94.9,133,80,144.5,64.2c2.2-3,2.5-6,0.2-8.3c-2.3-2.2-5.9-2.5-9.6-0.3c-5.5,3.2-10.4,7.3-15.3,11.5c4.1-4.9,7.5-9.1,10.5-14.4c2-3.6,0.6-6.7-1.2-8.6c-2.3-2.3-7.5-1.9-11.2,1c-21.5,16.7-41.1,36.4-60.3,57.2C79,71.2,104.7,41,127.5,9.9c1.9-2.6,0.9-6.4-1.5-8.5c-3-2.7-8.7-1.3-12.8,2.2C85.7,27.5,61.1,53.8,37.3,81.9c11.6-21.1,25-42.1,36.2-63.7c1.4-2.7,0.3-6.6-1.8-8c-4-2.6-7.9-0.8-11,2.1c-30.9,29-49.9,53.2-59.9,73c-0.7,1.3-0.3,2,0.6,2.5C1.8,88.1,2.4,88.3,2.4,88.7z" />
+        </svg>
+        <svg class="scribble-2" viewBox="0 0 256 194.3" xmlns="http://www.w3.org/2000/svg">
+            <path fill="currentColor"
+                d="M2.4,88.7c0.2,1-0.1,1.1,0.2,0.8c16-20.1,34.7-43.7,50.3-57.1C34.3,63.7,15.3,94.7,0.2,126.3c-0.8,1.7,0.6,2.1,2.9,2.2c1.8,0.1,3.4,2.9,4.7,5.8c0.9,2.1,2.2,2.8,3.6,1.1C28,114.1,43.9,94,60,75.8c-18.4,24.9-35.3,49.9-48.7,75.2c-1,1.8,0.3,2.9,2.7,3.4c2,0.4,4.1,1.7,5.2,5.2c0.6,1.9,1.9,3.5,3.1,2.1c18.9-19.9,35.3-42.4,54.4-61.3c-4.1,5.9-8.2,11.6-11.7,17.5c-0.7,1.2,0.7,1.7,2.3,1.9c2.1,0.3,3.2,2.9,4.5,5.4c0.7,1.4,2.2,1.4,3.3,0.2c11.4-12,22.7-23.7,35-34.8c-8.6,11.7-17,23.2-24.1,35.5c-1.1,1.9,0.4,3.3,2.4,3.9c2.1,0.6,3.4,1.8,4.4,4.6c0.6,1.7,2.6,2.9,4.3,1.5c11.6-9.5,22.3-19.7,34.7-29.6c-10.9,17.2-21.2,34-28.4,51.9c-0.9,2.3,0.9,3.1,2.6,3.4c2.1,0.4,3.4,2.5,4.6,5.1c1.1,2.3,4.2,2.1,7.5-1.2c15.1-14.9,44.5-58.8,92.3-106.4c-32.6,44.4-59.4,85.6-74.6,121.9c-1.4,3.4-0.6,5.1,2.2,5.4c1.9,0.2,3.9,1.6,4.9,5c0.8,2.8,3.9,3.6,6.2,0.7c11.3-13.9,23.5-27.1,35.7-40c-2.4,3.8-4.7,7.6-6.9,11.4c-1.3,2.2,0.2,2.7,2.3,3.1c2.4,0.5,3.3,2.2,4.6,5.1c1.2,2.5,2.9,2.3,4.1,1c10.8-11.2,21.5-21.2,34.2-28.5c-5,12-10.6,24.6-16.2,36.6c-0.3,0.7,0.4,0.9,1.8,0c11.6-7.3,23.9-23.9,26.9-35.3c1.4-5.3,0.3-10-2.6-12.8c-2.5-2.5-8-1.9-12.1-0.4c-5,1.8-7.7,3.8-12.6,6.8c5.5-8.9,11.8-16.4,17.9-25.3c2.2-3.2,1.8-7.6-0.7-9.8c-2.2-2-7.2-1.9-12,2.1c-19.5,16.6-36.9,34.5-54.3,54.8c28.5-49.8,60.1-94.6,94.1-138.4c3.2-4.1,2.9-9,0.1-11.2c-3.7-2.8-8.1-1.8-13.3,2.8c-41.4,36.6-78.1,76.9-112.6,121.6c6.6-12.2,15.2-23.9,21.8-37.6c2.1-4.4,1.3-8.9-0.8-10.6c-2.8-2.4-7.8-2-12.8,1.5c-9.3,6.5-17.9,13.8-26.4,21.3C120.8,94.9,133,80,144.5,64.2c2.2-3,2.5-6,0.2-8.3c-2.3-2.2-5.9-2.5-9.6-0.3c-5.5,3.2-10.4,7.3-15.3,11.5c4.1-4.9,7.5-9.1,10.5-14.4c2-3.6,0.6-6.7-1.2-8.6c-2.3-2.3-7.5-1.9-11.2,1c-21.5,16.7-41.1,36.4-60.3,57.2C79,71.2,104.7,41,127.5,9.9c1.9-2.6,0.9-6.4-1.5-8.5c-3-2.7-8.7-1.3-12.8,2.2C85.7,27.5,61.1,53.8,37.3,81.9c11.6-21.1,25-42.1,36.2-63.7c1.4-2.7,0.3-6.6-1.8-8c-4-2.6-7.9-0.8-11,2.1c-30.9,29-49.9,53.2-59.9,73c-0.7,1.3-0.3,2,0.6,2.5C1.8,88.1,2.4,88.3,2.4,88.7z" />
+        </svg>
+        <div id="app" style="pointer-events: auto;">
+            <div class="sidebar">
+                <div class="logo">
+                    <div class="logo-icon-wrapper">
+                        <i class="fa-solid fa-chart-pie"></i>
+                    </div>
+                    <div class="logo-text-wrapper">
+                        <div class="logo-title">
+                            <span class="logo-highlight">PAINEL</span>
+                            <span class="logo-normal">GESTOR</span>
+                        </div>
+                        <div class="logo-subtitle">GERENCIAMENTO DA CIDADE</div>
+                    </div>
+                </div>
+
+                <div class="nav-category">
+                    <div class="category-header">
+                        <span><i class="fa-solid fa-lock" style="margin-right: 6px;"></i> PERMISSÕES</span>
+                        <i class="fa-solid fa-chevron-down chevron"></i>
+                    </div>
+                    <div class="nav-items-wrapper">
+                        <div class="nav-item" data-page="manage-permissions">
+                            <i class="fa-solid fa-user-shield"></i> Configurar Cargos
+                        </div>
+                    </div>
+                </div>
+
+                <div class="nav-category">
+                    <div class="category-header">
+                        <span><i class="fa-solid fa-link" style="margin-right: 6px; color: var(--primary);"></i>
+                            WEBHOOKS</span>
+                        <i class="fa-solid fa-chevron-down chevron"></i>
+                    </div>
+                    <div class="nav-items-wrapper">
+                        <div class="nav-item" data-page="manage-webhooks">
+                            <i class="fa-brands fa-discord"></i> Configurar Webhooks
+                        </div>
+                    </div>
+                </div>
+
+                <hr
+                    style="border: none; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); margin: -10px auto 20px auto; width: 85%; flex-shrink: 0;">
+
+                <div class="nav-category">
+                    <div class="category-header">
+                        <span><i class="fa-solid fa-box-archive" style="margin-right: 6px;"></i> BAÚS</span>
+                        <i class="fa-solid fa-chevron-down chevron"></i>
+                    </div>
+                    <div class="nav-items-wrapper">
+                        <div class="nav-item active" data-page="create-chest">
+                            <i class="fa-solid fa-box-open"></i> Criar Baú
+                        </div>
+                        <div class="nav-item" data-page="manage-chests">
+                            <i class="fa-solid fa-boxes-stacked"></i> Gerenciar Baús
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-category">
+                    <div class="category-header">
+                        <span><i class="fa-solid fa-users" style="margin-right: 6px;"></i> NPCS</span>
+                        <i class="fa-solid fa-chevron-down chevron"></i>
+                    </div>
+                    <div class="nav-items-wrapper">
+                        <div class="nav-item" data-page="create-npc">
+                            <i class="fa-solid fa-user-plus"></i> Criar NPC
+                        </div>
+                        <div class="nav-item" data-page="manage-npcs">
+                            <i class="fa-solid fa-user-group"></i> Gerenciar NPCs
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-category">
+                    <div class="category-header">
+                        <span><i class="fa-solid fa-cube" style="margin-right: 6px;"></i> PROPS</span>
+                        <i class="fa-solid fa-chevron-down chevron"></i>
+                    </div>
+                    <div class="nav-items-wrapper">
+                        <div class="nav-item" data-page="create-prop">
+                            <i class="fa-solid fa-plus"></i> Adicionar Prop
+                        </div>
+                        <div class="nav-item" data-page="manage-props">
+                            <i class="fa-solid fa-cubes"></i> Gerenciar Props
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-category">
+                    <div class="category-header">
+                        <span><i class="fa-solid fa-cart-shopping" style="margin-right: 6px;"></i> LOJAS</span>
+                        <i class="fa-solid fa-chevron-down chevron"></i>
+                    </div>
+                    <div class="nav-items-wrapper">
+                        <div class="nav-item" data-page="create-shop">
+                            <i class="fa-solid fa-store"></i> Criar Loja
+                        </div>
+                        <div class="nav-item" data-page="manage-shops">
+                            <i class="fa-solid fa-shop-lock"></i> Gerenciar Lojas
+                        </div>
+                        <div class="nav-item" data-page="create-shop-config">
+                            <i class="fa-solid fa-tags"></i> Criar Tipo de Loja
+                        </div>
+                        <div class="nav-item" data-page="manage-shop-configs">
+                            <i class="fa-solid fa-table-list"></i> Gerenciar Tipos
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-category">
+                    <div class="category-header">
+                        <span><i class="fa-solid fa-route" style="margin-right: 6px;"></i> ROTAS</span>
+                        <i class="fa-solid fa-chevron-down chevron"></i>
+                    </div>
+                    <div class="nav-items-wrapper">
+                        <div class="nav-item" data-page="create-route">
+                            <i class="fa-solid fa-plus"></i> Criar Rota
+                        </div>
+                        <div class="nav-item" data-page="manage-routes">
+                            <i class="fa-solid fa-list-ul"></i> Gerenciar Rotas
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-category">
+                    <div class="category-header">
+                        <span><i class="fa-solid fa-map-location-dot" style="margin-right: 6px;"></i> BLIPS</span>
+                        <i class="fa-solid fa-chevron-down chevron"></i>
+                    </div>
+                    <div class="nav-items-wrapper">
+                        <div class="nav-item" data-page="create-blip">
+                            <i class="fa-solid fa-location-crosshairs"></i> Criar Blip
+                        </div>
+                        <div class="nav-item" data-page="manage-blips">
+                            <i class="fa-solid fa-map"></i> Gerenciar Blips
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-category">
+                    <div class="category-header">
+                        <span><i class="fa-solid fa-walkie-talkie" style="margin-right: 6px;"></i> RÁDIOS</span>
+                        <i class="fa-solid fa-chevron-down chevron"></i>
+                    </div>
+                    <div class="nav-items-wrapper">
+                        <div class="nav-item" data-page="create-radio">
+                            <i class="fa-solid fa-plus"></i> Criar Rádio
+                        </div>
+                        <div class="nav-item" data-page="manage-radios">
+                            <i class="fa-solid fa-list-ul"></i> Gerenciar Rádios
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-category">
+                    <div class="category-header">
+                        <span><i class="fa-solid fa-door-closed" style="margin-right: 6px;"></i> PORTAS</span>
+                        <i class="fa-solid fa-chevron-down chevron"></i>
+                    </div>
+                    <div class="nav-items-wrapper">
+                        <div class="nav-item" data-page="create-door-setup">
+                            <i class="fa-solid fa-plus"></i> Criar Portas
+                        </div>
+                        <div class="nav-item" data-page="manage-doors">
+                            <i class="fa-solid fa-list"></i> Gerenciar Portas
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-category">
+                    <div class="category-header">
+                        <span><i class="fa-solid fa-shirt" style="margin-right: 6px;"></i> ROUPAS</span>
+                        <i class="fa-solid fa-chevron-down chevron"></i>
+                    </div>
+                    <div class="nav-items-wrapper">
+                        <div class="nav-item" data-page="create-appearance" data-type="skinshop">
+                            <i class="fa-solid fa-store"></i> Criar Loja
+                        </div>
+                        <div class="nav-item" data-page="manage-appearances" data-type="skinshop">
+                            <i class="fa-solid fa-list-ul"></i> Gerenciar Lojas
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-category">
+                    <div class="category-header">
+                        <span><i class="fa-solid fa-money-bill-wave" style="margin-right: 6px;"></i> LAVAGEM</span>
+                        <i class="fa-solid fa-chevron-down chevron"></i>
+                    </div>
+                    <div class="nav-items-wrapper">
+                        <div class="nav-item" data-page="create-moneywash">
+                            <i class="fa-solid fa-plus"></i> Criar Máquina
+                        </div>
+                        <div class="nav-item" data-page="manage-moneywash">
+                            <i class="fa-solid fa-list"></i> Gerenciar Máquinas
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-category">
+                    <div class="category-header">
+                        <span><i class="fa-solid fa-warehouse" style="margin-right: 6px;"></i> GARAGENS</span>
+                        <i class="fa-solid fa-chevron-down chevron"></i>
+                    </div>
+                    <div class="nav-items-wrapper">
+                        <div class="nav-item" data-page="create-garage">
+                            <i class="fa-solid fa-car-tunnel"></i> Criar Garagem
+                        </div>
+                        <div class="nav-item" data-page="manage-garages">
+                            <i class="fa-solid fa-square-parking"></i> Gerenciar Garagens
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-category">
+                    <div class="category-header">
+                        <span><i class="fa-solid fa-hammer" style="margin-right: 6px;"></i> CRAFTING</span>
+                        <i class="fa-solid fa-chevron-down chevron"></i>
+                    </div>
+                    <div class="nav-items-wrapper">
+                        <div class="nav-item" data-page="create-crafting">
+                            <i class="fa-solid fa-screwdriver-wrench"></i> Criar Local
+                        </div>
+                        <div class="nav-item" data-page="manage-craftings">
+                            <i class="fa-solid fa-toolbox"></i> Gerenciar Locais
+                        </div>
+                        <div class="nav-item" data-page="create-crafting-config">
+                            <i class="fa-solid fa-scroll"></i> Criar Receita
+                        </div>
+                        <div class="nav-item" data-page="manage-crafting-configs">
+                            <i class="fa-solid fa-book-open"></i> Gerenciar Receitas
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-category">
+                    <div class="category-header">
+                        <span><i class="fa-solid fa-pen-nib" style="margin-right: 6px;"></i> TATUAGENS</span>
+                        <i class="fa-solid fa-chevron-down chevron"></i>
+                    </div>
+                    <div class="nav-items-wrapper">
+                        <div class="nav-item" data-page="create-appearance" data-type="tattooshop">
+                            <i class="fa-solid fa-store"></i> Criar Estúdio
+                        </div>
+                        <div class="nav-item" data-page="manage-appearances" data-type="tattooshop">
+                            <i class="fa-solid fa-list-ul"></i> Gerenciar Estúdios
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-category">
+                    <div class="category-header">
+                        <span><i class="fa-solid fa-wrench" style="margin-right: 6px;"></i> LSCUSTOMS</span>
+                        <i class="fa-solid fa-chevron-down chevron"></i>
+                    </div>
+                    <div class="nav-items-wrapper">
+                        <div class="nav-item" data-page="create-lscustoms">
+                            <i class="fa-solid fa-plus"></i> Criar Local
+                        </div>
+                        <div class="nav-item" data-page="manage-lscustoms">
+                            <i class="fa-solid fa-list-ul"></i> Gerenciar Locais
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-category">
+                    <div class="category-header">
+                        <span><i class="fa-solid fa-broom" style="margin-right: 6px;"></i> CLEARAREA</span>
+                        <i class="fa-solid fa-chevron-down chevron"></i>
+                    </div>
+                    <div class="nav-items-wrapper">
+                        <div class="nav-item" data-page="create-cleararea">
+                            <i class="fa-solid fa-plus"></i> Criar Área
+                        </div>
+                        <div class="nav-item" data-page="manage-clearareas">
+                            <i class="fa-solid fa-list-ul"></i> Gerenciar Áreas
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-category">
+                    <div class="category-header">
+                        <span><i class="fa-solid fa-users-slash" style="margin-right: 6px;"></i> DENSIDADE</span>
+                        <i class="fa-solid fa-chevron-down chevron"></i>
+                    </div>
+                    <div class="nav-items-wrapper">
+                        <div class="nav-item" data-page="manage-density">
+                            <i class="fa-solid fa-sliders"></i> Config. Densidade
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-category">
+                    <div class="category-header">
+                        <span><i class="fa-solid fa-shield-halved" style="margin-right: 6px;"></i> SAFEZONES</span>
+                        <i class="fa-solid fa-chevron-down chevron"></i>
+                    </div>
+                    <div class="nav-items-wrapper">
+                        <div class="nav-item" data-page="create-safezone">
+                            <i class="fa-solid fa-plus"></i> Criar Safezone
+                        </div>
+                        <div class="nav-item" data-page="manage-safezones">
+                            <i class="fa-solid fa-list"></i> Gerenciar Safezones
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-category">
+                    <div class="category-header">
+                        <span><i class="fa-solid fa-elevator" style="margin-right: 6px;"></i> ELEVADORES</span>
+                        <i class="fa-solid fa-chevron-down chevron"></i>
+                    </div>
+                    <div class="nav-items-wrapper">
+                        <div class="nav-item" data-page="create-elevator">
+                            <i class="fa-solid fa-plus"></i> Criar Andar
+                        </div>
+                        <div class="nav-item" data-page="manage-elevators">
+                            <i class="fa-solid fa-list-ul"></i> Gerenciar Andares
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-category">
+                    <div class="category-header">
+                        <span><i class="fa-solid fa-car-burst" style="margin-right: 6px;"></i> DESMANCHES</span>
+                        <i class="fa-solid fa-chevron-down chevron"></i>
+                    </div>
+                    <div class="nav-items-wrapper">
+                        <div class="nav-item" data-page="create-desmanche">
+                            <i class="fa-solid fa-plus"></i> Criar Desmanche
+                        </div>
+                        <div class="nav-item" data-page="manage-desmanches">
+                            <i class="fa-solid fa-list"></i> Gerenciar Desmanches
+                        </div>
+                        <div class="nav-item" data-page="settings-desmanche">
+                            <i class="fa-solid fa-gear"></i> Config. Desmanches
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-category">
+                    <div class="category-header">
+                        <span><i class="fa-solid fa-person-booth" style="margin-right: 6px;"></i> VESTIÁRIOS</span>
+                        <i class="fa-solid fa-chevron-down chevron"></i>
+                    </div>
+                    <div class="nav-items-wrapper">
+                        <div class="nav-item" data-page="create-cloakroom">
+                            <i class="fa-solid fa-plus"></i> Criar Vestiário
+                        </div>
+                        <div class="nav-item" data-page="manage-cloakrooms">
+                            <i class="fa-solid fa-list-ul"></i> Gerenciar Vestiários
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-category">
+                    <div class="category-header">
+                        <span><i class="fa-solid fa-scissors" style="margin-right: 6px;"></i> BARBEARIAS</span>
+                        <i class="fa-solid fa-chevron-down chevron"></i>
+                    </div>
+                    <div class="nav-items-wrapper">
+                        <div class="nav-item" data-page="create-appearance" data-type="barbershop">
+                            <i class="fa-solid fa-store"></i> Criar Barbearia
+                        </div>
+                        <div class="nav-item" data-page="manage-appearances" data-type="barbershop">
+                            <i class="fa-solid fa-list-ul"></i> Gerenciar Barbearias
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-category">
+                    <div class="category-header">
+                        <span><i class="fa-solid fa-car" style="margin-right: 6px;"></i> CONCESSIONÁRIAS</span>
+                        <i class="fa-solid fa-chevron-down chevron"></i>
+                    </div>
+                    <div class="nav-items-wrapper">
+                        <div class="nav-item" data-page="create-pdm">
+                            <i class="fa-solid fa-car-side"></i> Criar PDM
+                        </div>
+                        <div class="nav-item" data-page="manage-pdms">
+                            <i class="fa-solid fa-list"></i> Gerenciar PDMs
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-category">
+                    <div class="category-header">
+                        <span><i class="fa-solid fa-business-time" style="margin-right: 6px;"></i> BATE-PONTOS</span>
+                        <i class="fa-solid fa-chevron-down chevron"></i>
+                    </div>
+                    <div class="nav-items-wrapper">
+                        <div class="nav-item" data-page="create-service">
+                            <i class="fa-solid fa-plus"></i> Criar Bate Ponto
+                        </div>
+                        <div class="nav-item" data-page="manage-services">
+                            <i class="fa-solid fa-list-check"></i> Gerenciar Bate Pontos
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-category">
+                    <div class="category-header">
+                        <span><i class="fa-solid fa-users-gear" style="margin-right: 6px;"></i> GRUPOS</span>
+                        <i class="fa-solid fa-chevron-down chevron"></i>
+                    </div>
+                    <div class="nav-items-wrapper">
+                        <div class="nav-item" data-page="create-group">
+                            <i class="fa-solid fa-plus"></i> Criar Grupos
+                        </div>
+                        <div class="nav-item" data-page="manage-groups">
+                            <i class="fa-solid fa-list-check"></i> Gerenciar Grupos
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="main-content">
+                <div class="header">
+                    <h2 id="page-title">Night Management</h2>
+                    <button id="close-btn" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+
+                <!-- ROTAS PAGES -->
+
+                <!-- WEBHOOKS PAGE -->
+                <div class="page-content" id="manage-webhooks" style="display: none;">
+                    <div class="form-container">
+                        <div class="form-content" id="webhooks-container"
+                            style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px;">
+                            <!-- Webhook inputs will be generated here -->
+                        </div>
+                        <div class="form-actions" style="margin-top: 20px;">
+                            <button class="btn btn-primary" id="save-webhooks-btn">Salvar Webhooks</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PERMISSIONS PAGE -->
+                <div class="page-content" id="manage-permissions" style="display: none;">
+                    <h3 style="color: #fff; margin-bottom: 15px;">Configuração Dinâmica de Permissões</h3>
+
+                    <div class="permissions-info"
+                        style="margin-bottom: 20px; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 5px; border-left: 4px solid var(--primary);">
+                        <p style="margin-bottom: 8px;"><strong style="color: #fff;"><i class="fa-solid fa-eye"></i>
+                                Ver:</strong> Permite visualizar a aba no menu lateral.</p>
+                        <p style="margin-bottom: 8px;"><strong style="color: #fff;"><i
+                                    class="fa-solid fa-pen-to-square"></i> Gerenciar:</strong> Permite criar, editar ou
+                            deletar itens dentro da categoria.</p>
+                        <p style="margin-bottom: 0;"><strong style="color: #fff;"><i
+                                    class="fa-solid fa-location-dot"></i> Teleporte:</strong> Habilita os botões de ir
+                            até a coordenada cadastrada.</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Selecione um Cargo (Hierarquia do Admin)</label>
+                        <select id="permissions-role-select" class="form-control"
+                            style="width: 100%; padding: 10px; background: rgba(0,0,0,0.4); color: white; border: 1px solid rgba(255,255,255,0.1); border-radius: 5px;">
+                            <option value="">Aguardando cargos...</option>
+                        </select>
+                    </div>
+
+                    <div id="permissions-container" style="display: none; margin-top: 20px;">
+                        <h4
+                            style="color: var(--primary-color); border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-bottom: 15px;">
+                            Permissões por Categoria</h4>
+                        <style>
+                            #permissions-list::-webkit-scrollbar {
+                                display: none;
+                            }
+
+                            #permissions-list {
+                                -ms-overflow-style: none;
+                                scrollbar-width: none;
+                            }
+                        </style>
+                        <div id="permissions-list"
+                            style="display: flex; flex-direction: column; gap: 15px; max-height: 500px; overflow-y: auto; padding-right: 10px;">
+                            <!-- Populated via JS -->
+                        </div>
+
+                        <div class="form-actions" style="margin-top: 20px;">
+                            <button id="save-permissions" class="btn-primary" style="width: 100%;">Salvar
+                                Permissões</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="page-content" id="create-route" style="display: none;">
+                    <input type="hidden" id="edit-route-id" value="">
+
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 1;">
+                            <label>Nome da Rota</label>
+                            <input type="text" id="route-name" placeholder="Ex: Desmanhe">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Permissão</label>
+                            <input type="text" id="route-permission" placeholder="Ex: Desmanhe ou deixe vazio">
+                        </div>
+                    </div>
+
+                    <div class="form-row" style="align-items: flex-start;">
+                        <div class="form-group" style="flex: 1;">
+                            <label>Modo</label>
+                            <select id="route-mode">
+                                <option value="Always">Always</option>
+                                <option value="Init">Init</option>
+                                <option value="Never">Never</option>
+                            </select>
+                            <small
+                                style="color: var(--text-muted); font-size: 0.75rem; margin-top: 8px; display: block;">
+                                <b>Always:</b> Sempre ativa (coleta liberada livremente).<br>
+                                <b>Init:</b> Exige iniciar no local (bater ponto).<br>
+                                <b>Never:</b> Rota desativada ou acionada externamente.
+                            </small>
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Tamanho do Círculo (Circle)</label>
+                            <input type="number" id="route-circle" placeholder="1.0" value="1.0" step="0.1">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 1;">
+                            <label>Procurado (Segundos) <small>Deixe vazio para falso</small></label>
+                            <input type="number" id="route-wanted" placeholder="Ex: 600">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Passe de Batalha (Pontos) <small>Deixe vazio para falso</small></label>
+                            <input type="number" id="route-battlepass" placeholder="Ex: 2">
+                        </div>
+                    </div>
+
+                    <div class="form-row" style="align-items: stretch; margin-bottom: 24px;">
+                        <div class="form-group" style="flex: 1;">
+                            <label>Nome da Experiência</label>
+                            <input type="text" id="route-exp-name" placeholder="Ex: Dismantle">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Quantidade de Experiência</label>
+                            <input type="number" id="route-exp-amount" placeholder="Ex: 1">
+                        </div>
+                    </div>
+
+                    <div class="form-row checkbox-row"
+                        style="align-items: stretch; margin-bottom: 24px; display: flex; gap: 24px;">
+                        <div
+                            style="flex: 1; padding: 16px; background: rgba(0, 0, 0, 0.2); border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.05); display: flex; flex-direction: column; justify-content: flex-start;">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <label class="toggle-switch" style="margin: 0;">
+                                    <input type="checkbox" id="route-is-route" checked>
+                                    <span class="slider"></span>
+                                </label>
+                                <span style="font-weight: 600; font-size: 14px; color: var(--text-color);">Entrega
+                                    Sequencial</span>
+                            </div>
+                            <div
+                                style="margin-top: 12px; font-size: 0.8em; color: var(--text-muted); line-height: 1.4;">
+                                Exige que o jogador entregue nos pontos na ordem estrita em que foram adicionados. Se
+                                desmarcado, os pontos podem ser feitos em ordem aleatória.
+                            </div>
+                        </div>
+
+                        <div
+                            style="flex: 1; padding: 16px; background: rgba(0, 0, 0, 0.2); border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.05); display: flex; flex-direction: column; justify-content: flex-start;">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <label class="toggle-switch" style="margin: 0;">
+                                    <input type="checkbox" id="route-debugpoly">
+                                    <span class="slider"></span>
+                                </label>
+                                <span
+                                    style="font-weight: 600; font-size: 14px; color: var(--text-color);">DebugPoly</span>
+                            </div>
+                            <div
+                                style="margin-top: 12px; font-size: 0.8em; color: var(--text-muted); line-height: 1.4;">
+                                Habilita a visualização das áreas de coleta/entrega (círculos vermelhos/verdes) in-game
+                                para testes e ajustes por administradores.
+                            </div>
+                        </div>
+                        <div
+                            style="flex: 1; padding: 16px; background: rgba(0, 0, 0, 0.2); border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.05); display: flex; flex-direction: column; justify-content: flex-start;">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <label class="toggle-switch" style="margin: 0;">
+                                    <input type="checkbox" id="route-is-loop">
+                                    <span class="slider"></span>
+                                </label>
+                                <span style="font-weight: 600; font-size: 14px; color: var(--text-color);">Loop
+                                    Infinito</span>
+                            </div>
+                            <div
+                                style="margin-top: 12px; font-size: 0.8em; color: var(--text-muted); line-height: 1.4;">
+                                Se ativado, a rota reinicia automaticamente ao invés de finalizar o expediente.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section-title">Coordenada Inicial</div>
+                    <div class="access-item" style="margin-bottom: 24px;">
+                        <div class="access-row">
+                            <div class="form-group">
+                                <label>Coordenada X</label>
+                                <input type="number" id="route-init-x" placeholder="X" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label>Coordenada Y</label>
+                                <input type="number" id="route-init-y" placeholder="Y" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label>Coordenada Z</label>
+                                <input type="number" id="route-init-z" placeholder="Z" step="0.01">
+                            </div>
+                            <button type="button" class="btn-square btn-secondary-square get-coords-btn"
+                                data-target="route-init-coords" title="Pegar Coordenada Atual"><i
+                                    class="fa-solid fa-location-dot"></i></button>
+                        </div>
+                    </div>
+
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <div class="section-title" style="margin: 0;">Configuração de Itens (Drop da Rota)</div>
+                        <button type="button" class="btn btn-secondary add-item-btn" style="margin: 0;"><i
+                                class="fa-solid fa-plus"></i> Adicionar Item</button>
+                    </div>
+                    <div id="route-items-list" class="dynamic-list" style="margin-bottom: 24px;"></div>
+
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <div class="section-title" style="margin: 0;">Coordenadas de Entrega / Coleta</div>
+                        <button type="button" class="btn btn-secondary add-route-coord-btn" style="margin: 0;"><i
+                                class="fa-solid fa-location-dot"></i> Adicionar Coordenada Atual</button>
+                    </div>
+                    <div id="route-coords-list" class="dynamic-list" style="margin-bottom: 24px;"></div>
+
+                    <div style="margin-top: 10px; display: flex; justify-content: flex-end;">
+                        <button class="btn btn-primary" id="save-route-btn"
+                            style="padding: 12px 32px; font-weight: 600; font-size: 15px;">Salvar Rota</button>
+                    </div>
+                </div>
+
+                <div class="page-content" id="manage-routes" style="display: none;">
+                    <div class="table-container">
+                        <table class="data-table" id="routes-table">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Modo</th>
+                                    <th>Permissão</th>
+                                    <th>Itens</th>
+                                    <th>Entregas</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Preenchido via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- FIM ROTAS PAGES -->
+
+                <div class="page-content" id="create-door-setup" style="display: none;">
+                    <input type="hidden" id="edit-door-id" value="">
+
+                    <div class="form-group">
+                        <label>Nome da Porta (Identificação)</label>
+                        <input type="text" id="door-name" placeholder="Ex: Porta da DP">
+                    </div>
+
+                    <div class="form-row" style="align-items: center;">
+                        <div class="form-group" style="flex: 1;">
+                            <label>Distância da Porta</label>
+                            <input type="number" id="door-distance" placeholder="2.0" step="0.1" value="2.0">
+                        </div>
+
+                        <div class="form-group" style="flex: 1;">
+                            <label>Permissão Necessária</label>
+                            <input type="text" id="door-permission" placeholder="Ex: Policia,1;Paramedico,1">
+                        </div>
+
+                        <div class="form-group"
+                            style="flex: 0.5; display: flex; flex-direction: column; align-items: center;">
+                            <label>Porta Dupla?</label>
+                            <label class="toggle-switch" style="margin-top: 5px;">
+                                <input type="checkbox" id="door-is-double">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-actions" id="door-new-actions">
+                        <button id="start-door-setup" class="btn-primary">Selecionar Portas</button>
+                    </div>
+                    <div class="form-actions" id="door-edit-actions" style="display: none;">
+                        <button id="save-door-edit" class="btn-primary">Salvar Alterações</button>
+                    </div>
+                </div>
+
+                <div class="page-content" id="manage-doors" style="display: none;">
+                    <div class="table-container">
+                        <table id="doors-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nome</th>
+                                    <th>Distância</th>
+                                    <th>Permissão</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Populated via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="page-content" id="create-safezone" style="display: none;">
+                    <input type="hidden" id="edit-safezone-id" value="">
+                    <div class="form-group">
+                        <label>Nome da Safezone</label>
+                        <input type="text" id="safezone-name" placeholder="Ex: Praça Central">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Altura Mínima (minZ)</label><input type="number"
+                                id="safezone-minz" step="0.01" placeholder="Ex: 25.0"></div>
+                        <div class="form-group"><label>Altura Máxima (maxZ)</label><input type="number"
+                                id="safezone-maxz" step="0.01" placeholder="Ex: 45.0"></div>
+                        <div class="form-group btn-group-align"><button id="get-safezone-z" class="btn-secondary"><i
+                                    class="fa-solid fa-arrows-up-down"></i> Pegar Z Atual</button></div>
+                    </div>
+
+                    <div class="access-levels" style="margin-top: 15px;">
+                        <div class="access-header">
+                            <h4>Pontos do Polígono (PolyZone)</h4>
+                            <div>
+                                <button id="add-safezone-point" class="btn-small btn-secondary"><i
+                                        class="fa-solid fa-plus"></i> Manual</button>
+                                <button id="get-safezone-point" class="btn-small btn-primary"
+                                    style="margin-left: 5px;"><i class="fa-solid fa-location-crosshairs"></i>
+                                    Atual</button>
+                            </div>
+                        </div>
+                        <div id="safezone-points-list">
+                            <!-- Pontos populos via JS -->
+                        </div>
+                    </div>
+
+                    <div class="form-actions" style="display: flex; gap: 10px; margin-top: 20px;">
+                        <button id="toggle-safezone-preview" class="btn-secondary" style="flex: 1;"><i
+                                class="fa-solid fa-eye"></i> <span id="preview-text">Visualizar Polígono</span></button>
+                        <button id="save-safezone" class="btn-primary" style="flex: 2;">Salvar Safezone</button>
+                    </div>
+                </div>
+
+                <div class="page-content" id="manage-safezones" style="display: none;">
+                    <div class="table-container">
+                        <table id="safezones-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nome</th>
+                                    <th>Nº Pontos</th>
+                                    <th>Limites Z</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- DENSITY PAGE -->
+                <div class="page-content" id="manage-density" style="display: none;">
+                    <div class="section-title">Configurações de Densidade Global</div>
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 1;">
+                            <label>Multiplicador de Veículos (VehicleDensity)</label>
+                            <input type="number" id="density-vehicle" placeholder="0.0" step="0.1" value="0.0">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Veículos Aleatórios (RandomVehicle)</label>
+                            <input type="number" id="density-random-vehicle" placeholder="0.0" step="0.1" value="0.0">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 1;">
+                            <label>Veículos Estacionados (ParkedVehicle)</label>
+                            <input type="number" id="density-parked-vehicle" placeholder="0.0" step="0.1" value="0.0">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Peds de Cenário (ScenarioPed)</label>
+                            <input type="number" id="density-scenario-ped" placeholder="0.0" step="0.1" value="0.0">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 1;">
+                            <label>Multiplicador de Peds (PedDensity)</label>
+                            <input type="number" id="density-ped" placeholder="0.0" step="0.1" value="0.0">
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button id="save-density" class="btn-primary">Salvar Densidade</button>
+                    </div>
+                </div>
+
+                <!-- CLEARAREA PAGES -->
+                <div class="page-content" id="create-cleararea" style="display: none;">
+                    <input type="hidden" id="edit-cleararea-id" value="">
+
+                    <div class="form-group">
+                        <label>Nome da Área</label>
+                        <input type="text" id="cleararea-name" placeholder="Ex: Praça Central">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Coordenada X</label>
+                            <input type="number" id="cleararea-x" placeholder="X" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Coordenada Y</label>
+                            <input type="number" id="cleararea-y" placeholder="Y" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Coordenada Z</label>
+                            <input type="number" id="cleararea-z" placeholder="Z" step="0.01">
+                        </div>
+                        <div class="form-group btn-group-align">
+                            <button id="get-cleararea-coords" class="btn-secondary"><i
+                                    class="fa-solid fa-location-crosshairs"></i> Pegar Atual</button>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 1;">
+                            <label>Raio de Limpeza (Radius)</label>
+                            <input type="number" id="cleararea-radius" placeholder="100.0" step="1.0" value="100.0">
+                        </div>
+                        <div class="form-group"
+                            style="flex: 0.5; display: flex; flex-direction: column; align-items: center;">
+                            <label>Limpar Peds?</label>
+                            <label class="toggle-switch" style="margin-top: 5px;">
+                                <input type="checkbox" id="cleararea-peds" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="form-group"
+                            style="flex: 0.5; display: flex; flex-direction: column; align-items: center;">
+                            <label>Limpar Veículos?</label>
+                            <label class="toggle-switch" style="margin-top: 5px;">
+                                <input type="checkbox" id="cleararea-vehicles" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button id="save-cleararea" class="btn-primary">Salvar Área</button>
+                    </div>
+                </div>
+
+                <div class="page-content" id="manage-clearareas" style="display: none;">
+                    <div class="table-container">
+                        <table id="clearareas-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nome</th>
+                                    <th>Raio</th>
+                                    <th>Opções</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Populated via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="page-content active" id="create-chest">
+                    <input type="hidden" id="edit-chest-id" value="">
+
+                    <div class="form-group">
+                        <label>Identificador do Baú (Nome Único sem espaços, ex: Policia)</label>
+                        <input type="text" id="chest-name" placeholder="Ex: Policia">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Coordenada X</label>
+                            <input type="number" id="chest-x" placeholder="X" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Coordenada Y</label>
+                            <input type="number" id="chest-y" placeholder="Y" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Coordenada Z</label>
+                            <input type="number" id="chest-z" placeholder="Z" step="0.01">
+                        </div>
+                        <div class="form-group btn-group-align">
+                            <button id="get-coords" class="btn-secondary"><i
+                                    class="fa-solid fa-location-crosshairs"></i>
+                                Pegar Atual</button>
+                        </div>
+                    </div>
+
+                    <div class="access-levels">
+                        <div class="access-header">
+                            <h4>Níveis de Acesso (Ex: Baú Chefe, Baú Membro)</h4>
+                            <button id="add-access" class="btn-small"><i class="fa-solid fa-plus"></i> Adicionar
+                                Acesso</button>
+                        </div>
+                        <div id="access-list">
+                            <!-- Access Items -->
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button id="save-chest" class="btn-primary">Salvar Baú</button>
+                    </div>
+                </div>
+
+                <!-- LSCUSTOMS CREATION PAGE -->
+                <div class="page-content" id="create-lscustoms" style="display: none;">
+                    <input type="hidden" id="edit-lscustoms-id" value="">
+
+                    <div class="form-group">
+                        <label>Nome do Local (Identificador)</label>
+                        <input type="text" id="lscustoms-name" placeholder="Ex: Benny's">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Coordenada X</label>
+                            <input type="number" id="lscustoms-x" placeholder="X" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Coordenada Y</label>
+                            <input type="number" id="lscustoms-y" placeholder="Y" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Coordenada Z</label>
+                            <input type="number" id="lscustoms-z" placeholder="Z" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Coordenada H</label>
+                            <input type="number" id="lscustoms-h" placeholder="H" step="0.01">
+                        </div>
+                        <div class="form-group btn-group-align">
+                            <button id="get-lscustoms-coords" class="btn-secondary"><i
+                                    class="fa-solid fa-location-crosshairs"></i>
+                                Pegar Atual</button>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 1;">
+                            <label>Permissão Opcional</label>
+                            <input type="text" id="lscustoms-permission" placeholder="Ex: Mecanico">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Logo</label>
+                            <input type="text" id="lscustoms-logo" placeholder="lscustoms.png" value="lscustoms.png">
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button id="save-lscustoms" class="btn-primary">Salvar Local</button>
+                    </div>
+                </div>
+
+                <div class="page-content" id="manage-lscustoms" style="display: none;">
+                    <div class="table-container">
+                        <table id="lscustoms-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nome</th>
+                                    <th>Coordenadas</th>
+                                    <th>Permissão</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Populated via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="page-content" id="manage-chests" style="display: none;">
+                    <div class="table-container">
+                        <table id="chests-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nome / Identificador</th>
+                                    <th>Coordenadas</th>
+                                    <th>Acessos</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Populated via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- GARAGE CREATION PAGE -->
+                <div class="page-content" id="create-garage" style="display: none;">
+                    <input type="hidden" id="edit-garage-id" value="">
+
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 2;">
+                            <label>Identificador da Garagem (Ex: Praça Central)</label>
+                            <input type="text" id="garage-name" placeholder="Ex: Praça Central">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Permissão Opcional (Ex: Admin,1)</label>
+                            <input type="text" id="garage-permission" placeholder="Deixe em branco p/ público">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>CNH Opcional (Ex: A,B)</label>
+                            <input type="text" id="garage-cnh" placeholder="Deixe em branco p/ todos">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Emprego Necessário (Opcional)</label>
+                            <input type="text" id="garage-job" placeholder="Ex: Taxi">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Blip X</label>
+                            <input type="number" id="garage-x" placeholder="X" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Blip Y</label>
+                            <input type="number" id="garage-y" placeholder="Y" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Blip Z</label>
+                            <input type="number" id="garage-z" placeholder="Z" step="0.01">
+                        </div>
+                        <div class="form-group btn-group-align">
+                            <button id="get-garage-coords" class="btn-secondary"><i
+                                    class="fa-solid fa-location-crosshairs"></i> Pegar Atual</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Classes de Veículos Permitidas</label>
+                        <div class="classes-container" id="garage-classes">
+                            <!-- Populated via JS dynamically from vehicle config -->
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Veículos Específicos Permitidos (Opcional)</label>
+                        <input type="text" id="garage-specific-vehicles" placeholder="Ex: pbus, policiabm, nmax">
+                        <small style="color:var(--text-muted);font-size:11px;">Insira o código de spawn dos veículos
+                            separados por vírgula.</small>
+                    </div>
+
+                    <div class="access-levels">
+                        <div class="access-header">
+                            <h4>Vagas de Spawn do Veículo</h4>
+                            <div>
+                                <button id="add-spawn" class="btn-small"><i class="fa-solid fa-plus"></i> Adicionar
+                                    Manualmente</button>
+                                <button id="start-spawn-editor" class="btn-small btn-primary"
+                                    style="margin-left: 5px;"><i class="fa-solid fa-person-walking"></i> Marcar
+                                    In-Game</button>
+                            </div>
+                        </div>
+                        <div id="spawn-list">
+                            <!-- Spawns populated here -->
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button id="save-garage" class="btn-primary">Salvar Garagem</button>
+                    </div>
+                </div>
+
+                <div class="page-content" id="manage-garages" style="display: none;">
+                    <div class="table-container">
+                        <table id="garages-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Identificador</th>
+                                    <th>Classes</th>
+                                    <th>Spawns</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Populated via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- PDM CREATION PAGE -->
+                <div class="page-content" id="create-pdm" style="display: none;">
+                    <input type="hidden" id="edit-pdm-id" value="">
+
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 2;">
+                            <label>Identificador da PDM (Ex: PDM Central)</label>
+                            <input type="text" id="pdm-name" placeholder="Ex: PDM Central">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Permissão Opcional (Ex: Admin,1)</label>
+                            <input type="text" id="pdm-permission" placeholder="Deixe em branco p/ público">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Blip X</label>
+                            <input type="number" id="pdm-x" placeholder="X" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Blip Y</label>
+                            <input type="number" id="pdm-y" placeholder="Y" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Blip Z</label>
+                            <input type="number" id="pdm-z" placeholder="Z" step="0.01">
+                        </div>
+                        <div class="form-group btn-group-align">
+                            <button id="get-pdm-coords" class="btn-secondary"><i
+                                    class="fa-solid fa-location-crosshairs"></i> Pegar Atual</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Classes de Veículos Permitidas</label>
+                        <div class="classes-container" id="pdm-classes">
+                            <!-- Populated via JS dynamically from vehicle config -->
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Veículos Específicos Permitidos (Opcional)</label>
+                        <input type="text" id="pdm-specific-vehicles" placeholder="Ex: pbus, policiabm, nmax">
+                        <small style="color:var(--text-muted);font-size:11px;">Insira o código de spawn dos veículos
+                            separados por vírgula.</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Nome da Logo (Ex: logo.png)</label>
+                        <input type="text" id="pdm-logo" placeholder="logo.png">
+                        <small style="color:var(--text-muted);font-size:11px;">A imagem deve estar dentro da pasta
+                            images do pdm. Deixe em branco para o padrão.</small>
+                    </div>
+
+                    <div class="access-levels" style="margin-top: 20px;">
+                        <div class="access-header">
+                            <h4>Configurações Específicas de Spawn</h4>
+                        </div>
+
+                        <!-- CAM -->
+                        <div class="form-row"
+                            style="margin-top: 10px; padding: 10px; background: rgba(0,0,0,0.1); border-radius: 8px;">
+                            <div style="flex: 1; display: flex; align-items: center;"><label style="margin:0;">Câmera
+                                    (Cam)</label></div>
+                            <div class="form-group" style="margin:0;"><input type="number" id="pdm-cam-x"
+                                    placeholder="X" step="0.01"></div>
+                            <div class="form-group" style="margin:0;"><input type="number" id="pdm-cam-y"
+                                    placeholder="Y" step="0.01"></div>
+                            <div class="form-group" style="margin:0;"><input type="number" id="pdm-cam-z"
+                                    placeholder="Z" step="0.01"></div>
+                            <div class="form-group" style="margin:0;"><input type="number" id="pdm-cam-h"
+                                    placeholder="H" step="0.01"></div>
+                            <div class="form-group btn-group-align" style="margin:0;">
+                                <button class="btn-secondary btn-small get-pdm-specific-coords" data-target="cam"><i
+                                        class="fa-solid fa-location-crosshairs"></i> Atual</button>
+                            </div>
+                        </div>
+
+                        <!-- SPAWN -->
+                        <div class="form-row"
+                            style="margin-top: 10px; padding: 10px; background: rgba(0,0,0,0.1); border-radius: 8px;">
+                            <div style="flex: 1; display: flex; align-items: center;"><label style="margin:0;">Spawn
+                                    Principal</label></div>
+                            <div class="form-group" style="margin:0;"><input type="number" id="pdm-spawn-x"
+                                    placeholder="X" step="0.01"></div>
+                            <div class="form-group" style="margin:0;"><input type="number" id="pdm-spawn-y"
+                                    placeholder="Y" step="0.01"></div>
+                            <div class="form-group" style="margin:0;"><input type="number" id="pdm-spawn-z"
+                                    placeholder="Z" step="0.01"></div>
+                            <div class="form-group" style="margin:0;"><input type="number" id="pdm-spawn-h"
+                                    placeholder="H" step="0.01"></div>
+                            <div class="form-group btn-group-align" style="margin:0;">
+                                <button class="btn-secondary btn-small get-pdm-specific-coords" data-target="spawn"><i
+                                        class="fa-solid fa-location-crosshairs"></i> Atual</button>
+                            </div>
+                        </div>
+
+                        <!-- DRIVEIN -->
+                        <div class="form-row"
+                            style="margin-top: 10px; padding: 10px; background: rgba(0,0,0,0.1); border-radius: 8px;">
+                            <div style="flex: 1; display: flex; align-items: center;"><label style="margin:0;">Entrada
+                                    (DriveIn)</label></div>
+                            <div class="form-group" style="margin:0;"><input type="number" id="pdm-drivein-x"
+                                    placeholder="X" step="0.01"></div>
+                            <div class="form-group" style="margin:0;"><input type="number" id="pdm-drivein-y"
+                                    placeholder="Y" step="0.01"></div>
+                            <div class="form-group" style="margin:0;"><input type="number" id="pdm-drivein-z"
+                                    placeholder="Z" step="0.01"></div>
+                            <div class="form-group" style="margin:0;"><input type="number" id="pdm-drivein-h"
+                                    placeholder="H" step="0.01"></div>
+                            <div class="form-group btn-group-align" style="margin:0;">
+                                <button class="btn-secondary btn-small get-pdm-specific-coords" data-target="drivein"><i
+                                        class="fa-solid fa-location-crosshairs"></i> Atual</button>
+                            </div>
+                        </div>
+
+                        <!-- DRIVEOUT -->
+                        <div class="form-row"
+                            style="margin-top: 10px; padding: 10px; background: rgba(0,0,0,0.1); border-radius: 8px;">
+                            <div style="flex: 1; display: flex; align-items: center;"><label style="margin:0;">Saída
+                                    (DriveOut)</label></div>
+                            <div class="form-group" style="margin:0;"><input type="number" id="pdm-driveout-x"
+                                    placeholder="X" step="0.01"></div>
+                            <div class="form-group" style="margin:0;"><input type="number" id="pdm-driveout-y"
+                                    placeholder="Y" step="0.01"></div>
+                            <div class="form-group" style="margin:0;"><input type="number" id="pdm-driveout-z"
+                                    placeholder="Z" step="0.01"></div>
+                            <div class="form-group" style="margin:0;"><input type="number" id="pdm-driveout-h"
+                                    placeholder="H" step="0.01"></div>
+                            <div class="form-group btn-group-align" style="margin:0;">
+                                <button class="btn-secondary btn-small get-pdm-specific-coords"
+                                    data-target="driveout"><i class="fa-solid fa-location-crosshairs"></i>
+                                    Atual</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button id="save-pdm" class="btn-primary">Salvar PDM</button>
+                    </div>
+                </div>
+
+                <div class="page-content" id="manage-pdms" style="display: none;">
+                    <div class="table-container">
+                        <table id="pdms-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Identificador</th>
+                                    <th>Classes</th>
+                                    <th>Spawns</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Populated via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SHOP CREATION PAGE -->
+                <div class="page-content" id="create-shop" style="display: none;">
+                    <input type="hidden" id="edit-shop-id" value="">
+
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 2;">
+                            <label>Identificador Visual (Nome)</label>
+                            <input type="text" id="shop-name" placeholder="Ex: Loja de Armas Principal">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Modo/Tipo da Loja</label>
+                            <select id="shop-mode" class="form-control">
+                                <option value="">Selecione um Tipo...</option>
+                                <!-- Populated dynamically via JS -->
+                            </select>
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Ação da Loja</label>
+                            <select id="shop-type" class="form-control">
+                                <option value="Buy">Compra (Buy)</option>
+                                <option value="Sell">Venda (Sell)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Blip X</label>
+                            <input type="number" id="shop-x" placeholder="X" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Blip Y</label>
+                            <input type="number" id="shop-y" placeholder="Y" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Blip Z</label>
+                            <input type="number" id="shop-z" placeholder="Z" step="0.01">
+                        </div>
+                        <div class="form-group btn-group-align">
+                            <button id="get-shop-coords" class="btn-secondary"><i
+                                    class="fa-solid fa-location-crosshairs"></i> Pegar Atual</button>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Raio de Acesso (Opcional, Padrão null)</label>
+                            <input type="number" id="shop-circle" placeholder="Ex: 0.1" step="0.1">
+                        </div>
+                        <div class="form-group">
+                            <label>Routing Bucket (Opcional)</label>
+                            <input type="number" id="shop-route" placeholder="Ex: 9999998">
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button id="save-shop" class="btn-primary">Salvar Loja</button>
+                    </div>
+                </div>
+
+                <!-- SHOPS LIST PAGE -->
+                <div class="page-content" id="manage-shops" style="display: none;">
+                    <div class="table-container">
+                        <table id="shops-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Identificador</th>
+                                    <th>Modo</th>
+                                    <th>Coordenadas</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Populated via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SHOP CONFIG CREATION PAGE -->
+                <div class="page-content" id="create-shop-config" style="display: none;">
+                    <input type="hidden" id="edit-shop-config-isnew" value="true">
+
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 2;">
+                            <label>Identificador do Tipo (ex: Ammunation, Miners)</label>
+                            <input type="text" id="shop-config-mode" placeholder="Ex: Departament">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Ação Padrão</label>
+                            <select id="shop-config-action" class="form-control">
+                                <option value="Buy">Compra (Buy)</option>
+                                <option value="Sell">Venda (Sell)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Tipo da Moeda</label>
+                            <select id="shop-config-type" class="form-control">
+                                <option value="Cash">Dinheiro Físico (Cash)</option>
+                                <option value="Gemstone">Diamantes (Gemstone)</option>
+                                <option value="Consume">Item Específico (Consume)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Moeda Específica (Se for Consume)</label>
+                            <input type="text" id="shop-config-item" placeholder="Ex: dirtydollar, ironfilings">
+                        </div>
+                        <div class="form-group">
+                            <label>Permissão (Opcional)</label>
+                            <input type="text" id="shop-config-permission" placeholder="Ex: Policia, Paramedico">
+                        </div>
+                    </div>
+
+                    <div class="access-levels">
+                        <div class="access-header">
+                            <h4>Itens da Loja</h4>
+                            <button id="add-shop-item" class="btn-small"><i class="fa-solid fa-plus"></i> Adicionar
+                                Item</button>
+                        </div>
+                        <div id="shop-item-list">
+                            <!-- Items Items -->
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button id="save-shop-config" class="btn-primary">Salvar Tipo de Loja</button>
+                    </div>
+                </div>
+
+                <!-- SHOP CONFIGS LIST PAGE -->
+                <div class="page-content" id="manage-shop-configs" style="display: none;">
+                    <div class="table-container">
+                        <table id="shop-configs-table">
+                            <thead>
+                                <tr>
+                                    <th>Modo / Identificador</th>
+                                    <th>Ação / Tipo</th>
+                                    <th>Qtd. Itens</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Populated via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- CRAFTING CREATION PAGE -->
+                <div class="page-content" id="create-crafting" style="display: none;">
+                    <input type="hidden" id="edit-crafting-id" value="">
+
+                    <div class="form-group">
+                        <label>Nome do Local (Ex: Crafting #1)</label>
+                        <input type="text" id="crafting-name" placeholder="Ex: Crafting #1">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Coordenada X</label>
+                            <input type="number" id="crafting-x" placeholder="X" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Coordenada Y</label>
+                            <input type="number" id="crafting-y" placeholder="Y" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Coordenada Z</label>
+                            <input type="number" id="crafting-z" placeholder="Z" step="0.01">
+                        </div>
+                        <button id="get-crafting-coords" class="btn-square btn-secondary-square"
+                            style="margin-top: 24px;" title="Pegar Coordenada Atual"><i
+                                class="fa-solid fa-location-dot"></i></button>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Raio de Acesso (Circle)</label>
+                            <input type="number" id="crafting-circle" placeholder="Ex: 0.1" step="0.01" value="0.1">
+                        </div>
+                        <div class="form-group">
+                            <label>Modo / Tipo de Crafting</label>
+                            <select id="crafting-mode">
+                                <!-- Populated via JS -->
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button id="save-crafting" class="btn-primary">Salvar Local</button>
+                    </div>
+                </div>
+
+                <!-- CRAFTINGS LIST PAGE -->
+                <div class="page-content" id="manage-craftings" style="display: none;">
+                    <div class="table-container">
+                        <table id="craftings-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nome</th>
+                                    <th>Modo</th>
+                                    <th>Coordenadas</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Populated via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- CRAFTING CONFIG CREATION PAGE -->
+                <div class="page-content" id="create-crafting-config" style="display: none;">
+                    <input type="hidden" id="edit-crafting-config-isnew" value="true">
+
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 2;">
+                            <label>Identificador da Mesa/Receita (ex: Lester, Mecanico)</label>
+                            <input type="text" id="crafting-config-mode" placeholder="Ex: Mecanico">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Permissão (Opcional)</label>
+                            <input type="text" id="crafting-config-permission" placeholder="Ex: Admin">
+                        </div>
+                    </div>
+
+                    <div class="access-levels">
+                        <div class="access-header">
+                            <h4>Receitas</h4>
+                            <button id="add-crafting-recipe" class="btn-small"><i class="fa-solid fa-plus"></i>
+                                Adicionar
+                                Receita</button>
+                        </div>
+                        <div id="crafting-recipe-list">
+                            <!-- Recipes populated here -->
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button id="save-crafting-config" class="btn-primary">Salvar Receitas</button>
+                    </div>
+                </div>
+
+                <!-- CRAFTING CONFIGS LIST PAGE -->
+                <div class="page-content" id="manage-crafting-configs" style="display: none;">
+                    <div class="table-container">
+                        <table id="crafting-configs-table">
+                            <thead>
+                                <tr>
+                                    <th>Mesa / Identificador</th>
+                                    <th>Permissão</th>
+                                    <th>Qtd. Receitas</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Populated via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- PÁGINAS BLIPS E NPCS -->
+                <div class="page-content" id="create-blip" style="display: none;">
+                    <input type="hidden" id="edit-blip-id" value="">
+
+                    <div class="form-group">
+                        <label>Nome do Blip (Identificação no mapa)</label>
+                        <input type="text" id="blip-name" placeholder="Ex: Loja de Roupas">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Coordenada X</label>
+                            <input type="number" id="blip-x" placeholder="X" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Coordenada Y</label>
+                            <input type="number" id="blip-y" placeholder="Y" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Coordenada Z</label>
+                            <input type="number" id="blip-z" placeholder="Z" step="0.01">
+                        </div>
+                        <div class="form-group btn-group-align">
+                            <button id="get-coords-blip" class="btn-secondary"><i
+                                    class="fa-solid fa-location-crosshairs"></i> Pegar Atual</button>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Sprite (ID do Ícone)</label>
+                            <input type="number" id="blip-sprite" placeholder="Ex: 52" value="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Cor (ID da Cor)</label>
+                            <input type="number" id="blip-color" placeholder="Ex: 36" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Escala</label>
+                            <input type="number" id="blip-scale" placeholder="Ex: 0.5" step="0.1" value="0.5">
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button id="save-blip" class="btn-primary">Salvar Blip</button>
+                    </div>
+                </div>
+
+                <div class="page-content" id="manage-blips" style="display: none;">
+                    <div class="table-container">
+                        <table id="blips-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nome</th>
+                                    <th>Coordenadas</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Rows generated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="page-content" id="create-npc" style="display: none;">
+                    <input type="hidden" id="edit-npc-id" value="">
+
+                    <div class="form-group">
+                        <label>Nome do NPC (Identificação no Painel)</label>
+                        <input type="text" id="npc-name" placeholder="Ex: Atendente de Loja">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Modelo (Hash ou Nome do Ped)</label>
+                            <input type="text" id="npc-model" placeholder="Ex: mp_m_shopkeep_01">
+                        </div>
+                        <div class="form-group">
+                            <label>Distância (Para aparecer)</label>
+                            <input type="number" id="npc-distance" placeholder="Ex: 50" value="50">
+                        </div>
+                        <div class="form-group"
+                            style="flex: 0.5; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+                            <label>Colisão?</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="npc-collision" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Coordenada X</label>
+                            <input type="number" id="npc-x" placeholder="X" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Coordenada Y</label>
+                            <input type="number" id="npc-y" placeholder="Y" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Coordenada Z</label>
+                            <input type="number" id="npc-z" placeholder="Z" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Heading (Rotação W)</label>
+                            <input type="number" id="npc-h" placeholder="W" step="0.01">
+                        </div>
+                        <div class="form-group btn-group-align">
+                            <button id="get-coords-npc" class="btn-secondary"><i
+                                    class="fa-solid fa-location-crosshairs"></i> Pegar Atual</button>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Dicionário de Animação (Opcional)</label>
+                            <input type="text" id="npc-animdict" placeholder="Ex: anim@heists@heist_corona@single_team">
+                        </div>
+                        <div class="form-group">
+                            <label>Nome da Animação (Opcional)</label>
+                            <input type="text" id="npc-animname" placeholder="Ex: single_team_loop_boss">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Rota Específica (Opcional)</label>
+                        <input type="number" id="npc-route" placeholder="Ex: 1 (Deixe vazio para todas as rotas)">
+                    </div>
+
+                    <div class="form-actions">
+                        <button id="save-npc" class="btn-primary">Salvar NPC</button>
+                    </div>
+                </div>
+
+                <div class="page-content" id="manage-npcs" style="display: none;">
+                    <div class="table-container">
+                        <table id="npcs-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nome / Modelo</th>
+                                    <th>Coordenadas</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Rows generated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- PROPS -->
+                <div class="page-content" id="create-prop" style="display: none;">
+                    <input type="hidden" id="edit-prop-id" value="">
+
+                    <div class="form-group">
+                        <label>Nome do Prop (Identificação no Painel)</label>
+                        <input type="text" id="prop-name" placeholder="Ex: Barreira da praça">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Modelo (nome do prop)</label>
+                            <input type="text" id="prop-model" placeholder="Ex: prop_barrier_work05">
+                        </div>
+                        <div class="form-group">
+                            <label>Distância (Para aparecer)</label>
+                            <input type="number" id="prop-distance" placeholder="Ex: 100" value="100">
+                        </div>
+                        <div class="form-group"
+                            style="flex: 0.5; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+                            <label>Colisão?</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="prop-collision" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <p style="color: var(--text-muted); margin: 8px 0 16px;">O painel fecha e o prop aparece na sua mira. Gire com a roda do mouse, suba/desça com Page Up/Page Down, confirme com E e cancele com Backspace ou botão direito.</p>
+
+                    <div class="form-actions">
+                        <button id="place-prop" class="btn-primary"><i class="fa-solid fa-hand-pointer"></i> Posicionar no Jogo</button>
+                    </div>
+                </div>
+
+                <div class="page-content" id="manage-props" style="display: none;">
+                    <div class="table-container">
+                        <table id="props-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nome / Modelo</th>
+                                    <th>Coordenadas</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Rows generated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- RADIO CREATION PAGE -->
+                <div class="page-content" id="create-radio" style="display: none;">
+                    <input type="hidden" id="edit-radio-frequencia" value="">
+
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 1;">
+                            <label>Frequência (Ex: 1, 2, 3)</label>
+                            <input type="number" id="radio-frequency" placeholder="Frequência (Numérica)"
+                                oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(this.value > 999) this.value = 999;">
+                        </div>
+                        <div class="form-group" style="flex: 2;">
+                            <label>Permissão Opcional (Ex: Admin, Policia)</label>
+                            <input type="text" id="radio-permission" placeholder="Deixe em branco p/ rádio pública">
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button id="save-radio" class="btn-primary">Salvar Rádio</button>
+                    </div>
+                </div>
+
+                <!-- RADIOS LIST PAGE -->
+                <div class="page-content" id="manage-radios" style="display: none;">
+                    <div class="table-container">
+                        <table id="radios-table">
+                            <thead>
+                                <tr>
+                                    <th>Frequência</th>
+                                    <th>Permissão</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Populated via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- ELEVATOR CREATION PAGE -->
+                <div class="page-content" id="create-elevator" style="display: none;">
+                    <input type="hidden" id="edit-elevator-id" value="">
+
+                    <div class="form-group">
+                        <label>Nome do Elevador (Agrupa os andares)</label>
+                        <input type="text" id="elevator-id-group" placeholder="Ex: Principal">
+                    </div>
+
+                    <div class="access-levels">
+                        <div class="access-header">
+                            <h4>Andares do Elevador</h4>
+                            <button id="add-elevator-floor" class="btn-small"><i class="fa-solid fa-plus"></i> Adicionar
+                                Andar</button>
+                        </div>
+                        <div id="elevator-floor-list">
+                            <!-- Populated via JS -->
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button id="save-elevator" class="btn-primary">Salvar Elevador</button>
+                    </div>
+                </div>
+
+                <!-- ELEVATORS LIST PAGE -->
+                <div class="page-content" id="manage-elevators" style="display: none;">
+                    <div class="table-container">
+                        <table id="elevators-table">
+                            <thead>
+                                <tr>
+                                    <th>Nome do Elevador</th>
+                                    <th>Quantidade de Andares</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Populated via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- CREATE APPEARANCE PAGE -->
+                <div class="page-content" id="create-appearance" style="display: none;">
+                    <input type="hidden" id="edit-appearance-id" value="">
+                    <input type="hidden" id="appearance-type" value="skinshop">
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Coordenada X</label>
+                            <input type="number" id="appearance-x" placeholder="X" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Coordenada Y</label>
+                            <input type="number" id="appearance-y" placeholder="Y" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Coordenada Z</label>
+                            <input type="number" id="appearance-z" placeholder="Z" step="0.01">
+                        </div>
+                        <div class="form-group btn-group-align">
+                            <button id="get-coords-appearance" class="btn-secondary"><i
+                                    class="fa-solid fa-location-crosshairs"></i> Pegar Atual</button>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Permissão (Opcional)</label>
+                            <input type="text" id="appearance-permission" placeholder="Ex: Admin,1">
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button id="save-appearance" class="btn-primary">Salvar Loja</button>
+                    </div>
+                </div>
+
+                <!-- MANAGE APPEARANCES PAGE -->
+                <div class="page-content" id="manage-appearances" style="display: none;">
+                    <div class="table-container">
+                        <table id="appearances-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Tipo</th>
+                                    <th>Permissão</th>
+                                    <th>Coordenadas</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Populated via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- CREATE CLOAKROOM PAGE -->
+                <div class="page-content" id="create-cloakroom" style="display: none;">
+                    <input type="hidden" id="edit-cloakroom-id" value="">
+
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 2;">
+                            <label>Identificador do Vestiário (Nome)</label>
+                            <input type="text" id="cloakroom-name" placeholder="Ex: Policia">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Permissão Opcional</label>
+                            <input type="text" id="cloakroom-permission" placeholder="Ex: Policia">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Coordenada X</label>
+                            <input type="number" id="cloakroom-x" placeholder="X" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Coordenada Y</label>
+                            <input type="number" id="cloakroom-y" placeholder="Y" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Coordenada Z</label>
+                            <input type="number" id="cloakroom-z" placeholder="Z" step="0.01">
+                        </div>
+                        <div class="form-group btn-group-align">
+                            <button id="get-coords-cloakroom" class="btn-secondary"><i
+                                    class="fa-solid fa-location-crosshairs"></i> Pegar Atual</button>
+                        </div>
+                    </div>
+
+                    <div class="access-levels">
+                        <div class="access-header">
+                            <h4>Presets do Vestiário</h4>
+                            <button id="add-cloakroom-preset" class="btn-small"><i class="fa-solid fa-plus"></i>
+                                Adicionar Preset</button>
+                        </div>
+                        <div id="cloakroom-preset-list">
+                            <!-- Presets -->
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button id="save-cloakroom" class="btn-primary">Salvar Vestiário</button>
+                    </div>
+                </div>
+
+                <!-- MANAGE CLOAKROOMS PAGE -->
+                <div class="page-content" id="manage-cloakrooms" style="display: none;">
+                    <div class="table-container">
+                        <table id="cloakrooms-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Identificador</th>
+                                    <th>Permissão</th>
+                                    <th>Coordenadas</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Populated via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- DESMANCHES PAGE -->
+                <div class="page-content" id="create-desmanche" style="display: none;">
+                    <input type="hidden" id="edit-desmanche-id" value="">
+
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 2;">
+                            <label>Identificador Visual (Nome)</label>
+                            <input type="text" id="desmanche-name" placeholder="Ex: Desmanche Norte">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Permissão Opcional</label>
+                            <input type="text" id="desmanche-permission" placeholder="Deixe em branco p/ público">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Blip X</label>
+                            <input type="number" id="desmanche-blip-x" placeholder="X" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Blip Y</label>
+                            <input type="number" id="desmanche-blip-y" placeholder="Y" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Blip Z</label>
+                            <input type="number" id="desmanche-blip-z" placeholder="Z" step="0.01">
+                        </div>
+                        <div class="form-group btn-group-align">
+                            <button class="get-desmanche-coords btn-secondary" data-target="blip"><i
+                                    class="fa-solid fa-location-crosshairs"></i> Atual</button>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Estante X</label>
+                            <input type="number" id="desmanche-shelf-x" placeholder="X" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Estante Y</label>
+                            <input type="number" id="desmanche-shelf-y" placeholder="Y" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Estante Z</label>
+                            <input type="number" id="desmanche-shelf-z" placeholder="Z" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Estante H</label>
+                            <input type="number" id="desmanche-shelf-h" placeholder="H" step="0.01">
+                        </div>
+                        <div class="form-group btn-group-align">
+                            <button class="get-desmanche-coords btn-secondary" data-target="shelf"><i
+                                    class="fa-solid fa-location-crosshairs"></i> Atual</button>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Item Necessário (Opcional)</label>
+                            <input type="text" id="desmanche-requireItem" placeholder="Ex: water">
+                        </div>
+                        <div class="form-group">
+                            <label>Qtd do Item</label>
+                            <input type="number" id="desmanche-requireItemAmount" placeholder="Ex: 50" value="0">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Item Pagamento (Dinheiro Sujo)</label>
+                            <input type="text" id="desmanche-darkMoneyItem" placeholder="Ex: dirtydollar"
+                                value="dirtydollar">
+                        </div>
+                        <div class="form-group">
+                            <label>Multiplicador de Pagamento (%)</label>
+                            <input type="number" id="desmanche-paymentMultiplier" placeholder="Ex: 40" value="40">
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button id="save-desmanche" class="btn-primary">Salvar Desmanche</button>
+                    </div>
+                </div>
+
+                <div class="page-content" id="manage-desmanches" style="display: none;">
+                    <div class="table-container">
+                        <table id="desmanches-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Identificador</th>
+                                    <th>Permissão</th>
+                                    <th>Coordenadas Blip</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Populated via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="page-content" id="settings-desmanche" style="display: none;">
+                    <h2 id="page-title">Configurações Globais: Desmanches</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Tempo de Espera antes de Iniciar (segundos)</label>
+                            <input type="number" id="desmanche-st-wait" placeholder="Ex: 15" value="15">
+                        </div>
+                        <div class="form-group">
+                            <label>Tempo para Finalizar (minutos)</label>
+                            <input type="number" id="desmanche-st-duration" placeholder="Ex: 10" value="10">
+                        </div>
+                        <div class="form-group">
+                            <label>Tempo de Animação (segundos)</label>
+                            <input type="number" id="desmanche-st-anim" placeholder="Ex: 5" value="5">
+                        </div>
+                        <div class="form-group">
+                            <label>Distância p/ Ver Texto (metros)</label>
+                            <input type="number" id="desmanche-st-dist" placeholder="Ex: 20" value="20">
+                        </div>
+                        <div class="form-group">
+                            <label>Nome do Objeto (Estante)</label>
+                            <input type="text" id="desmanche-st-shelf" placeholder="Ex: v_ind_cf_shelf2"
+                                value="v_ind_cf_shelf2">
+                        </div>
+                        <div class="form-group">
+                            <label>Pode Desmanchar Veículos de NPC?</label>
+                            <select id="desmanche-st-npc">
+                                <option value="false">Não (Recomendado)</option>
+                                <option value="true">Sim</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Pode Auto-Desmanchar (Próprios veículos)?</label>
+                            <select id="desmanche-st-auto">
+                                <option value="false">Não</option>
+                                <option value="true">Sim</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 15px;">
+                        <label>Veículos Proibidos (Hashes separados por vírgula)</label>
+                        <textarea id="desmanche-st-prohibited" placeholder="Ex: pounder, mule, terbyte"
+                            style="width: 100%; height: 100px; padding: 10px; background: rgba(0,0,0,0.2); border: 1px solid var(--border); color: #fff; border-radius: 5px;"></textarea>
+                    </div>
+
+                    <div class="form-actions" style="margin-top: 20px;">
+                        <button id="save-desmanche-settings" class="btn-primary">Salvar Configurações</button>
+                    </div>
+                </div>
+
+                <!-- MONEYWASH PAGES -->
+                <div class="page-content" id="create-moneywash" style="display: none;">
+                    <input type="hidden" id="edit-moneywash-id" value="">
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 2;">
+                            <label>Nome da Máquina</label>
+                            <input type="text" id="moneywash-name" placeholder="Ex: Lavanderia Centro">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Permissão</label>
+                            <input type="text" id="moneywash-permission" placeholder="Ex: Admin ou Vazio">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 2;">
+                            <label>Prop (Modelo 3D)</label>
+                            <input type="text" id="moneywash-hash" value="bkr_prop_prtmachine_dryer_spin"
+                                placeholder="bkr_prop_prtmachine_dryer_spin">
+                        </div>
+                        <div class="form-group"
+                            style="flex: 1; padding: 16px; background: rgba(0, 0, 0, 0.2); border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.05); display: flex; flex-direction: column; justify-content: flex-start;">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <label class="toggle-switch" style="margin: 0;">
+                                    <input type="checkbox" id="moneywash-spawn-prop" checked>
+                                    <span class="slider"></span>
+                                </label>
+                                <span style="font-weight: 600; font-size: 14px; color: var(--text-color);">Criar
+                                    Objeto</span>
+                            </div>
+                            <div
+                                style="margin-top: 12px; font-size: 0.8em; color: var(--text-muted); line-height: 1.4;">
+                                Cria um objeto 3D. Se desmarcado, funcionará invisível.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 1;">
+                            <label>Item da Bateria</label>
+                            <input type="text" id="moneywash-battery" value="washbattery" placeholder="washbattery">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Item do Alvejante</label>
+                            <input type="text" id="moneywash-bleach" value="washbleach" placeholder="washbleach">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 1;">
+                            <label>Item de Dinheiro Sujo</label>
+                            <input type="text" id="moneywash-dirty-item" value="dirtydollar" placeholder="dirtydollar">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Item de Dinheiro Limpo</label>
+                            <input type="text" id="moneywash-clean-item" value="dollar" placeholder="dollar">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Item de Dinheiro Molhado</label>
+                            <input type="text" id="moneywash-wet-item" value="wetdollar" placeholder="wetdollar">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 1;">
+                            <label>Duração da Bateria (Segs)</label>
+                            <input type="number" id="moneywash-battery-duration" value="604800"
+                                placeholder="Ex: 604800">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Duração do Alvejante (Segs)</label>
+                            <input type="number" id="moneywash-bleach-duration" value="21600" placeholder="Ex: 21600">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Bônus do Alvejante (%)</label>
+                            <input type="number" id="moneywash-bleach-bonus" value="50" placeholder="Ex: 50" min="0">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 1;">
+                            <label>Valor Limpo (por ciclo)</label>
+                            <input type="number" id="moneywash-amount" value="500" placeholder="Ex: 500" min="1">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Tempo do Ciclo (segs)</label>
+                            <input type="number" id="moneywash-time" value="10" placeholder="Ex: 10" min="1">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Taxa de Lavagem (%)</label>
+                            <input type="number" id="moneywash-tax" value="5" placeholder="Ex: 5" min="0" max="100">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 1;">
+                            <label>Valor Seco (por ciclo)</label>
+                            <input type="number" id="moneywash-dry-amount" value="200" placeholder="Ex: 200" min="1">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Tempo de Secagem (segs)</label>
+                            <input type="number" id="moneywash-dry-time" value="30" placeholder="Ex: 30" min="1">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Taxa de Secagem (%)</label>
+                            <input type="number" id="moneywash-dry-tax" value="30" placeholder="Ex: 30" min="0"
+                                max="100">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>X</label>
+                            <input type="number" id="moneywash-x" placeholder="X" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Y</label>
+                            <input type="number" id="moneywash-y" placeholder="Y" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Z</label>
+                            <input type="number" id="moneywash-z" placeholder="Z" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>H</label>
+                            <input type="number" id="moneywash-h" placeholder="H" step="0.01">
+                        </div>
+                        <div class="form-group btn-group-align">
+                            <button class="btn-secondary" id="get-moneywash-coords"><i
+                                    class="fa-solid fa-location-crosshairs"></i> Atual</button>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="btn-primary" id="save-moneywash-btn"><i class="fa-solid fa-floppy-disk"></i>
+                            Salvar</button>
+                    </div>
+                </div>
+
+                <div class="page-content" id="manage-moneywash" style="display: none;">
+                    <div class="table-container">
+                        <table id="moneywash-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Identificador</th>
+                                    <th>Permissão</th>
+                                    <th>Taxa</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="moneywash-list">
+                                <!-- Populated via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SERVICES (BATE PONTOS) PAGES -->
+                <div class="page-content" id="create-service" style="display: none;">
+                    <input type="hidden" id="edit-service-id" value="">
+
+                    <div class="form-row" style="align-items: flex-start;">
+                        <div class="form-group" style="flex: 2;">
+                            <label>Permissão / Grupos de Serviço</label>
+                            <input type="text" id="service-permission" placeholder="Ex: Policia;Paramedico;Redline">
+                            <small
+                                style="color: var(--text-muted); font-size: 0.75rem; margin-top: 4px; display: block;">
+                                Permissão necessária (para mais de uma, separe por ponto e vírgula <b>;</b>).
+                            </small>
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Distância (Distance)</label>
+                            <input type="number" id="service-distance" placeholder="1.5" step="0.1" value="1.5">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Tamanho / Raio (Weight)</label>
+                            <input type="number" id="service-weight" placeholder="1.0" step="0.1" value="1.0">
+                        </div>
+                    </div>
+
+                    <div class="section-title">Coordenadas do Bate Ponto</div>
+                    <div class="access-item" style="margin-bottom: 24px;">
+                        <div class="access-row">
+                            <div class="form-group">
+                                <label>Coordenada X</label>
+                                <input type="number" id="service-x" placeholder="X" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label>Coordenada Y</label>
+                                <input type="number" id="service-y" placeholder="Y" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label>Coordenada Z</label>
+                                <input type="number" id="service-z" placeholder="Z" step="0.01">
+                            </div>
+                            <button type="button" class="btn-square btn-secondary-square" id="get-coords-service"
+                                title="Pegar Coordenada Atual">
+                                <i class="fa-solid fa-location-dot"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 20px; display: flex; justify-content: flex-end;">
+                        <button class="btn btn-primary" id="save-service-btn"
+                            style="padding: 12px 32px; font-weight: 600; font-size: 15px;">Salvar Bate Ponto</button>
+                    </div>
+                </div>
+
+                <div class="page-content" id="manage-services" style="display: none;">
+                    <div class="table-container">
+                        <table class="data-table" id="services-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Permissão</th>
+                                    <th>Coordenadas</th>
+                                    <th>Distância</th>
+                                    <th>Weight</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Populated via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- GROUPS (GRUPOS / CARGOS) PAGES -->
+                <div class="page-content" id="create-group" style="display: none;">
+                    <input type="hidden" id="edit-group-original-name" value="">
+                    <input type="hidden" id="group-type" value="Work">
+                    <input type="hidden" id="group-hierarchy" value="">
+                    <input type="hidden" id="group-salary" value="">
+
+                    <!-- SEÇÃO 1: IDENTIFICAÇÃO -->
+                    <div class="section-title">1. Identificação Básica</div>
+                    <div class="form-row" style="align-items: flex-start;">
+                        <div class="form-group" style="flex: 1;">
+                            <label>Identificador do Grupo (ID / Nome Único no Sistema) *</label>
+                            <input type="text" id="group-name" placeholder="Ex: Policia, Bennys, Mecanicas, Ouro">
+                            <small style="color: var(--text-muted); font-size: 0.75rem; margin-top: 5px; display: block;">
+                                Nome interno sem espaços usado no sistema e comandos (/group).
+                            </small>
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Nome de Exibição (Label / Nome Visual na Tela)</label>
+                            <input type="text" id="group-label" placeholder="Ex: Polícia Militar, Mecânica Benny's">
+                            <small style="color: var(--text-muted); font-size: 0.75rem; margin-top: 5px; display: block;">
+                                Nome legível e formatado que aparecerá para os jogadores e painéis.
+                            </small>
+                        </div>
+                    </div>
+
+                    <!-- TIPO DO GRUPO (CARDS VISUAIS) -->
+                    <div style="margin-top: 5px; margin-bottom: 20px;">
+                        <label style="font-size: 13px; color: var(--text-muted); font-weight: 500; display: block; margin-bottom: 8px;">Tipo Estrutural do Grupo:</label>
+                        <div class="group-type-cards">
+                            <div class="group-type-card active" data-type="Work">
+                                <span class="card-title"><i class="fa-solid fa-briefcase"></i> Work (Emprego / Org)</span>
+                                <span class="card-desc">Para Facções, Polícias, Mecânicas, Hospitais e Empresas. Possui hierarquia e bate-ponto.</span>
+                            </div>
+                            <div class="group-type-card" data-type="UnWorked">
+                                <span class="card-title"><i class="fa-solid fa-gem"></i> UnWorked (VIP / Sem Emprego)</span>
+                                <span class="card-desc">Para Planos VIPs ou grupos de benefícios de mochila, sem interferir no emprego.</span>
+                            </div>
+                            <div class="group-type-card" data-type="Propertys">
+                                <span class="card-title"><i class="fa-solid fa-house"></i> Propertys (Residência)</span>
+                                <span class="card-desc">Para grupos de casas, mansões e famílias com portas e baús compartilhados.</span>
+                            </div>
+                            <div class="group-type-card" data-type="Fuel">
+                                <span class="card-title"><i class="fa-solid fa-gas-pump"></i> Fuel (Posto Combustível)</span>
+                                <span class="card-desc">Para redes de postos de combustível com gerenciamento de frentistas e donos.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SEÇÃO 2: HIERARQUIA E CARGOS INTERATIVA -->
+                    <div class="section-title">2. Hierarquia de Cargos e Salários</div>
+
+                    <div class="cargos-builder-container">
+                        <div class="cargos-builder-header">
+                            <div>
+                                <span style="font-size: 13px; font-weight: 600; color: #fff;">Lista de Cargos da Organização</span>
+                                <small style="display: block; color: var(--text-muted); font-size: 11px; margin-top: 2px;">
+                                    Adicione e ordene os cargos do mais alto para o mais baixo. O salário é opcional.
+                                </small>
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <button type="button" id="add-cargo-btn" class="btn btn-primary" style="padding: 8px 16px; font-size: 12px; display: inline-flex; align-items: center; gap: 6px;">
+                                    <i class="fa-solid fa-plus"></i> Adicionar Cargo
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- LABELS DAS COLUNAS -->
+                        <div class="cargos-table-labels">
+                            <span style="width: 85px; text-align: center;">Nível</span>
+                            <span style="flex: 2;">Nome do Cargo</span>
+                            <span style="flex: 1.2;">Salário (R$)</span>
+                            <span style="width: 78px; text-align: center;">Ações</span>
+                        </div>
+
+                        <!-- LISTA DINÂMICA DE CARGOS -->
+                        <div id="group-cargos-list">
+                            <!-- Injetado dinamicamente via JS -->
+                        </div>
+                    </div>
+
+                    <!-- SEÇÃO 3: PERMISSÕES E BENEFÍCIOS -->
+                    <div class="section-title">3. Permissões e Acessos</div>
+                    <div class="form-row" style="align-items: flex-start;">
+                        <div class="form-group" style="flex: 2;">
+                            <label>Permissões Liberadas (Permission) *</label>
+                            <input type="text" id="group-permissions" placeholder="Ex: Policia ou Bennys;Redline">
+                            <small style="color: var(--text-muted); font-size: 0.75rem; margin-top: 4px; display: block;">
+                                Permissão exigida em portas, baús, viaturas e bate-pontos. Para múltiplas permissões, separe por <b>;</b>.
+                            </small>
+                        </div>
+
+                        <div class="form-group" style="flex: 1;">
+                            <label>Máximo de Membros (Vagas)</label>
+                            <input type="number" id="group-max" placeholder="0 = Ilimitado" min="0">
+                            <small style="color: var(--text-muted); font-size: 0.75rem; margin-top: 4px; display: block;">
+                                Limite de vagas na facção (deixe 0 ou vazio para ilimitado).
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="form-row" style="align-items: flex-start;">
+                        <div class="form-group" style="flex: 1;">
+                            <label>Mochila Extra (Backpack em Kg)</label>
+                            <input type="number" id="group-backpack" placeholder="Ex: 25" min="0" value="0">
+                            <small style="color: var(--text-muted); font-size: 0.75rem; margin-top: 4px; display: block;">
+                                Peso adicional concedido ao inventário dos membros (ideal para planos VIPs).
+                            </small>
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Marcador de Mapa (Markers ID)</label>
+                            <input type="number" id="group-markers" placeholder="Ex: 26 (Opcional)" min="1">
+                            <small style="color: var(--text-muted); font-size: 0.75rem; margin-top: 4px; display: block;">
+                                ID dos blips e rotas na agência de empregos (opcional).
+                            </small>
+                        </div>
+                    </div>
+
+                    <!-- SEÇÃO 4: COMPORTAMENTOS E OPÇÕES (TOGGLES) -->
+                    <div class="section-title">4. Opções e Comportamentos</div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; margin-bottom: 25px;">
+                        <!-- Service -->
+                        <div style="background: rgba(0,0,0,0.35); padding: 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: space-between;">
+                            <div>
+                                <span style="font-size: 13px; font-weight: 600; color: #fff; display: flex; align-items: center; gap: 7px;"><i class="fa-solid fa-business-time"></i> Entrar em Serviço</span>
+                                <span style="font-size: 11px; color: var(--text-muted); display: block; margin-top: 2px;">Possui expediente / bate-ponto</span>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="group-service" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <!-- RejoinService -->
+                        <div style="background: rgba(0,0,0,0.35); padding: 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: space-between;">
+                            <div>
+                                <span style="font-size: 13px; font-weight: 600; color: #fff; display: flex; align-items: center; gap: 7px;"><i class="fa-solid fa-rotate-right"></i> Reconectar em Serviço</span>
+                                <span style="font-size: 11px; color: var(--text-muted); display: block; margin-top: 2px;">Mantém em serviço ao relogar</span>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="group-rejoin-service" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <!-- Chat -->
+                        <div style="background: rgba(0,0,0,0.35); padding: 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: space-between;">
+                            <div>
+                                <span style="font-size: 13px; font-weight: 600; color: #fff; display: flex; align-items: center; gap: 7px;"><i class="fa-solid fa-comments"></i> Chat Exclusivo</span>
+                                <span style="font-size: 11px; color: var(--text-muted); display: block; margin-top: 2px;">Canal próprio de rádio/chat</span>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="group-chat">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <!-- Chest -->
+                        <div style="background: rgba(0,0,0,0.35); padding: 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: space-between;">
+                            <div>
+                                <span style="font-size: 13px; font-weight: 600; color: #fff; display: flex; align-items: center; gap: 7px;"><i class="fa-solid fa-box-archive"></i> Baú da Organização</span>
+                                <span style="font-size: 11px; color: var(--text-muted); display: block; margin-top: 2px;">Possui baú coletivo de grupo</span>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="group-chest">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <!-- Domination -->
+                        <div style="background: rgba(0,0,0,0.35); padding: 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: space-between;">
+                            <div>
+                                <span style="font-size: 13px; font-weight: 600; color: #fff; display: flex; align-items: center; gap: 7px;"><i class="fa-solid fa-crosshairs"></i> Guerra de Território</span>
+                                <span style="font-size: 11px; color: var(--text-muted); display: block; margin-top: 2px;">Disputa de dominação de área</span>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="group-domination">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <!-- Banned -->
+                        <div style="background: rgba(0,0,0,0.35); padding: 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: space-between;">
+                            <div>
+                                <span style="font-size: 13px; font-weight: 600; color: #fff; display: flex; align-items: center; gap: 7px;"><i class="fa-solid fa-ban"></i> Org Exclusiva (Banned)</span>
+                                <span style="font-size: 11px; color: var(--text-muted); display: block; margin-top: 2px;">Impede pertencer a outras orgs</span>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="group-banned">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <!-- SecurityCam -->
+                        <div style="background: rgba(0,0,0,0.35); padding: 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: space-between;">
+                            <div>
+                                <span style="font-size: 13px; font-weight: 600; color: #fff; display: flex; align-items: center; gap: 7px;"><i class="fa-solid fa-video"></i> Câmeras de Segurança</span>
+                                <span style="font-size: 11px; color: var(--text-muted); display: block; margin-top: 2px;">Acesso às câmeras do local</span>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="group-security-cam">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <!-- Block -->
+                        <div style="background: rgba(0,0,0,0.35); padding: 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: space-between;">
+                            <div>
+                                <span style="font-size: 13px; font-weight: 600; color: #fff; display: flex; align-items: center; gap: 7px;"><i class="fa-solid fa-shield-halved"></i> Bloquear em Painéis</span>
+                                <span style="font-size: 11px; color: var(--text-muted); display: block; margin-top: 2px;">Oculta de líderes sem permissão</span>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="group-block">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- BOTÃO SALVAR GRUPO -->
+                    <div style="margin-top: 25px; display: flex; justify-content: flex-end;">
+                        <button class="btn btn-primary" id="save-group-btn" style="padding: 12px 36px; font-weight: 600; font-size: 15px;">
+                            Salvar Grupo
+                        </button>
+                    </div>
+                </div>
+
+                <div class="page-content" id="manage-groups" style="display: none;">
+                    <div class="table-container">
+                        <table class="data-table" id="groups-table">
+                            <thead>
+                                <tr>
+                                    <th>ID / Nome</th>
+                                    <th>Nome de Exibição</th>
+                                    <th>Tipo</th>
+                                    <th>Permissões</th>
+                                    <th>Hierarquia (Cargos)</th>
+                                    <th>Serviço</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="groups-list">
+                                <!-- Populated via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <template id="access-template">
+        <div class="access-item">
+            <div class="access-row">
+                <div class="drag-handle" title="Arrastar para reordenar">
+                    <i class="fa-solid fa-grip-vertical"></i>
+                </div>
+                <div class="form-group">
+                    <label>Label (Nome na Tela)</label>
+                    <input type="text" class="acc-label" placeholder="Ex: Baú Chefe">
+                </div>
+                <div class="form-group">
+                    <label>Permissão (Ex: Admin,1)</label>
+                    <input type="text" class="acc-perm" placeholder="Ex: Admin,1">
+                </div>
+                <div class="form-group">
+                    <label>Peso (Kg)</label>
+                    <input type="number" class="acc-weight" value="500">
+                </div>
+                <div class="form-group">
+                    <label>Slots</label>
+                    <input type="number" class="acc-slots" value="50">
+                </div>
+                <button class="remove-access btn-square btn-danger" title="Remover Acesso"><i
+                        class="fa-solid fa-trash"></i></button>
+            </div>
+        </div>
+    </template>
+
+    <template id="spawn-template">
+        <div class="access-item spawn-item">
+            <div class="access-row">
+                <div class="drag-handle" title="Arrastar para reordenar">
+                    <i class="fa-solid fa-grip-vertical"></i>
+                </div>
+                <div class="form-group">
+                    <label>Spawn X</label>
+                    <input type="number" class="spw-x" placeholder="X" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label>Spawn Y</label>
+                    <input type="number" class="spw-y" placeholder="Y" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label>Spawn Z</label>
+                    <input type="number" class="spw-z" placeholder="Z" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label>Heading (H)</label>
+                    <input type="number" class="spw-h" placeholder="0.0" step="0.01">
+                </div>
+                <button class="get-spw-coords btn-square btn-secondary-square" title="Pegar Coordenada Atual"><i
+                        class="fa-solid fa-location-dot"></i></button>
+                <button class="remove-spawn btn-square btn-danger" title="Remover Vaga"><i
+                        class="fa-solid fa-trash"></i></button>
+            </div>
+        </div>
+    </template>
+
+    <template id="shop-item-template">
+        <div class="access-item shop-item-row">
+            <div class="access-row">
+                <div class="drag-handle" title="Arrastar para reordenar">
+                    <i class="fa-solid fa-grip-vertical"></i>
+                </div>
+                <div class="form-group">
+                    <label>Código do Item</label>
+                    <input type="text" class="si-name" placeholder="Ex: water">
+                </div>
+                <div class="form-group">
+                    <label>Preço / Valor</label>
+                    <input type="number" class="si-price" value="10">
+                </div>
+                <button class="remove-shop-item btn-square btn-danger" title="Remover Item"><i
+                        class="fa-solid fa-trash"></i></button>
+            </div>
+        </div>
+    </template>
+
+    <template id="crafting-recipe-template">
+        <div class="access-item crafting-recipe-row">
+            <div class="access-row"
+                style="margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 10px;">
+                <div class="drag-handle" title="Arrastar para reordenar">
+                    <i class="fa-solid fa-grip-vertical"></i>
+                </div>
+                <div class="form-group">
+                    <label>Item Resultado</label>
+                    <input type="text" class="cr-result" placeholder="Ex: WEAPON_PISTOL">
+                </div>
+                <div class="form-group" style="flex: 0.5;">
+                    <label>Qtd. Produzida</label>
+                    <input type="number" class="cr-amount" value="1">
+                </div>
+                <button class="remove-crafting-recipe btn-square btn-danger" title="Remover Receita"><i
+                        class="fa-solid fa-trash"></i></button>
+            </div>
+            <div class="cr-ingredients-list" style="padding-left: 30px;">
+                <!-- Ingredients -->
+            </div>
+            <div style="padding-left: 30px; margin-top: 10px;">
+                <button class="add-cr-ingredient btn-small"><i class="fa-solid fa-plus"></i> Ingrediente</button>
+            </div>
+        </div>
+    </template>
+
+    <template id="crafting-ingredient-template">
+        <div class="access-row crafting-ingredient-row" style="margin-bottom: 5px;">
+            <div class="form-group" style="flex: 1;">
+                <label style="font-size: 11px;">Ingrediente (Código)</label>
+                <input type="text" class="ci-name" placeholder="Ex: ironfilings">
+            </div>
+            <div class="form-group" style="flex: 0.5;">
+                <label style="font-size: 11px;">Quantidade</label>
+                <input type="number" class="ci-amount" value="1">
+            </div>
+            <button class="remove-cr-ingredient btn-square btn-secondary-square" style="margin-bottom: 0px;"
+                title="Remover Ingrediente"><i class="fa-solid fa-minus"></i></button>
+        </div>
+    </template>
+
+    <template id="cloakroom-preset-template">
+        <div class="access-item cloakroom-preset-row">
+            <div class="access-row"
+                style="margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 10px;">
+                <div class="drag-handle" title="Arrastar para reordenar">
+                    <i class="fa-solid fa-grip-vertical"></i>
+                </div>
+                <div class="form-group" style="flex: 2;">
+                    <label>Nome do Preset (Ex: Recruta)</label>
+                    <input type="text" class="cp-name" placeholder="Ex: Recruta">
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label>Permissão Específica (Opcional)</label>
+                    <input type="text" class="cp-perm" placeholder="Ex: recruta">
+                </div>
+                <button class="remove-cloakroom-preset btn-square btn-danger" title="Remover Preset"><i
+                        class="fa-solid fa-trash"></i></button>
+            </div>
+            <div style="padding-left: 30px; margin-bottom: 10px; width: 100%;">
+                <label>Numerações dos Fardamento</label>
+                <textarea class="cp-code" rows="34"
+                    style="width: 100%; min-height: 300px; background: rgba(0,0,0,0.3); color: #fff; border: 1px solid rgba(255,255,255,0.1); border-radius: 5px; padding: 10px; font-family: monospace; resize: vertical; margin-bottom: 10px;"></textarea>
+                <button class="fill-current-clothes btn-small"><i class="fa-solid fa-person"></i> Importar do
+                    Personagem Atual</button>
+            </div>
+        </div>
+    </template>
+
+    <template id="cloakroom-item-template">
+        <div class="access-row cloakroom-item-row" style="margin-bottom: 5px;">
+            <div class="form-group" style="flex: 1;">
+                <label style="font-size: 11px;">Peça (ex: hat, pants, vest, mask)</label>
+                <input type="text" class="cpi-name" placeholder="Ex: hat">
+            </div>
+            <div class="form-group" style="flex: 1;">
+                <label style="font-size: 11px;">Item ID</label>
+                <input type="number" class="cpi-item" value="-1">
+            </div>
+            <div class="form-group" style="flex: 1;">
+                <label style="font-size: 11px;">Textura</label>
+                <input type="number" class="cpi-texture" value="0">
+            </div>
+            <button class="remove-cp-item btn-square btn-secondary-square" style="margin-bottom: 0px;"
+                title="Remover Peça"><i class="fa-solid fa-minus"></i></button>
+        </div>
+    </template>
+    </template>
+
+
+
+    <template id="elevator-floor-template">
+        <div class="access-item elevator-floor-row"
+            style="margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 10px;">
+            <div class="form-row">
+                <div class="form-group" style="flex: 2;">
+                    <label>Nome do Andar</label>
+                    <input type="text" class="ef-name" placeholder="Ex: Térreo">
+                </div>
+                <div class="form-group" style="flex: 2;">
+                    <label>Permissão (Opcional)</label>
+                    <input type="text" class="ef-perm" placeholder="Ex: Admin">
+                </div>
+                <button class="remove-elevator-floor btn-square btn-danger" style="margin-top: 24px;"
+                    title="Remover Andar"><i class="fa-solid fa-trash"></i></button>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>X</label>
+                    <input type="number" class="ef-x" placeholder="X" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label>Y</label>
+                    <input type="number" class="ef-y" placeholder="Y" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label>Z</label>
+                    <input type="number" class="ef-z" placeholder="Z" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label>H</label>
+                    <input type="number" class="ef-h" placeholder="H" step="0.01">
+                </div>
+                <div class="form-group btn-group-align">
+                    <button type="button" class="get-coords-elevator-floor btn-secondary"><i
+                            class="fa-solid fa-location-crosshairs"></i> Atual</button>
+                </div>
+            </div>
+        </div>
+    </template>
+    <script src="index.js"></script>
+</body>
+
+</html>

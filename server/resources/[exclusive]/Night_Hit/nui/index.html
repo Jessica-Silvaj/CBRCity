@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hit Confirm</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="hitfeed-container" aria-live="polite"></div>
+
+    <div id="hitmarker-container" data-effect="0" aria-hidden="true">
+      <div class="fx-layer" id="fx-1">
+        <div class="line line-1"></div>
+        <div class="line line-2"></div>
+      </div>
+      <div class="fx-layer" id="fx-2">
+        <div class="shockwave"></div>
+        <div class="line line-1"></div>
+        <div class="line line-2"></div>
+      </div>
+      <div class="fx-layer" id="fx-3">
+        <img src="sounds/skull.png" alt="" />
+      </div>
+      <div class="fx-layer" id="fx-4"></div>
+      <div class="fx-layer" id="fx-5">
+        <div class="center-dot"></div>
+        <div class="outer-ring"></div>
+      </div>
+    </div>
+
+    <main id="settings-panel" class="panel" style="display: none">
+      <button id="close-btn" class="icon-button close-button" type="button" aria-label="Fechar painel">
+        <svg viewBox="0 0 12 12" aria-hidden="true">
+          <path d="M1 1 11 11M11 1 1 11" />
+        </svg>
+      </button>
+
+      <header class="panel-header">
+        <div class="header-brand">
+          <div class="brand-logo">
+            <img src="sounds/logo.png" alt="CBR CITY" />
+          </div>
+          <div class="header-copy">
+            <div class="title-row">
+              <h1>HIT CONFIRM</h1>
+              <div class="title-stripes" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+            </div>
+            <p>Personalize o retorno visual e sonoro dos seus disparos.</p>
+          </div>
+        </div>
+
+        <div class="save-state" id="save-state">
+          <span class="save-dot"></span>
+          <span id="save-state-text">CONFIGURAÇÕES CARREGADAS</span>
+        </div>
+      </header>
+
+      <div class="panel-content">
+        <section class="column">
+          <div class="section-heading">
+            <div class="section-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v3m0 12v3M3 12h3m12 0h3M6.4 6.4l2.1 2.1m7 7 2.1 2.1m0-11.2-2.1 2.1m-7 7-2.1 2.1"/><circle cx="12" cy="12" r="4"/></svg>
+            </div>
+            <div><h2>GERAL</h2><span>Preferências principais</span></div>
+          </div>
+
+          <div class="settings-stack">
+            <div class="setting-card volume-card">
+              <div class="setting-copy">
+                <strong>VOLUME GERAL</strong>
+                <span>Intensidade de todos os efeitos sonoros</span>
+              </div>
+              <div class="volume-control">
+                <span id="vol-label">50%</span>
+                <input type="range" id="volume-slider" min="0" max="100" value="50" aria-label="Volume geral" />
+              </div>
+            </div>
+
+            <div class="setting-card">
+              <div class="setting-copy">
+                <strong>PASSAPORTE NO HIT</strong>
+                <span>Exibe o passaporte do jogador atingido</span>
+              </div>
+              <label class="switch" aria-label="Ativar passaporte no hit">
+                <input type="checkbox" id="hitfeed-toggle" />
+                <span></span>
+              </label>
+            </div>
+
+            <div class="setting-card">
+              <div class="setting-copy">
+                <strong>COR DE DESTAQUE</strong>
+                <span>Aplicada ao painel, feed e efeitos visuais</span>
+              </div>
+              <label class="color-control" aria-label="Selecionar cor">
+                <span id="color-value">#2E8B57</span>
+                <span class="color-preview"></span>
+                <input type="color" id="theme-color" value="#2E8B57" />
+              </label>
+            </div>
+          </div>
+
+          <div class="subsection-heading">
+            <div><h3>SOM DE IMPACTO</h3><span>Reproduzido ao acertar o corpo</span></div>
+            <span class="option-count">10 OPÇÕES</span>
+          </div>
+          <div class="option-grid impact-grid" id="body-sound-grid">
+            <button class="option-button hit-sound-option" data-id="0" type="button"><b>OFF</b><small>Desativado</small></button>
+            <button class="option-button hit-sound-option" data-id="1" type="button"><b>01</b><small>Impacto</small></button>
+            <button class="option-button hit-sound-option" data-id="2" type="button"><b>02</b><small>Impacto</small></button>
+            <button class="option-button hit-sound-option" data-id="3" type="button"><b>03</b><small>Impacto</small></button>
+            <button class="option-button hit-sound-option" data-id="4" type="button"><b>04</b><small>Impacto</small></button>
+            <button class="option-button hit-sound-option" data-id="5" type="button"><b>05</b><small>Impacto</small></button>
+            <button class="option-button hit-sound-option" data-id="6" type="button"><b>06</b><small>Impacto</small></button>
+            <button class="option-button hit-sound-option" data-id="7" type="button"><b>07</b><small>Impacto</small></button>
+            <button class="option-button hit-sound-option" data-id="8" type="button"><b>08</b><small>Impacto</small></button>
+            <button class="option-button hit-sound-option" data-id="9" type="button"><b>09</b><small>Impacto</small></button>
+            <button class="option-button hit-sound-option" data-id="10" type="button"><b>10</b><small>Impacto</small></button>
+          </div>
+        </section>
+
+        <section class="column column-right">
+          <div class="section-heading">
+            <div class="section-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3"/></svg>
+            </div>
+            <div><h2>CONFIRMAÇÃO DE ABATE</h2><span>Efeitos executados ao eliminar um jogador</span></div>
+          </div>
+
+          <div class="subsection-heading first-subsection">
+            <div><h3>EFEITO SONORO</h3><span>Selecione e clique para ouvir uma prévia</span></div>
+            <span class="option-count">11 OPÇÕES</span>
+          </div>
+          <div class="option-grid kill-grid" id="kill-sound-grid">
+            <button class="option-button sound-option" data-id="0" type="button"><b>OFF</b><small>Desativado</small></button>
+            <button class="option-button sound-option" data-id="1" type="button"><b>01</b><small>Abate</small></button>
+            <button class="option-button sound-option" data-id="2" type="button"><b>02</b><small>Abate</small></button>
+            <button class="option-button sound-option" data-id="3" type="button"><b>03</b><small>Abate</small></button>
+            <button class="option-button sound-option" data-id="4" type="button"><b>04</b><small>Abate</small></button>
+            <button class="option-button sound-option" data-id="5" type="button"><b>05</b><small>Abate</small></button>
+            <button class="option-button sound-option" data-id="6" type="button"><b>06</b><small>Abate</small></button>
+            <button class="option-button sound-option" data-id="7" type="button"><b>07</b><small>Abate</small></button>
+            <button class="option-button sound-option" data-id="8" type="button"><b>08</b><small>Abate</small></button>
+            <button class="option-button sound-option" data-id="9" type="button"><b>09</b><small>Abate</small></button>
+            <button class="option-button sound-option" data-id="10" type="button"><b>10</b><small>Abate</small></button>
+            <button class="option-button sound-option valorant-option" data-id="11" type="button"><b>STREAK</b><small>Valorant • 5 níveis</small></button>
+          </div>
+
+          <div class="subsection-heading">
+            <div><h3>EFEITO VISUAL</h3><span>Animação exibida no centro da tela</span></div>
+            <span class="option-count">5 OPÇÕES</span>
+          </div>
+          <div class="option-grid visual-grid" id="visual-grid">
+            <button class="option-button visual-option" data-id="0" type="button"><b>OFF</b><small>Desativado</small></button>
+            <button class="option-button visual-option" data-id="1" type="button"><b>X</b><small>Clássico</small></button>
+            <button class="option-button visual-option" data-id="2" type="button"><b>◎</b><small>Shockwave</small></button>
+            <button class="option-button visual-option" data-id="3" type="button"><b>☠</b><small>Caveira</small></button>
+            <button class="option-button visual-option" data-id="4" type="button"><b>▣</b><small>Flash</small></button>
+            <button class="option-button visual-option" data-id="5" type="button"><b>⊙</b><small>Sniper</small></button>
+          </div>
+        </section>
+      </div>
+
+      <footer class="panel-footer">
+        <div class="footer-tip"><kbd>ESC</kbd><span>PARA FECHAR</span></div>
+        <button id="reset-settings-btn" class="reset-button" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+          RESTAURAR PADRÃO
+        </button>
+      </footer>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>

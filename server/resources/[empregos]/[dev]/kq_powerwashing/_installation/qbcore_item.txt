@@ -1,0 +1,8 @@
+
+	[`weapon_kqpowerwasher`] = {
+         name = 'weapon_kqpowerwasher',
+         label = 'Pressure Washing gun',
+         weapontype = 'Miscellaneous',
+         ammotype = nil,
+         damagereason = 'Died'
+	 },

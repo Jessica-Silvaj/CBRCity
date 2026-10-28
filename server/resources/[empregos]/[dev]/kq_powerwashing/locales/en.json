@@ -1,0 +1,130 @@
+{
+  "settings": {
+    "vehicle": "Work Vehicle"
+  },
+  "headquarters": {
+    "name": "Dirty Hose Headquarters",
+    "finish_contract_3d": "[E] Finish contract",
+    "finish_contract_target": "Finish contract",
+    "job_board_3d": "[E] View Job Board",
+    "job_board_target": "View Job Board"
+  },
+  "vehicles": {
+    "kqbison": "Dirty Hose Bison",
+    "kqcaracara": "Dirty Hose Caracara"
+  },
+  "blips": {
+    "work_vehicle": "Work Vehicle",
+    "go_to_area": "Go to area",
+    "clean": "Clean",
+    "supervisor": "Supervisor"
+  },
+  "tasks": {
+    "enter_vehicle": "Get in work vehicle",
+    "go_to_prefix": "Go to ",
+    "clean_prefix": "Clean ",
+    "return_to_hq": "Return to the Dirty Hose Headquarters",
+    "report_to_supervisor": "Report to supervisor"
+  },
+  "job_board": {
+    "title": "Power Washing Jobs"
+  },
+  "units": {
+    "meters": "m",
+    "kilometers": "km",
+    "yards": "yds",
+    "miles": "mi"
+  },
+  "bonuses": {
+    "perfect_time": "Perfect Time Bonus",
+    "perfect_time_tip": "Finished the contract in perfect time!",
+    "good_time": "Fast Completion Bonus",
+    "good_time_tip": "Finished the contract in a really good time!",
+    "vehicle_care": "Vehicle Care Bonus",
+    "vehicle_care_tip": "Bonus for taking great care of the work truck",
+    "vehicle_damage": "Vehicle Damage",
+    "vehicle_damage_tip": "Vehicle suffered major damage during the contract",
+    "missing_vehicle": "Missing Vehicle",
+    "missing_vehicle_tip": "Vehicle is missing",
+    "top_washer": "Top Performance Bonus",
+    "top_washer_tip": "You've cleaned the most during this contract",
+    "team_size_bonus": "Team Work Bonus",
+    "team_size_bonus_tip": "Bonus for working in a team",
+    "experience": "Work Experience Bonus",
+    "experience_tip": "Bonus unlocked by reaching a high job level"
+  },
+  "supervisor": {
+    "prefix": "<strong>Supervisor:</strong>",
+    "stars_5": [
+      "Outstanding work out there! That's exactly the kind of efficiency I like to see.",
+      "Now THAT'S how it's done! You're making me look good to the clients.",
+      "Incredible job! You might just be the best washer I've got on the team."
+    ],
+    "stars_4": [
+      "Solid work today, keep it up.",
+      "Good job out there. The client's going to be happy with this one.",
+      "Nice and quick. You're getting the hang of this."
+    ],
+    "stars_3": [
+      "Alright, not bad, but I know you can do better. Keep at it.",
+      "Job's done. Nothing special, but it'll do.",
+      "Average work, average pay. You want bonuses? Pick up the pace next time."
+    ],
+    "stars_2": [
+      "You finished it. But at what cost. You really must improve for the next one.",
+      "Yeah. That is NOT how its done. Do better."
+    ],
+    "stars_1": [
+      "Better luck next time."
+    ],
+    "job_short": [
+      "Quick one today, but those keep the company running.",
+      "Small job, easy money. Can't complain about that.",
+      "These little contracts add up, you know. Bread and butter work."
+    ],
+    "job_medium": [
+      "Decent sized contract, good honest work.",
+      "Standard job, nothing too crazy. Just how I like it.",
+      "That's the kind of work that pays the bills."
+    ],
+    "job_long": [
+      "That was a big one. Probably wasn't fun, but those bring in the real money.",
+      "Massive contract right there. The client paid top dollar for that kind of work.",
+      "That's what I call a proper job. Those big ones keep the lights on around here."
+    ],
+    "vehicle_perfect": [
+      "The truck came back in perfect condition too. I appreciate you taking care of our equipment.",
+      "Nice to see the vehicle without a scratch. That's the professional attitude I'm looking for.",
+      "Truck looks good as new, that's going in your file as a positive."
+    ],
+    "vehicle_damaged": [
+      "Now about the truck... what the hell happened? I'm taking the repair costs out of your pay.",
+      "You banged up the vehicle pretty good though. That's coming out of your cut, try to be more careful next time.",
+      "But, the truck came back looking like it went through a warzone. Repairs aren't free, so that's on you."
+    ],
+    "vehicle_missing": [
+      "And where's the truck?! I will have to send someone to find it. That little adventure is coming out of your paycheck.",
+      "You left the vehicle god knows where. Do you know how much time I will waste tracking it down? That's a deduction.",
+      "No truck, no explanation... I don't even want to know. Just know you're paying for the retrieval."
+    ]
+  },
+  "outfit": {
+    "apply": "Apply {{name}}",
+    "switch_regular": "Switch to regular clothes",
+    "required": "You must be wearing your work uniform",
+    "not_unlocked": "You have not unlocked this outfit yet"
+  },
+  "water_tank": {
+    "empty": "You're out of water! Refill at the vehicle.",
+    "refilled": "Water tank refilled!",
+    "refill_3d": "[E] Refill Water Tank",
+    "refill_target": "Refill Water Tank"
+  },
+  "cancellation_ban": {
+    "applied": "You have been suspended from starting new contracts for {{time}} minutes.",
+    "blocked": "You are suspended from starting new contracts. Time remaining: {{time}} minute(s)"
+  },
+  "keybinds": {
+    "washer_vision": "Press ~INPUT_RELOAD~ to highlight dirt"
+  }
+}

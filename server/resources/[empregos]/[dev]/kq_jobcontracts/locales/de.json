@@ -1,0 +1,79 @@
+{
+    "ui": {
+        "board": {
+            "title": "Wähle deinen Auftrag",
+            "subtitle": "Durchsuche und tritt verfügbaren Aufträgen bei",
+            "level": "Level",
+            "sort_by": "Sortieren:",
+            "sort": {
+                "alphabetical": "Alphabetisch",
+                "active_players": "Aktive Spieler",
+                "max_players": "Max. Spieler",
+                "salary": "Gehalt",
+                "tasks": "Aufgaben"
+            },
+            "empty": {
+                "title": "Keine Aufträge verfügbar",
+                "subtitle": "Schau später nochmal vorbei"
+            }
+        },
+        "currency": "$",
+        "contract": {
+            "not_found": "Auftrag nicht gefunden",
+            "team": "Team",
+            "min": "Min:",
+            "base_payout": "Grundvergütung",
+            "per_person": "(Pro Person)",
+            "team_split": "(Aufgeteilt zwischen Spielern)",
+            "task_list": "Aufgabenliste",
+            "tasks": "Aufgaben",
+            "players": "Spieler",
+            "join": "Auftrag beitreten",
+            "leave": "Auftrag verlassen",
+            "start": "Auftrag starten",
+            "not_enough_players": "Nicht genug Spieler zum Starten",
+            "full": "Auftrag voll",
+            "join_cta": "Beitreten",
+            "settings": "Auftragsoptionen"
+        },
+        "player": {
+            "ready": "Bereit",
+            "away": "Abwesend",
+            "leader": "Leiter",
+            "kick": "Entfernen"
+        },
+        "status": {
+            "waiting": "Wartend",
+            "ready": "Bereit",
+            "in_progress": "In Bearbeitung",
+            "completed": "Abgeschlossen",
+            "cancelled": "Abgebrochen"
+        },
+        "leave_confirmation_title": "Auftrag verlassen?",
+        "leave_confirmation_message": "Das Verlassen eines aktiven Auftrags kann zu Strafen führen. Bist du sicher?",
+        "leave_confirm": "Verlassen",
+        "leave_cancel": "Bleiben",
+        "completion": {
+            "header": "Auftrag abgeschlossen",
+            "team": "Team",
+            "time": "Zeit",
+            "tasks": "Aufgaben",
+            "rating": "Bewertung",
+            "payout_breakdown": "Auszahlungsübersicht",
+            "base_pay": "Grundvergütung",
+            "base_pay_split": "Aufgeteilt zwischen Teammitgliedern. Basierend auf der Grundvergütung von ${{base}}",
+            "total_payout": "Gesamtauszahlung",
+            "experience": "Erfahrung",
+            "finish": "Auftrag beenden"
+        },
+        "progression": {
+            "title": "Karrierefortschritt",
+            "subtitle": "Deine Meilensteine und Freischaltungen",
+            "level": "Level",
+            "next": "NÄCHSTES",
+            "no_unlocks": "Keine Freischaltungen verfügbar",
+            "total_xp": "Gesamt-XP",
+            "jobs_completed": "Aufträge abgeschlossen"
+        }
+    }
+}

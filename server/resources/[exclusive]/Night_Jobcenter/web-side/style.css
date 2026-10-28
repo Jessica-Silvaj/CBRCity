@@ -1,0 +1,27 @@
+:root {
+    --textcolor: #fff;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    cursor: default;
+    user-select: none;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
+}

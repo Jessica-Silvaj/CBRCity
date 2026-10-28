@@ -1,0 +1,79 @@
+{
+    "ui": {
+        "board": {
+            "title": "Wybierz zlecenie",
+            "subtitle": "Przeglądaj i dołączaj do dostępnych zleceń",
+            "level": "Poziom",
+            "sort_by": "Sortuj:",
+            "sort": {
+                "alphabetical": "Alfabetycznie",
+                "active_players": "Aktywni gracze",
+                "max_players": "Maks. graczy",
+                "salary": "Wynagrodzenie",
+                "tasks": "Zadania"
+            },
+            "empty": {
+                "title": "Brak dostępnych zleceń",
+                "subtitle": "Sprawdź później"
+            }
+        },
+        "currency": "$",
+        "contract": {
+            "not_found": "Nie znaleziono zlecenia",
+            "team": "Zespół",
+            "min": "Min:",
+            "base_payout": "Podstawowa wypłata",
+            "per_person": "(Na osobę)",
+            "team_split": "(Podzielone między graczy)",
+            "task_list": "Lista zadań",
+            "tasks": "Zadania",
+            "players": "Graczy",
+            "join": "Dołącz do zlecenia",
+            "leave": "Opuść zlecenie",
+            "start": "Rozpocznij zlecenie",
+            "not_enough_players": "Za mało graczy, aby rozpocząć",
+            "full": "Zlecenie pełne",
+            "join_cta": "Dołącz do zlecenia",
+            "settings": "Opcje zlecenia"
+        },
+        "player": {
+            "ready": "Gotowy",
+            "away": "Nieobecny",
+            "leader": "Lider",
+            "kick": "Wyrzuć"
+        },
+        "status": {
+            "waiting": "Oczekiwanie",
+            "ready": "Gotowy",
+            "in_progress": "W trakcie",
+            "completed": "Ukończono",
+            "cancelled": "Anulowano"
+        },
+        "leave_confirmation_title": "Opuścić zlecenie?",
+        "leave_confirmation_message": "Opuszczenie aktywnego zlecenia może skutkować karą. Czy na pewno?",
+        "leave_confirm": "Opuść",
+        "leave_cancel": "Zostań",
+        "completion": {
+            "header": "Zlecenie ukończone",
+            "team": "Zespół",
+            "time": "Czas",
+            "tasks": "Zadania",
+            "rating": "Ocena",
+            "payout_breakdown": "Podsumowanie wypłaty",
+            "base_pay": "Podstawowa wypłata",
+            "base_pay_split": "Podzielone między członków zespołu. Na podstawie podstawowej wypłaty ze zlecenia ${{base}}",
+            "total_payout": "Całkowita wypłata",
+            "experience": "Doświadczenie",
+            "finish": "Zakończ zlecenie"
+        },
+        "progression": {
+            "title": "Postęp kariery",
+            "subtitle": "Twoje kamienie milowe i odblokowania",
+            "level": "Poziom",
+            "next": "NASTĘPNY",
+            "no_unlocks": "Brak dostępnych odblokowań",
+            "total_xp": "całkowite XP",
+            "jobs_completed": "ukończonych zleceń"
+        }
+    }
+}

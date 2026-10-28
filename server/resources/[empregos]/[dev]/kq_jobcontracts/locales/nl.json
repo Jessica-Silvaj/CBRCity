@@ -1,0 +1,79 @@
+{
+    "ui": {
+        "board": {
+            "title": "Kies je contract",
+            "subtitle": "Bekijk en neem deel aan beschikbare contracten",
+            "level": "Level",
+            "sort_by": "Sorteer op:",
+            "sort": {
+                "alphabetical": "Alfabetisch",
+                "active_players": "Actieve spelers",
+                "max_players": "Max spelers",
+                "salary": "Salaris",
+                "tasks": "Taken"
+            },
+            "empty": {
+                "title": "Geen contracten beschikbaar",
+                "subtitle": "Probeer het later opnieuw"
+            }
+        },
+        "currency": "$",
+        "contract": {
+            "not_found": "Contract niet gevonden",
+            "team": "Team",
+            "min": "Min:",
+            "base_payout": "Basisbetaling",
+            "per_person": "(Per persoon)",
+            "team_split": "(Verdeeld tussen spelers)",
+            "task_list": "Takenlijst",
+            "tasks": "Taken",
+            "players": "Spelers",
+            "join": "Deelnemen aan contract",
+            "leave": "Contract verlaten",
+            "start": "Contract starten",
+            "not_enough_players": "Niet genoeg spelers om te starten",
+            "full": "Contract vol",
+            "join_cta": "Deelnemen",
+            "settings": "Contractopties"
+        },
+        "player": {
+            "ready": "Gereed",
+            "away": "Afwezig",
+            "leader": "Leider",
+            "kick": "Verwijderen"
+        },
+        "status": {
+            "waiting": "Wachtend",
+            "ready": "Gereed",
+            "in_progress": "Bezig",
+            "completed": "Voltooid",
+            "cancelled": "Geannuleerd"
+        },
+        "leave_confirmation_title": "Contract verlaten?",
+        "leave_confirmation_message": "Het verlaten van een actief contract kan leiden tot boetes. Weet je het zeker?",
+        "leave_confirm": "Verlaten",
+        "leave_cancel": "Blijven",
+        "completion": {
+            "header": "Contract voltooid",
+            "team": "Team",
+            "time": "Tijd",
+            "tasks": "Taken",
+            "rating": "Beoordeling",
+            "payout_breakdown": "Betalingsoverzicht",
+            "base_pay": "Basisbetaling",
+            "base_pay_split": "Verdeeld tussen teamleden. Gebaseerd op de contractbasisbetaling van ${{base}}",
+            "total_payout": "Totale betaling",
+            "experience": "Ervaring",
+            "finish": "Contract afronden"
+        },
+        "progression": {
+            "title": "Carrière voortgang",
+            "subtitle": "Jouw mijlpalen en ontgrendelingen",
+            "level": "Level",
+            "next": "VOLGENDE",
+            "no_unlocks": "Geen ontgrendelingen beschikbaar",
+            "total_xp": "totale XP",
+            "jobs_completed": "contracten voltooid"
+        }
+    }
+}

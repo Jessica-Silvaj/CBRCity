@@ -1,0 +1,130 @@
+{
+  "settings": {
+    "vehicle": "Veículo de trabalho"
+  },
+  "headquarters": {
+    "name": "Central da Lavagem",
+    "finish_contract_3d": "[E] Finalizar contrato",
+    "finish_contract_target": "Finalizar contrato",
+    "job_board_3d": "[E] Ver contratos",
+    "job_board_target": "Ver contratos"
+  },
+  "vehicles": {
+    "kqbison": "Bison da Lavagem",
+    "kqcaracara": "Caracara da Lavagem"
+  },
+  "blips": {
+    "work_vehicle": "Veículo de trabalho",
+    "go_to_area": "Ir para a área",
+    "clean": "Lavar",
+    "supervisor": "Supervisor"
+  },
+  "tasks": {
+    "enter_vehicle": "Entre no veículo de trabalho",
+    "go_to_prefix": "Vá até ",
+    "clean_prefix": "Lave ",
+    "return_to_hq": "Volte para a Central da Lavagem",
+    "report_to_supervisor": "Fale com o supervisor"
+  },
+  "job_board": {
+    "title": "Contratos de Lavagem"
+  },
+  "units": {
+    "meters": "m",
+    "kilometers": "km",
+    "yards": "jd",
+    "miles": "mi"
+  },
+  "bonuses": {
+    "perfect_time": "Bônus de Tempo Perfeito",
+    "perfect_time_tip": "Contrato finalizado no tempo perfeito!",
+    "good_time": "Bônus de Rapidez",
+    "good_time_tip": "Contrato finalizado em um ótimo tempo!",
+    "vehicle_care": "Bônus de Cuidado com o Veículo",
+    "vehicle_care_tip": "Bônus por cuidar bem do veículo de trabalho",
+    "vehicle_damage": "Veículo Danificado",
+    "vehicle_damage_tip": "O veículo sofreu danos graves durante o contrato",
+    "missing_vehicle": "Veículo Desaparecido",
+    "missing_vehicle_tip": "O veículo não foi devolvido",
+    "top_washer": "Bônus de Melhor Desempenho",
+    "top_washer_tip": "Você foi quem mais lavou neste contrato",
+    "team_size_bonus": "Bônus de Trabalho em Equipe",
+    "team_size_bonus_tip": "Bônus por trabalhar em equipe",
+    "experience": "Bônus de Experiência",
+    "experience_tip": "Bônus liberado por alcançar um nível alto no emprego"
+  },
+  "supervisor": {
+    "prefix": "<strong>Supervisor:</strong>",
+    "stars_5": [
+      "Trabalho excelente! É exatamente esse tipo de eficiência que eu gosto de ver.",
+      "Agora sim, é assim que se faz! Você está me fazendo ficar bem com os clientes.",
+      "Trabalho incrível! Talvez você seja o melhor lavador da equipe."
+    ],
+    "stars_4": [
+      "Bom trabalho hoje, continue assim.",
+      "Mandou bem. O cliente vai ficar satisfeito com esse.",
+      "Rápido e bem feito. Você está pegando o jeito."
+    ],
+    "stars_3": [
+      "Tá, nada mal, mas sei que você consegue fazer melhor. Continue tentando.",
+      "Serviço feito. Nada de especial, mas serve.",
+      "Trabalho mediano, pagamento mediano. Quer bônus? Acelera da próxima vez."
+    ],
+    "stars_2": [
+      "Você terminou. Mas a que custo? Precisa melhorar muito no próximo.",
+      "É... NÃO é assim que se faz. Capricha mais."
+    ],
+    "stars_1": [
+      "Mais sorte da próxima vez."
+    ],
+    "job_short": [
+      "Serviço rápido hoje, mas são esses que mantêm a empresa funcionando.",
+      "Trabalho pequeno, dinheiro fácil. Não dá pra reclamar.",
+      "Esses contratos pequenos vão somando, sabia? É o arroz com feijão."
+    ],
+    "job_medium": [
+      "Contrato de tamanho bom, trabalho honesto.",
+      "Serviço padrão, nada de mais. Do jeito que eu gosto.",
+      "É esse tipo de trabalho que paga as contas."
+    ],
+    "job_long": [
+      "Esse foi grande. Provavelmente não foi divertido, mas é desses que vem o dinheiro de verdade.",
+      "Que contrato enorme. O cliente pagou caro por esse serviço.",
+      "Isso é que é trabalho de verdade. São esses grandes que mantêm a empresa de pé."
+    ],
+    "vehicle_perfect": [
+      "E o veículo voltou em perfeito estado. Obrigado por cuidar do nosso equipamento.",
+      "Bom ver o veículo sem nenhum arranhão. Essa é a postura profissional que eu procuro.",
+      "O veículo voltou novinho, isso vai pra sua ficha como ponto positivo."
+    ],
+    "vehicle_damaged": [
+      "Agora sobre o veículo... o que diabos aconteceu? O conserto vai sair do seu pagamento.",
+      "Você estragou bastante o veículo. Isso vai sair da sua parte, tome mais cuidado da próxima vez.",
+      "O veículo voltou parecendo que saiu de uma guerra. Conserto não é de graça, então é por sua conta."
+    ],
+    "vehicle_missing": [
+      "E cadê o veículo?! Vou ter que mandar alguém procurar. Essa aventura vai sair do seu pagamento.",
+      "Você largou o veículo sabe-se lá onde. Sabe quanto tempo vou perder procurando? Vai ter desconto.",
+      "Sem veículo, sem explicação... nem quero saber. Só saiba que você vai pagar pelo resgate."
+    ]
+  },
+  "outfit": {
+    "apply": "Vestir {{name}}",
+    "switch_regular": "Voltar para a roupa normal",
+    "required": "Você precisa estar com o uniforme de trabalho",
+    "not_unlocked": "Você ainda não desbloqueou este uniforme"
+  },
+  "water_tank": {
+    "empty": "A água acabou! Reabasteça no veículo.",
+    "refilled": "Tanque de água reabastecido!",
+    "refill_3d": "[E] Reabastecer tanque de água",
+    "refill_target": "Reabastecer tanque de água"
+  },
+  "cancellation_ban": {
+    "applied": "Você foi suspenso de iniciar novos contratos por {{time}} minutos.",
+    "blocked": "Você está suspenso de iniciar novos contratos. Tempo restante: {{time}} minuto(s)"
+  },
+  "keybinds": {
+    "washer_vision": "Pressione ~INPUT_RELOAD~ para destacar a sujeira"
+  }
+}

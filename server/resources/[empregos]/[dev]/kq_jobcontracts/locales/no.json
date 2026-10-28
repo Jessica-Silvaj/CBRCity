@@ -1,0 +1,79 @@
+{
+    "ui": {
+        "board": {
+            "title": "Velg din kontrakt",
+            "subtitle": "Bla gjennom og bli med i tilgjengelige kontrakter",
+            "level": "Nivå",
+            "sort_by": "Sorter etter:",
+            "sort": {
+                "alphabetical": "Alfabetisk",
+                "active_players": "Aktive spillere",
+                "max_players": "Maks spillere",
+                "salary": "Lønn",
+                "tasks": "Oppgaver"
+            },
+            "empty": {
+                "title": "Ingen kontrakter tilgjengelig",
+                "subtitle": "Sjekk igjen senere"
+            }
+        },
+        "currency": "$",
+        "contract": {
+            "not_found": "Kontrakt ikke funnet",
+            "team": "Lag",
+            "min": "Min:",
+            "base_payout": "Grunnbetaling",
+            "per_person": "(Per person)",
+            "team_split": "(Fordelt mellom spillere)",
+            "task_list": "Oppgaveliste",
+            "tasks": "Oppgaver",
+            "players": "Spillere",
+            "join": "Bli med i kontrakt",
+            "leave": "Forlat kontrakt",
+            "start": "Start kontrakt",
+            "not_enough_players": "Ikke nok spillere til å starte",
+            "full": "Kontrakt full",
+            "join_cta": "Bli med",
+            "settings": "Kontraktinnstillinger"
+        },
+        "player": {
+            "ready": "Klar",
+            "away": "Borte",
+            "leader": "Leder",
+            "kick": "Kast ut"
+        },
+        "status": {
+            "waiting": "Venter",
+            "ready": "Klar",
+            "in_progress": "Pågår",
+            "completed": "Fullført",
+            "cancelled": "Avbrutt"
+        },
+        "leave_confirmation_title": "Forlate kontrakt?",
+        "leave_confirmation_message": "Å forlate en aktiv kontrakt kan føre til straff. Er du sikker?",
+        "leave_confirm": "Forlat",
+        "leave_cancel": "Bli",
+        "completion": {
+            "header": "Kontrakt fullført",
+            "team": "Lag",
+            "time": "Tid",
+            "tasks": "Oppgaver",
+            "rating": "Vurdering",
+            "payout_breakdown": "Betalingsoversikt",
+            "base_pay": "Grunnbetaling",
+            "base_pay_split": "Fordelt mellom lagmedlemmer. Basert på kontraktens grunnbetaling på ${{base}}",
+            "total_payout": "Total utbetaling",
+            "experience": "Erfaring",
+            "finish": "Fullfør kontrakt"
+        },
+        "progression": {
+            "title": "Karriereprogresjon",
+            "subtitle": "Dine milepæler og opplåsinger",
+            "level": "Nivå",
+            "next": "NESTE",
+            "no_unlocks": "Ingen opplåsinger tilgjengelig",
+            "total_xp": "total XP",
+            "jobs_completed": "kontrakter fullført"
+        }
+    }
+}

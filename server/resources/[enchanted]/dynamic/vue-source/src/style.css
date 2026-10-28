@@ -1,0 +1,148 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        font-size: 1rem;
+        --main: 46 139 87;
+        --mainText: 255 255 255;
+        --mainHover: 37 111 70;
+        --from: 3 8 5;
+        --to: 5 14 9;
+        --common: 111 198 106;
+        --rare: 106 198 197;
+        --epic: 198 106 117;
+        --legendary: 198 152 106;
+    }
+
+    @media screen and (max-width: 800px), screen and (max-height: 600px) {
+        :root { font-size: 0.3rem; }
+    }
+    @media screen and (min-width: 800px) and (min-height: 600px) {
+        :root { font-size: 0.425rem; }
+    }
+    @media screen and (min-width: 1000px) and (min-height: 700px) {
+        :root { font-size: 0.55rem; }
+    }
+    @media screen and (min-width: 1100px) and (min-height: 700px) {
+        :root { font-size: 0.6rem; }
+    }
+    @media screen and (min-width: 1300px) and (min-height: 700px) {
+        :root { font-size: 0.7rem; }
+    }
+    @media screen and (min-width: 1400px) and (min-height: 700px) {
+        :root { font-size: 0.75rem; }
+    }
+    @media screen and (min-width: 1600px) and (min-height: 800px) {
+        :root { font-size: 0.8rem; }
+    }
+    @media screen and (min-width: 1750px) and (min-height: 900px) {
+        :root { font-size: 0.9rem; }
+    }
+    @media screen and (min-width: 1850px) and (min-height: 1000px) {
+        :root { font-size: 1rem; }
+    }
+
+    * {
+        user-select: none;
+        letter-spacing: 0.025em;
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+    }
+
+    * img { pointer-events: none; }
+    * input { user-select: text; }
+
+    html, body, #app {
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    body {
+        font-weight: 300;
+        @apply text-white;
+    }
+}
+
+@layer components {
+    .bg-default {
+        background-image: linear-gradient(
+            to right,
+            rgb(var(--from) / 0.9),
+            rgb(var(--to) / 0) 60%
+        );
+    }
+
+    .bg-shadow-circle {
+        background-image: radial-gradient(
+            circle,
+            rgb(var(--main)),
+            rgb(var(--main) / 0) 75%
+        );
+    }
+
+    .scrollbar-hide { scrollbar-width: none; }
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+}
+
+/* ══════════════════════════════════════════════════════════
+   BACKGROUND — 0.2s enter, 0.2s leave (espelhado)
+   ══════════════════════════════════════════════════════════ */
+.bg-fade-enter-active,
+.bg-fade-leave-active {
+    transition: opacity 0.2s ease;
+}
+.bg-fade-leave-active {
+    transition-delay: 0.1s;
+}
+.bg-fade-enter-from,
+.bg-fade-leave-to {
+    opacity: 0;
+}
+
+/* ══════════════════════════════════════════════════════════
+   PANEL — 0.3s enter (com 0.2s delay), 0.3s leave (sem delay)
+   Espelhado: bg aparece → painel aparece | painel some → bg some
+   ══════════════════════════════════════════════════════════ */
+.panel-enter-active {
+    transition: opacity 0.3s ease 0.2s, transform 0.3s ease 0.2s;
+}
+.panel-leave-active {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.panel-enter-from,
+.panel-leave-to {
+    opacity: 0;
+    transform: translateX(-2rem) scale(0.97);
+}
+
+/* ══════════════════════════════════════════════════════════
+   SLIDE — troca de submenus / voltar
+   0.2s enter, 0.2s leave — uniforme e rápido.
+   ══════════════════════════════════════════════════════════ */
+.slide-enter-active,
+.slide-leave-active {
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.slide-enter-from {
+    opacity: 0;
+    transform: translateX(1rem);
+}
+.slide-leave-to {
+    opacity: 0;
+    transform: translateX(-1rem);
+}
+
+/* ══════════════════════════════════════════════════════════
+   SPAN-TAG — cor main do tema, herda hover do card pai
+   ══════════════════════════════════════════════════════════ */
+.span-tag {
+    color: rgb(var(--main));
+    font-weight: 600;
+}
+
+.group:hover .span-tag {
+    color: rgb(var(--mainText));
+}

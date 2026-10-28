@@ -1,0 +1,79 @@
+{
+    "ui": {
+        "board": {
+            "title": "Choisissez votre contrat",
+            "subtitle": "Parcourez et rejoignez les contrats disponibles",
+            "level": "Niveau",
+            "sort_by": "Trier par:",
+            "sort": {
+                "alphabetical": "Alphabétique",
+                "active_players": "Joueurs actifs",
+                "max_players": "Joueurs max",
+                "salary": "Salaire",
+                "tasks": "Tâches"
+            },
+            "empty": {
+                "title": "Aucun contrat disponible",
+                "subtitle": "Revenez plus tard"
+            }
+        },
+        "currency": "$",
+        "contract": {
+            "not_found": "Contrat introuvable",
+            "team": "Équipe",
+            "min": "Min:",
+            "base_payout": "Paiement de base",
+            "per_person": "(Par personne)",
+            "team_split": "(Réparti entre les joueurs)",
+            "task_list": "Liste des tâches",
+            "tasks": "Tâches",
+            "players": "Joueurs",
+            "join": "Rejoindre le contrat",
+            "leave": "Quitter le contrat",
+            "start": "Démarrer le contrat",
+            "not_enough_players": "Pas assez de joueurs pour démarrer",
+            "full": "Contrat complet",
+            "join_cta": "Rejoindre",
+            "settings": "Options du contrat"
+        },
+        "player": {
+            "ready": "Prêt",
+            "away": "Absent",
+            "leader": "Chef",
+            "kick": "Expulser"
+        },
+        "status": {
+            "waiting": "En attente",
+            "ready": "Prêt",
+            "in_progress": "En cours",
+            "completed": "Terminé",
+            "cancelled": "Annulé"
+        },
+        "leave_confirmation_title": "Quitter le contrat?",
+        "leave_confirmation_message": "Quitter un contrat actif peut entraîner des pénalités. Êtes-vous sûr?",
+        "leave_confirm": "Quitter",
+        "leave_cancel": "Rester",
+        "completion": {
+            "header": "Contrat terminé",
+            "team": "Équipe",
+            "time": "Temps",
+            "tasks": "Tâches",
+            "rating": "Évaluation",
+            "payout_breakdown": "Détail du paiement",
+            "base_pay": "Paiement de base",
+            "base_pay_split": "Réparti entre les membres de l'équipe. Basé sur le paiement de base du contrat de ${{base}}",
+            "total_payout": "Paiement total",
+            "experience": "Expérience",
+            "finish": "Terminer le contrat"
+        },
+        "progression": {
+            "title": "Progression de carrière",
+            "subtitle": "Vos jalons et déverrouillages",
+            "level": "Niveau",
+            "next": "SUIVANT",
+            "no_unlocks": "Aucun déverrouillage disponible",
+            "total_xp": "XP total",
+            "jobs_completed": "contrats terminés"
+        }
+    }
+}

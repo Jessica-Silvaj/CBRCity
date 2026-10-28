@@ -1,0 +1,79 @@
+{
+    "ui": {
+        "board": {
+            "title": "Select your contract",
+            "subtitle": "Browse and join available contracts",
+            "level": "Level",
+            "sort_by": "Sort by:",
+            "sort": {
+                "alphabetical": "Alphabetical",
+                "active_players": "Active Players",
+                "max_players": "Max Players",
+                "salary": "Salary",
+                "tasks": "Task(s)"
+            },
+            "empty": {
+                "title": "No contracts available",
+                "subtitle": "Check back later"
+            }
+        },
+        "currency": "$",
+        "contract": {
+            "not_found": "Contract not found",
+            "team": "Team",
+            "min": "Min:",
+            "base_payout": "Base payout",
+            "per_person": "(Per person)",
+            "team_split": "(Split between players)",
+            "task_list": "Task List",
+            "tasks": "Tasks",
+            "players": "Players",
+            "join": "Join Contract",
+            "leave": "Leave Contract",
+            "start": "Start Contract",
+            "not_enough_players": "Not enough players to start",
+            "full": "Contract full",
+            "join_cta": "Join contract",
+            "settings": "Contract options"
+        },
+        "player": {
+            "ready": "Ready",
+            "away": "Away",
+            "leader": "Leader",
+            "kick": "Kick"
+        },
+        "status": {
+            "waiting": "Waiting",
+            "ready": "Ready",
+            "in_progress": "In Progress",
+            "completed": "Completed",
+            "cancelled": "Cancelled"
+        },
+        "leave_confirmation_title": "Leave Contract?",
+        "leave_confirmation_message": "Leaving an active contract may result in penalties. Are you sure?",
+        "leave_confirm": "Leave",
+        "leave_cancel": "Stay",
+        "completion": {
+            "header": "Contract Complete",
+            "team": "Team",
+            "time": "Time",
+            "tasks": "Tasks",
+            "rating": "Rating",
+            "payout_breakdown": "Payout Breakdown",
+            "base_pay": "Base Pay",
+            "base_pay_split": "Split between team members. Based on contract base pay of ${{base}}",
+            "total_payout": "Total Payout",
+            "experience": "Experience",
+            "finish": "Finish Contract"
+        },
+        "progression": {
+            "title": "Career progression",
+            "subtitle": "Your milestones and unlocks",
+            "level": "Level",
+            "next": "NEXT",
+            "no_unlocks": "No unlocks available",
+            "total_xp": "total XP",
+            "jobs_completed": "jobs completed"
+        }
+    }
+}

@@ -1,0 +1,5 @@
+
+	['WEAPON_KQPOWERWASHER'] = {
+		label = 'Pressure Washing gun',
+		weight = 1000,
+	},

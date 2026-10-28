@@ -1,0 +1,79 @@
+{
+    "ui": {
+        "board": {
+            "title": "Escolha seu contrato",
+            "subtitle": "Veja e entre nos contratos disponíveis",
+            "level": "Nível",
+            "sort_by": "Ordenar por:",
+            "sort": {
+                "alphabetical": "Ordem alfabética",
+                "active_players": "Jogadores ativos",
+                "max_players": "Máx. de jogadores",
+                "salary": "Pagamento",
+                "tasks": "Tarefa(s)"
+            },
+            "empty": {
+                "title": "Nenhum contrato disponível",
+                "subtitle": "Volte mais tarde"
+            }
+        },
+        "currency": "$",
+        "contract": {
+            "not_found": "Contrato não encontrado",
+            "team": "Equipe",
+            "min": "Mín:",
+            "base_payout": "Pagamento base",
+            "per_person": "(Por pessoa)",
+            "team_split": "(Dividido entre os jogadores)",
+            "task_list": "Lista de tarefas",
+            "tasks": "Tarefas",
+            "players": "Jogadores",
+            "join": "Entrar no contrato",
+            "leave": "Sair do contrato",
+            "start": "Iniciar contrato",
+            "not_enough_players": "Jogadores insuficientes para iniciar",
+            "full": "Contrato cheio",
+            "join_cta": "Entrar no contrato",
+            "settings": "Opções do contrato"
+        },
+        "player": {
+            "ready": "Pronto",
+            "away": "Ausente",
+            "leader": "Líder",
+            "kick": "Expulsar"
+        },
+        "status": {
+            "waiting": "Aguardando",
+            "ready": "Pronto",
+            "in_progress": "Em andamento",
+            "completed": "Concluído",
+            "cancelled": "Cancelado"
+        },
+        "leave_confirmation_title": "Sair do contrato?",
+        "leave_confirmation_message": "Sair de um contrato em andamento pode gerar penalidades. Tem certeza?",
+        "leave_confirm": "Sair",
+        "leave_cancel": "Ficar",
+        "completion": {
+            "header": "Contrato concluído",
+            "team": "Equipe",
+            "time": "Tempo",
+            "tasks": "Tarefas",
+            "rating": "Avaliação",
+            "payout_breakdown": "Detalhes do pagamento",
+            "base_pay": "Pagamento base",
+            "base_pay_split": "Dividido entre a equipe. Baseado no pagamento base do contrato de ${{base}}",
+            "total_payout": "Pagamento total",
+            "experience": "Experiência",
+            "finish": "Finalizar contrato"
+        },
+        "progression": {
+            "title": "Progresso na carreira",
+            "subtitle": "Suas conquistas e desbloqueios",
+            "level": "Nível",
+            "next": "PRÓXIMO",
+            "no_unlocks": "Nenhum desbloqueio disponível",
+            "total_xp": "XP total",
+            "jobs_completed": "serviços concluídos"
+        }
+    }
+}

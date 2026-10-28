@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Creative Network</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Manrope:wght@200..800&display=swap" rel="stylesheet">
+    <script type="module" crossorigin src="./script.js"></script>
+    <link rel="stylesheet" crossorigin href="./style.css">
+</head>
+
+<body>
+    <div id="app"></div>
+
+    <!-- Indicador de sangramento (fora do script.js protegido). Estado vem do paramedic via hud:Bleeding -->
+    <div id="bleeding" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M12 2.5c-3.6 4.6-6.5 8.4-6.5 12A6.5 6.5 0 0 0 18.5 14.5C18.5 10.9 15.6 7.1 12 2.5z"/></svg>
+        <div class="bleeding-info">
+            <span class="bleeding-title">Sangramento</span>
+        </div>
+    </div>
+    <style>
+        #bleeding {
+            position: fixed; left: 50%; bottom: 3.2vh; transform: translateX(-50%);
+            display: none; align-items: center; gap: 0.55rem;
+            padding: 0.45rem 0.8rem 0.45rem 0.6rem; border-radius: 0.5rem;
+            background: rgba(13, 13, 13, 0.78); border: 1px solid rgba(220, 38, 38, 0.45);
+            font-family: "Rajdhani", sans-serif; color: #fff; pointer-events: none; z-index: 50;
+        }
+        #bleeding.show { display: flex; }
+        #bleeding svg { width: 1.35rem; height: 1.35rem; fill: #dc2626; filter: drop-shadow(0 0 4px rgba(220, 38, 38, 0.8)); }
+        #bleeding.show svg { animation: bleeding-pulse 1s ease-in-out infinite; }
+        .bleeding-info { display: flex; flex-direction: column; line-height: 1; }
+        .bleeding-title { font-size: 1rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255, 255, 255, 0.6); }
+        @keyframes bleeding-pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.18); opacity: 0.7; } }
+    </style>
+    <script>
+        (function () {
+            var box = document.getElementById("bleeding");
+            var visible = false, bleeding = false;
+
+            function render() {
+                box.classList.toggle("show", visible && bleeding);
+            }
+
+            window.addEventListener("message", function (event) {
+                var data = event.data || {};
+                if (data.Action === "Body") { visible = !!data.Payload; render(); }
+                else if (data.Action === "Bleeding") { bleeding = Number(data.Payload) > 0; render(); }
+            });
+        })();
+    </script>
+</body>
+
+</html>
