@@ -1,0 +1,90 @@
+Config = {}
+
+Config.App = {
+    name = 'Loja VIP',
+    description = 'Loja VIP por Diamantes',
+    developer = 'CBR CITY',
+    defaultApp = false,
+    size = 37600
+}
+
+Config.Webhook = ''
+
+Config.Categories = {
+    { id = 'diamantes', name = 'Diamantes' },
+    { id = 'grupos', name = 'Grupos' },
+    { id = 'veiculos', name = 'Veículos' },
+    { id = 'utilidades', name = 'Utilidades' },
+    { id = 'armamentos', name = 'Armamentos' },
+    { id = 'empregos', name = 'Empregos' },
+    { id = 'vestimentas', name = 'Vestimentas' },
+    { id = 'medicamentos', name = 'Medicamentos' },
+    { id = 'lavagem', name = 'Lavagem' },
+    { id = 'domesticos', name = 'Domésticos' },
+    { id = 'cofres', name = 'Cofres' },
+    { id = 'moveis', name = 'Móveis' },
+    { id = 'decoracao', name = 'Decoração' }
+}
+
+-- As imagens sao geradas automaticamente usando ItemIndex(item):
+-- nui://vrp/config/inventory/<Index>.png
+Config.Products = {
+    { id = 'vip_gemstone', category = 'diamantes', name = 'GEMSTONE', description = 'Diamantes.', item = 'gemstone', amount = 1, price = 1, image = 'nui://vrp/config/inventory/gemstone.png' },
+    { id = 'vip_chestgroupp', category = 'grupos', name = 'CHESTGROUPP', description = 'Grupos.', item = 'chestgroupp', amount = 1, price = 25000, image = 'nui://vrp/config/inventory/chestgroup.png' },
+    { id = 'vip_chestgroupm', category = 'grupos', name = 'CHESTGROUPM', description = 'Grupos.', item = 'chestgroupm', amount = 1, price = 50000, image = 'nui://vrp/config/inventory/chestgroup.png' },
+    { id = 'vip_chestgroupg', category = 'grupos', name = 'CHESTGROUPG', description = 'Grupos.', item = 'chestgroupg', amount = 1, price = 75000, image = 'nui://vrp/config/inventory/chestgroup.png' },
+    { id = 'vip_premiumplate', category = 'veiculos', name = 'PREMIUMPLATE', description = 'Veículos.', item = 'premiumplate', amount = 1, price = 5000, image = 'nui://vrp/config/inventory/platepremium.png' },
+    { id = 'vip_namechange', category = 'utilidades', name = 'NAMECHANGE', description = 'Utilidades.', item = 'namechange', amount = 1, price = 3000, image = 'nui://vrp/config/inventory/namechange.png' },
+    { id = 'vip_diagram', category = 'utilidades', name = 'DIAGRAM', description = 'Utilidades.', item = 'diagram', amount = 1, price = 500, image = 'nui://vrp/config/inventory/diagram.png' },
+    { id = 'vip_weapon_katana', category = 'armamentos', name = 'WEAPON_KATANA', description = 'Armamentos.', item = 'WEAPON_KATANA', amount = 1, price = 500, image = 'nui://vrp/config/inventory/katana.png' },
+    { id = 'vip_pickaxeplus', category = 'empregos', name = 'PICKAXEPLUS', description = 'Empregos.', item = 'pickaxeplus', amount = 1, price = 2500, image = 'nui://vrp/config/inventory/pickaxe.png' },
+    { id = 'vip_fishingrodplus', category = 'empregos', name = 'FISHINGRODPLUS', description = 'Empregos.', item = 'fishingrodplus', amount = 1, price = 2500, image = 'nui://vrp/config/inventory/fishingrod.png' },
+    { id = 'vip_axeplus', category = 'empregos', name = 'AXEPLUS', description = 'Empregos.', item = 'axeplus', amount = 1, price = 2500, image = 'nui://vrp/config/inventory/axe.png' },
+    { id = 'vip_backpackp', category = 'vestimentas', name = 'BACKPACKP', description = 'Vestimentas.', item = 'backpackp', amount = 1, price = 2000, image = 'nui://vrp/config/inventory/backpackp.png' },
+    { id = 'vip_backpackm', category = 'vestimentas', name = 'BACKPACKM', description = 'Vestimentas.', item = 'backpackm', amount = 1, price = 3500, image = 'nui://vrp/config/inventory/backpackm.png' },
+    { id = 'vip_backpackg', category = 'vestimentas', name = 'BACKPACKG', description = 'Vestimentas.', item = 'backpackg', amount = 1, price = 5000, image = 'nui://vrp/config/inventory/backpackg.png' },
+    { id = 'vip_teddypack', category = 'vestimentas', name = 'TEDDYPACK', description = 'Vestimentas.', item = 'teddypack', amount = 1, price = 5000, image = 'nui://vrp/config/inventory/teddypack.png' },
+    { id = 'vip_weaponbox', category = 'armamentos', name = 'WEAPONBOX', description = 'Armamentos.', item = 'weaponbox', amount = 1, price = 5000, image = 'nui://vrp/config/inventory/weaponbox.png' },
+    { id = 'vip_ammobox', category = 'armamentos', name = 'AMMOBOX', description = 'Armamentos.', item = 'ammobox', amount = 1, price = 3500, image = 'nui://vrp/config/inventory/ammobox.png' },
+    { id = 'vip_sewingkit', category = 'utilidades', name = 'SEWINGKIT', description = 'Utilidades.', item = 'sewingkit', amount = 1, price = 2500, image = 'nui://vrp/config/inventory/sewingkit.png' },
+    { id = 'vip_seatbelt', category = 'veiculos', name = 'SEATBELT', description = 'Veículos.', item = 'seatbelt', amount = 1, price = 5000, image = 'nui://vrp/config/inventory/seatbelt.png' },
+    { id = 'vip_adrenalineplus', category = 'medicamentos', name = 'ADRENALINEPLUS', description = 'Medicamentos.', item = 'adrenalineplus', amount = 1, price = 500, image = 'nui://vrp/config/inventory/adrenaline.png' },
+    { id = 'vip_moneywash', category = 'lavagem', name = 'MONEYWASH', description = 'Lavagem.', item = 'moneywash', amount = 1, price = 5000, image = 'nui://vrp/config/inventory/moneywash.png' },
+    { id = 'vip_moneywashplus', category = 'lavagem', name = 'MONEYWASHPLUS', description = 'Lavagem.', item = 'moneywashplus', amount = 1, price = 10000, image = 'nui://vrp/config/inventory/moneywash.png' },
+    { id = 'vip_moneywashalpha', category = 'lavagem', name = 'MONEYWASHALPHA', description = 'Lavagem.', item = 'moneywashalpha', amount = 1, price = 20000, image = 'nui://vrp/config/inventory/moneywash.png' },
+    { id = 'vip_moneywashomega', category = 'lavagem', name = 'MONEYWASHOMEGA', description = 'Lavagem.', item = 'moneywashomega', amount = 1, price = 100000, image = 'nui://vrp/config/inventory/moneywash.png' },
+    { id = 'vip_washbattery', category = 'lavagem', name = 'WASHBATTERY', description = 'Lavagem.', item = 'washbattery', amount = 1, price = 750, image = 'nui://vrp/config/inventory/washbattery.png' },
+    { id = 'vip_washbleach', category = 'lavagem', name = 'WASHBLEACH', description = 'Lavagem.', item = 'washbleach', amount = 1, price = 500, image = 'nui://vrp/config/inventory/washbleach.png' },
+    { id = 'vip_a_c_cat_01', category = 'domesticos', name = 'A_C_CAT_01', description = 'Domésticos.', item = 'a_c_cat_01', amount = 1, price = 5000, image = 'nui://vrp/config/inventory/a_c_cat_01.png' },
+    { id = 'vip_a_c_husky', category = 'domesticos', name = 'A_C_HUSKY', description = 'Domésticos.', item = 'a_c_husky', amount = 1, price = 5000, image = 'nui://vrp/config/inventory/a_c_husky.png' },
+    { id = 'vip_a_c_poodle', category = 'domesticos', name = 'A_C_POODLE', description = 'Domésticos.', item = 'a_c_poodle', amount = 1, price = 5000, image = 'nui://vrp/config/inventory/a_c_poodle.png' },
+    { id = 'vip_a_c_pug', category = 'domesticos', name = 'A_C_PUG', description = 'Domésticos.', item = 'a_c_pug', amount = 1, price = 5000, image = 'nui://vrp/config/inventory/a_c_pug.png' },
+    { id = 'vip_a_c_retriever', category = 'domesticos', name = 'A_C_RETRIEVER', description = 'Domésticos.', item = 'a_c_retriever', amount = 1, price = 5000, image = 'nui://vrp/config/inventory/a_c_retriever.png' },
+    { id = 'vip_a_c_rottweiler', category = 'domesticos', name = 'A_C_ROTTWEILER', description = 'Domésticos.', item = 'a_c_rottweiler', amount = 1, price = 5000, image = 'nui://vrp/config/inventory/a_c_rottweiler.png' },
+    { id = 'vip_a_c_shepherd', category = 'domesticos', name = 'A_C_SHEPHERD', description = 'Domésticos.', item = 'a_c_shepherd', amount = 1, price = 5000, image = 'nui://vrp/config/inventory/a_c_shepherd.png' },
+    { id = 'vip_a_c_westy', category = 'domesticos', name = 'A_C_WESTY', description = 'Domésticos.', item = 'a_c_westy', amount = 1, price = 5000, image = 'nui://vrp/config/inventory/a_c_westy.png' },
+    { id = 'vip_furniture_simplebox', category = 'cofres', name = 'FURNITURE_SIMPLEBOX', description = 'Cofres.', item = 'furniture_simplebox', amount = 1, price = 5000, image = 'nui://vrp/config/inventory/furniture_simplebox.png' },
+    { id = 'vip_furniture_safebox', category = 'cofres', name = 'FURNITURE_SAFEBOX', description = 'Cofres.', item = 'furniture_safebox', amount = 1, price = 10000, image = 'nui://vrp/config/inventory/furniture_safebox.png' },
+    { id = 'vip_furniture_officebox', category = 'cofres', name = 'FURNITURE_OFFICEBOX', description = 'Cofres.', item = 'furniture_officebox', amount = 1, price = 25000, image = 'nui://vrp/config/inventory/furniture_officebox.png' },
+    { id = 'vip_furniture_industrialbox', category = 'cofres', name = 'FURNITURE_INDUSTRIALBOX', description = 'Cofres.', item = 'furniture_industrialbox', amount = 1, price = 50000, image = 'nui://vrp/config/inventory/furniture_industrialbox.png' },
+    { id = 'vip_furniture_ornamentbox', category = 'cofres', name = 'FURNITURE_ORNAMENTBOX', description = 'Cofres.', item = 'furniture_ornamentbox', amount = 1, price = 75000, image = 'nui://vrp/config/inventory/furniture_ornamentbox.png' },
+    { id = 'vip_furniture_goldenbox', category = 'cofres', name = 'FURNITURE_GOLDENBOX', description = 'Cofres.', item = 'furniture_goldenbox', amount = 1, price = 125000, image = 'nui://vrp/config/inventory/furniture_goldenbox.png' },
+    { id = 'vip_furniture_pack_bathcab', category = 'moveis', name = 'FURNITURE_PACK_BATHCAB', description = 'Móveis.', item = 'furniture_pack_bathcab', amount = 1, price = 5000, image = 'nui://vrp/config/inventory/furniture_pack_bathcab.png' },
+    { id = 'vip_furniture_pack_cabinet', category = 'moveis', name = 'FURNITURE_PACK_CABINET', description = 'Móveis.', item = 'furniture_pack_cabinet', amount = 1, price = 5000, image = 'nui://vrp/config/inventory/furniture_pack_cabinet.png' },
+    { id = 'vip_furniture_pack_cabinet_2', category = 'moveis', name = 'FURNITURE_PACK_CABINET_2', description = 'Móveis.', item = 'furniture_pack_cabinet_2', amount = 1, price = 5000, image = 'nui://vrp/config/inventory/furniture_pack_cabinet_2.png' },
+    { id = 'vip_furniture_pack_table_1', category = 'moveis', name = 'FURNITURE_PACK_TABLE_1', description = 'Móveis.', item = 'furniture_pack_table_1', amount = 1, price = 5000, image = 'nui://vrp/config/inventory/furniture_pack_table_1.png' },
+    { id = 'vip_furniture_pack_table_2', category = 'moveis', name = 'FURNITURE_PACK_TABLE_2', description = 'Móveis.', item = 'furniture_pack_table_2', amount = 1, price = 5000, image = 'nui://vrp/config/inventory/furniture_pack_table_2.png' },
+    { id = 'vip_furniture_pack_wall', category = 'moveis', name = 'FURNITURE_PACK_WALL', description = 'Móveis.', item = 'furniture_pack_wall', amount = 1, price = 5000, image = 'nui://vrp/config/inventory/furniture_pack_wall.png' },
+    { id = 'vip_furniture_pack_wardrobe_1', category = 'moveis', name = 'FURNITURE_PACK_WARDROBE_1', description = 'Móveis.', item = 'furniture_pack_wardrobe_1', amount = 1, price = 5000, image = 'nui://vrp/config/inventory/furniture_pack_wardrobe_1.png' },
+    { id = 'vip_furniture_pack_wardrobe_2', category = 'moveis', name = 'FURNITURE_PACK_WARDROBE_2', description = 'Móveis.', item = 'furniture_pack_wardrobe_2', amount = 1, price = 5000, image = 'nui://vrp/config/inventory/furniture_pack_wardrobe_2.png' },
+    { id = 'vip_furniture_pack_cabinet_3', category = 'moveis', name = 'FURNITURE_PACK_CABINET_3', description = 'Móveis.', item = 'furniture_pack_cabinet_3', amount = 1, price = 5000, image = 'nui://vrp/config/inventory/furniture_pack_cabinet_3.png' },
+    { id = 'vip_furniture_pack_chair_1', category = 'moveis', name = 'FURNITURE_PACK_CHAIR_1', description = 'Móveis.', item = 'furniture_pack_chair_1', amount = 1, price = 5000, image = 'nui://vrp/config/inventory/furniture_pack_chair_1.png' },
+    { id = 'vip_furniture_pack_chair_2', category = 'moveis', name = 'FURNITURE_PACK_CHAIR_2', description = 'Móveis.', item = 'furniture_pack_chair_2', amount = 1, price = 5000, image = 'nui://vrp/config/inventory/furniture_pack_chair_2.png' },
+    { id = 'vip_furniture_pack_dresser', category = 'moveis', name = 'FURNITURE_PACK_DRESSER', description = 'Móveis.', item = 'furniture_pack_dresser', amount = 1, price = 5000, image = 'nui://vrp/config/inventory/furniture_pack_dresser.png' },
+    { id = 'vip_furniture_pack_sofa', category = 'moveis', name = 'FURNITURE_PACK_SOFA', description = 'Móveis.', item = 'furniture_pack_sofa', amount = 1, price = 5000, image = 'nui://vrp/config/inventory/furniture_pack_sofa.png' },
+    { id = 'vip_furniture_pack_table', category = 'moveis', name = 'FURNITURE_PACK_TABLE', description = 'Móveis.', item = 'furniture_pack_table', amount = 1, price = 5000, image = 'nui://vrp/config/inventory/furniture_pack_table.png' },
+    { id = 'vip_furniture_halloween_pumpkin', category = 'decoracao', name = 'FURNITURE_HALLOWEEN_PUMPKIN', description = 'Decoração.', item = 'furniture_halloween_pumpkin', amount = 1, price = 5000, image = 'nui://vrp/config/inventory/furniture_halloween_pumpkin.png' },
+    { id = 'vip_furniture_halloween_ghost', category = 'decoracao', name = 'FURNITURE_HALLOWEEN_GHOST', description = 'Decoração.', item = 'furniture_halloween_ghost', amount = 1, price = 5000, image = 'nui://vrp/config/inventory/furniture_halloween_ghost.png' },
+    { id = 'vip_furniture_largebed', category = 'moveis', name = 'FURNITURE_LARGEBED', description = 'Móveis.', item = 'furniture_largebed', amount = 1, price = 5000, image = 'nui://vrp/config/inventory/furniture_largebed.png' },
+    { id = 'vip_furniture_browncloset', category = 'moveis', name = 'FURNITURE_BROWNCLOSET', description = 'Móveis.', item = 'furniture_browncloset', amount = 1, price = 5000, image = 'nui://vrp/config/inventory/furniture_browncloset.png' }
+}

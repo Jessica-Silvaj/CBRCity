@@ -1,0 +1,37 @@
+{
+  "movement": [
+    { "id": "default", "clipset": "" },
+    { "id": "casual", "clipset": "move_m@casual@a" },
+    { "id": "confident", "clipset": "move_m@confident" },
+    { "id": "brave", "clipset": "move_m@brave" },
+    { "id": "business", "clipset": "move_m@business@a" },
+    { "id": "gangster", "clipset": "move_m@gangster@generic" },
+    { "id": "gangster2", "clipset": "move_m@gangster@var_a" },
+    { "id": "tough", "clipset": "move_m@intimidation@unarmed" },
+    { "id": "guard", "clipset": "move_m@prison_gaurd" },
+    { "id": "muscle", "clipset": "move_m@muscle@a" },
+    { "id": "hiking", "clipset": "move_m@hiking" },
+    { "id": "hurried", "clipset": "move_m@hurry@a" },
+    { "id": "injured", "clipset": "move_m@injured" },
+    { "id": "injuredFemale", "clipset": "move_f@injured" },
+    { "id": "drunk", "clipset": "move_m@drunk@moderatedrunk" },
+    { "id": "veryDrunk", "clipset": "move_m@drunk@verydrunk" },
+    { "id": "nervous", "clipset": "move_characters@jimmy@nervous@" },
+    { "id": "sad", "clipset": "move_m@depressed@a" },
+    { "id": "handcuffed", "clipset": "move_m@prisoner_cuffed" },
+    { "id": "heels", "clipset": "move_f@heels@c" },
+    { "id": "arrogant", "clipset": "move_f@arrogant@a" },
+    { "id": "femme", "clipset": "move_f@femme@" },
+    { "id": "grooving", "clipset": "anim@move_m@grooving@" },
+    { "id": "armored", "clipset": "anim_group_move_ballistic" }
+  ],
+  "weapon": [
+    { "id": "default", "override": "Default" },
+    { "id": "gang", "override": "Gang" },
+    { "id": "oneHanded", "override": "Gang1H" },
+    { "id": "hillbilly", "override": "Hillbilly" },
+    { "id": "ballistic", "override": "Ballistic" },
+    { "id": "focused", "override": "FirstPersonAiming" },
+    { "id": "gangFemale", "override": "GangFemale" }
+  ]
+}

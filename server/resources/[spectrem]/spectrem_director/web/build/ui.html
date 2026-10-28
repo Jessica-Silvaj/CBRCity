@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="style.css?v=20261005202209" rel="stylesheet" />
+    <link rel="stylesheet" href="vendor/outfit.css" />
+    <link rel="stylesheet" href="../fonts/cinematic/font-library.css" />
+    <link rel="stylesheet" href="vendor/fontawesome.min.css" />
+    <title>Spectrem Director</title>
+  </head>
+  <body>
+    <div id="app-shell"></div>
+
+    <div id="_sd_err" style="display:none;position:fixed;top:12px;left:12px;background:rgba(180,0,0,0.93);color:#fff;padding:14px 18px;border-radius:10px;font-size:13px;z-index:999999;max-width:560px;word-break:break-all;line-height:1.5;pointer-events:none;"></div>
+    <script>
+    window.onerror = function(msg, src, line) {
+      var el = document.getElementById('_sd_err');
+      if (el) { el.style.display = 'block'; el.textContent = 'ERRO JS (linha ' + line + '): ' + msg; }
+      return false;
+    };
+    </script>
+    <script src="vendor/vue.min.js"></script>
+    <script>
+    if (typeof Vue === 'undefined') {
+      var el = document.getElementById('_sd_err');
+      if (el) { el.style.display = 'block'; el.textContent = 'Não foi possível carregar o Vue local. Reinstale os arquivos do resource.'; }
+    } else {
+      Vue.config.errorHandler = function(err, vm, info) {
+        var el = document.getElementById('_sd_err');
+        if (el) { el.style.display = 'block'; el.textContent = 'ERRO VUE [' + info + ']: ' + err.message; }
+      };
+    }
+    </script>
+    <script src="spectrem-director.js?v=20261005202209"></script>
+    <script src="../locales/locale-factory.js"></script>
+    <script src="../locales/pt-br.js"></script>
+  </body>
+</html>

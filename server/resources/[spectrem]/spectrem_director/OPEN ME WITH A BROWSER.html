@@ -1,0 +1,1931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark">
+  <title>Spectrem Director — Complete Installation &amp; User Guide</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* Design tokens shared with layout.html so the offline manual keeps the
+       same visual language. Generated from the documentation source. */
+    :root {
+          --bg-0: #0c0c0f;
+          --bg-1: #0c0c0f;
+          --bg-2: #0c0c0f;
+          --surface: #0c0c0f;
+          --surface-2: #141418;
+          --card: #141418;
+          --border: rgba(255,255,255,0.06);
+          --border-h: rgba(255,255,255,0.12);
+          --t1: #ededf0;
+          --t2: #8e8e9a;
+          --t3: #5a5a66;
+          --accent: #d4a853;
+          --accent-h: #c49a48;
+          --accent-bg: #d4a85318;
+          --accent-border: #d4a85333;
+          --accent-glow: #d4a85355;
+          --accent-dim: #d4a85326;
+          --danger: #ff4d6a;
+          --success: #34d399;
+          --font: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+          --font-display: 'Sora', -apple-system, BlinkMacSystemFont, sans-serif;
+          --mono: 'IBM Plex Mono', 'SFMono-Regular', monospace;
+          --max-w: 1680px;
+          --gap: 24px;
+          --r: 16px;
+          --r-sm: 10px;
+          --r-xs: 6px;
+          --ease: cubic-bezier(.22, 1, .36, 1);
+          --ease-out-expo: cubic-bezier(.16, 1, .3, 1);
+          --transition: 0.5s var(--ease-out-expo);
+        }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg-0);
+      color: var(--t2);
+      font-family: var(--font);
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    ::selection { background: var(--accent-dim, rgba(212,168,83,.25)); color: var(--t1); }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-0); }
+    ::-webkit-scrollbar-thumb { background: var(--border-h); border-radius: 3px; }
+
+    /* The offline manual has no fixed storefront header, so it owns its top spacing. */
+    .docs { padding-top: 32px; }
+  </style>
+</head>
+<body>
+
+<style>
+/* ==========================================================================
+   Documentation — uses the same tokens as the rest of the interface
+   (--accent, --card, --border, --t1/2/3, Sora / DM Sans / IBM Plex Mono)
+   ========================================================================== */
+
+.docs {
+  position: relative;
+  z-index: 10;
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 0 var(--gap, 24px) 120px;
+  font-family: var(--font);
+  font-size: 14.5px;
+  line-height: 1.75;
+  color: var(--t2);
+}
+
+.docs-layout {
+  display: grid;
+  grid-template-columns: 264px minmax(0, 1fr);
+  gap: 56px;
+  align-items: start;
+}
+
+/* --- Barra lateral ------------------------------------------------------ */
+
+.docs-aside {
+  position: sticky;
+  top: 24px;
+  max-height: calc(100vh - 48px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  background: var(--card);
+}
+
+.docs-aside__head {
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.docs-aside__label {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+.docs-aside__title {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--t1);
+  line-height: 1.3;
+  margin: 0;
+}
+.docs-aside__version {
+  margin-top: 6px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--t3);
+}
+
+.docs-search { padding: 14px 14px 6px; }
+.docs-search input {
+  width: 100%;
+  padding: 9px 12px;
+  font-family: var(--font);
+  font-size: 13px;
+  color: var(--t1);
+  background: var(--bg-0);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xs);
+  outline: none;
+  transition: border-color .25s var(--ease);
+}
+.docs-search input::placeholder { color: var(--t3); }
+.docs-search input:focus { border-color: var(--accent-border); }
+
+.docs-nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 10px 18px;
+}
+.docs-nav__group { margin-bottom: 18px; }
+.docs-nav__group.is-empty { display: none; }
+.docs-nav__title {
+  padding: 0 10px 6px;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--t3);
+}
+.docs-nav a {
+  display: block;
+  padding: 6px 10px;
+  margin: 1px 0;
+  font-size: 13px;
+  color: var(--t2);
+  border-radius: var(--r-xs);
+  border-left: 2px solid transparent;
+  text-decoration: none;
+  transition: color .2s var(--ease), background .2s var(--ease);
+}
+.docs-nav a:hover { color: var(--t1); background: rgba(255,255,255,.03); }
+.docs-nav a.is-active {
+  color: var(--accent);
+  background: var(--accent-bg);
+  border-left-color: var(--accent);
+}
+.docs-nav a.is-hidden { display: none; }
+
+.docs-aside__foot {
+  padding: 12px 20px;
+  border-top: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--t3);
+}
+
+.docs-aside__toggle { display: none; }
+
+/* --- Cabecera ----------------------------------------------------------- */
+
+.docs-hero {
+  padding: 56px 0 44px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 48px;
+}
+.docs-hero__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px;
+  border: 1px solid var(--accent-border);
+  border-radius: 100px;
+  background: var(--accent-bg);
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.docs-hero__label::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.docs-hero h1 {
+  margin: 20px 0 14px;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4.4vw, 3.1rem);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  color: var(--t1);
+}
+.docs-hero h1 span { color: var(--accent); }
+.docs-hero p {
+  max-width: 620px;
+  margin: 0;
+  font-size: 16px;
+  color: var(--t2);
+}
+.docs-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 28px;
+}
+/* High specificity keeps button labels from inheriting the generic content-link accent. */
+.docs-main a.docs-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--t1);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  text-decoration: none;
+  transition: border-color .25s var(--ease), color .25s var(--ease);
+}
+.docs-main a.docs-btn:hover { border-color: var(--border-h); color: var(--t1); }
+.docs-main a.docs-btn--primary {
+  color: var(--bg-0);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.docs-main a.docs-btn--primary:hover { background: var(--accent-h); border-color: var(--accent-h); color: var(--bg-0); }
+
+/* --- Secciones ---------------------------------------------------------- */
+
+.docs-section {
+  margin-bottom: 64px;
+  scroll-margin-top: 24px;
+}
+.docs-section__head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 22px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+.docs-section__num {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--accent-bg);
+  border: 1px solid var(--accent-border);
+  border-radius: var(--r-xs);
+}
+.docs-section__head h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2.4vw, 1.5rem);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: var(--t1);
+}
+
+.docs h3 {
+  margin: 32px 0 10px;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--t1);
+}
+.docs h4 {
+  margin: 22px 0 8px;
+  font-family: var(--font-display);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--t1);
+}
+.docs p { margin: 0 0 12px; }
+.docs strong, .docs b { color: var(--t1); font-weight: 600; }
+/* Content links only; the navigation index has its own styling. */
+.docs-main a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color .25s; }
+.docs-main a:hover { border-bottom-color: var(--accent); }
+
+.docs ul, .docs ol { margin: 10px 0 16px; padding-left: 22px; }
+.docs ul { list-style: disc; }
+.docs ol { list-style: decimal; }
+.docs li { margin: 5px 0; padding-left: 3px; color: var(--t2); }
+.docs li::marker { color: var(--t3); }
+
+/* --- Tarjetas ----------------------------------------------------------- */
+
+.docs-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 16px 0; }
+.docs-grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.docs-card {
+  padding: 18px 20px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  transition: border-color .25s var(--ease);
+}
+.docs-card:hover { border-color: var(--border-h); }
+.docs-card__icon {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  color: var(--accent);
+  background: var(--accent-bg);
+  border: 1px solid var(--accent-border);
+  border-radius: var(--r-xs);
+}
+.docs-card__title {
+  margin: 0 0 6px;
+  font-family: var(--font-display);
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--t1);
+}
+.docs-card p, .docs-card li { font-size: 13px; }
+.docs-card p:last-child, .docs-card ul:last-child { margin-bottom: 0; }
+.docs-card ul { margin: 6px 0 0; }
+
+.docs-metric {
+  display: block;
+  margin-bottom: 4px;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--t1);
+}
+
+.docs-tag {
+  display: inline-block;
+  margin: 2px 5px 2px 0;
+  padding: 3px 10px;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  color: var(--t2);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+}
+
+/* --- Avisos ------------------------------------------------------------- */
+
+.docs-note {
+  display: flex;
+  gap: 12px;
+  margin: 18px 0;
+  padding: 14px 16px;
+  font-size: 13.5px;
+  border: 1px solid;
+  border-radius: var(--r-sm);
+}
+.docs-note b { display: block; margin-bottom: 3px; color: inherit; }
+.docs-note__sym { flex: 0 0 auto; font-weight: 700; }
+.docs-note--info    { color: #9fb6e8; border-color: rgba(120,150,225,.22); background: rgba(90,120,210,.07); }
+.docs-note--tip     { color: var(--success); border-color: rgba(52,211,153,.2); background: rgba(52,211,153,.06); }
+.docs-note--warning { color: var(--accent); border-color: var(--accent-border); background: var(--accent-bg); }
+.docs-note--danger  { color: var(--danger); border-color: rgba(255,77,106,.22); background: rgba(255,77,106,.06); }
+
+/* --- Codigo ------------------------------------------------------------- */
+
+.docs-code { position: relative; margin: 14px 0 18px; }
+.docs pre {
+  margin: 0;
+  padding: 16px 18px;
+  overflow: auto;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  line-height: 1.7;
+  color: var(--t1);
+  background: rgba(255,255,255,.02);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+}
+.docs :not(pre) > code {
+  padding: 2px 6px;
+  font-family: var(--mono);
+  font-size: .88em;
+  color: var(--accent);
+  background: rgba(255,255,255,.04);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xs);
+}
+.docs-copy {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 4px 10px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--t3);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xs);
+  cursor: pointer;
+  transition: color .2s var(--ease), border-color .2s var(--ease);
+}
+.docs-copy:hover { color: var(--t1); border-color: var(--border-h); }
+
+.docs kbd {
+  display: inline-block;
+  min-width: 24px;
+  padding: 2px 7px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  text-align: center;
+  color: var(--t1);
+  background: var(--surface-2);
+  border: 1px solid var(--border-h);
+  border-bottom-width: 2px;
+  border-radius: var(--r-xs);
+}
+
+.docs-tree {
+  margin: 14px 0 18px;
+  padding: 16px 18px;
+  overflow: auto;
+  white-space: pre;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  line-height: 1.8;
+  color: var(--t2);
+  background: rgba(255,255,255,.02);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+}
+
+/* --- Pasos -------------------------------------------------------------- */
+
+.docs-steps { margin: 18px 0; counter-reset: docstep; }
+.docs-step {
+  position: relative;
+  margin: 0 0 10px 18px;
+  padding: 16px 18px 16px 30px;
+  border-left: 1px solid var(--border-h);
+  background: linear-gradient(90deg, var(--accent-bg), transparent 60%);
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+}
+.docs-step::before {
+  counter-increment: docstep;
+  content: counter(docstep);
+  position: absolute;
+  left: -16px;
+  top: 15px;
+  display: grid;
+  place-items: center;
+  width: 31px;
+  height: 31px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--bg-0);
+  border: 1px solid var(--accent-border);
+  border-radius: 50%;
+}
+.docs-step__title { margin-bottom: 4px; font-weight: 600; color: var(--t1); }
+.docs-step p:last-child { margin-bottom: 0; }
+
+/* --- Tablas ------------------------------------------------------------- */
+
+.docs-table {
+  margin: 14px 0 20px;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+}
+.docs-table table { width: 100%; border-collapse: collapse; font-size: 13px; background: var(--card); }
+.docs-table th {
+  padding: 10px 14px;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: left;
+  color: var(--t3);
+  background: var(--surface-2);
+  white-space: nowrap;
+}
+.docs-table td {
+  padding: 11px 14px;
+  vertical-align: top;
+  color: var(--t2);
+  border-top: 1px solid var(--border);
+}
+.docs-table td:first-child { color: var(--t1); font-weight: 500; white-space: nowrap; }
+
+/* --- Desplegables ------------------------------------------------------- */
+
+.docs details {
+  margin: 10px 0;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+}
+.docs summary {
+  padding: 13px 16px;
+  font-weight: 600;
+  color: var(--t1);
+  cursor: pointer;
+  list-style: none;
+}
+.docs summary::-webkit-details-marker { display: none; }
+.docs summary::before {
+  content: "+";
+  display: inline-block;
+  width: 14px;
+  font-family: var(--mono);
+  color: var(--accent);
+}
+.docs details[open] > summary::before { content: "\2212"; }
+.docs details > div { padding: 0 16px 14px 30px; }
+.docs details > div > *:last-child { margin-bottom: 0; }
+
+.docs-foot {
+  padding-top: 28px;
+  border-top: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1.9;
+  color: var(--t3);
+}
+
+.docs-top {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 80;
+  display: none;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  color: var(--accent);
+  background: var(--card);
+  border: 1px solid var(--accent-border);
+  border-radius: var(--r-sm);
+  cursor: pointer;
+}
+.docs-top.is-visible { display: grid; }
+
+/* --- Responsive --------------------------------------------------------- */
+
+@media (max-width: 1080px) {
+  .docs-grid--3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .docs-layout { gap: 36px; grid-template-columns: 232px minmax(0, 1fr); }
+}
+
+@media (max-width: 900px) {
+  .docs-layout { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .docs-aside {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 1200;
+    width: 282px;
+    max-height: none;
+    border-radius: 0;
+    border-width: 0 1px 0 0;
+    transform: translateX(-102%);
+    transition: transform .3s var(--ease);
+  }
+  .docs-aside.is-open { transform: translateX(0); box-shadow: 24px 0 60px rgba(0,0,0,.5); }
+  .docs-aside__toggle {
+    position: fixed;
+    left: 16px;
+    bottom: 20px;
+    z-index: 1201;
+    display: grid;
+    place-items: center;
+    gap: 8px;
+    width: auto;
+    padding: 0 16px;
+    height: 40px;
+    grid-auto-flow: column;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--t1);
+    background: var(--card);
+    border: 1px solid var(--border-h);
+    border-radius: var(--r-sm);
+    cursor: pointer;
+  }
+  .docs-hero { padding-top: 40px; }
+}
+
+@media (max-width: 640px) {
+  .docs { font-size: 14px; padding-bottom: 90px; }
+  .docs-grid, .docs-grid--3 { grid-template-columns: minmax(0, 1fr); }
+  .docs-section { margin-bottom: 48px; }
+  .docs-hero__actions .docs-btn { flex: 1 1 auto; justify-content: center; }
+}
+
+@media print {
+  .docs-aside, .docs-aside__toggle, .docs-top, .docs-copy, .docs-hero__actions { display: none !important; }
+  .docs-layout { display: block; }
+  .docs { max-width: none; padding: 0; }
+}
+</style>
+
+<div class="docs" lang="en">
+  <div class="docs-layout">
+
+    <aside class="docs-aside" id="docsAside">
+      <div class="docs-aside__head">
+        <div class="docs-aside__label">Documentation</div>
+        <p class="docs-aside__title">Spectrem Director</p>
+        <div class="docs-aside__version">Version 2.8.0</div>
+      </div>
+
+      <div class="docs-search">
+        <input type="search" id="docsSearch" placeholder="Filter sections..." aria-label="Filter sections">
+      </div>
+
+      <nav class="docs-nav" id="docsNav">
+        <div class="docs-nav__group">
+          <div class="docs-nav__title">Getting started</div>
+          <a href="#overview">Overview</a>
+          <a href="#requirements">Requirements</a>
+          <a href="#spectrem-export">Spectrem Export</a>
+          <a href="#installation">Installation</a>
+          <a href="#scripthook-plugins">Script Hook plugins</a>
+          <a href="#access">Access &amp; Scene Admin</a>
+          <a href="#first-start">First start</a>
+        </div>
+        <div class="docs-nav__group">
+          <div class="docs-nav__title">Configuration</div>
+          <a href="#configuration">Global configuration</a>
+          <a href="#integrations">edit.lua &amp; integrations</a>
+          <a href="#updates">Updating safely</a>
+        </div>
+        <div class="docs-nav__group">
+          <div class="docs-nav__title">Director panels</div>
+          <a href="#navigation">Navigation basics</a>
+          <a href="#controls">Master controls</a>
+          <a href="#tutorial">Guided tutorial</a>
+          <a href="#scenes">Scenes &amp; favorites</a>
+          <a href="#peds">My Peds</a>
+          <a href="#animations">Animations</a>
+          <a href="#live-tools">Live scene tools</a>
+          <a href="#environment">Environment &amp; effects</a>
+        </div>
+        <div class="docs-nav__group">
+          <div class="docs-nav__title">Creation tools</div>
+          <a href="#spooner">Object Spooner</a>
+          <a href="#camera">Cinematic Camera</a>
+          <a href="#scene-preview">Scene Preview</a>
+          <a href="#object-motion">Object Motion</a>
+          <a href="#actor-sequencer">Actor Sequencer</a>
+          <a href="#door-director">Door Director</a>
+          <a href="#scene-tools">Scene Tools</a>
+          <a href="#stage-lighting">Stage Lighting</a>
+          <a href="#cinematic-text">Cinematic Text</a>
+          <a href="#custom-scenes">Custom Scenes</a>
+          <a href="#timeline">Timeline</a>
+          <a href="#replays">Replay systems</a>
+          <a href="#cutscenes">Cutscene Player</a>
+          <a href="#utilities">Mechanic &amp; PropPlace</a>
+        </div>
+        <div class="docs-nav__group">
+          <div class="docs-nav__title">Reference</div>
+          <a href="#commands">Commands</a>
+          <a href="#storage">Database &amp; storage</a>
+          <a href="#best-practices">Best practices</a>
+          <a href="#troubleshooting">Troubleshooting</a>
+          <a href="#support">Support</a>
+        </div>
+      </nav>
+
+      <div class="docs-aside__foot">Complete manual &middot; v2.8.0</div>
+    </aside>
+
+    <button class="docs-aside__toggle" id="docsAsideToggle" aria-label="Open contents">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:15px;height:15px"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      Contents
+    </button>
+
+    <main class="docs-main">
+
+      <header class="docs-hero">
+        <span class="docs-hero__label">Version 2.8.0</span>
+        <h1>Direct every scene.<br><span>Frame every moment.</span></h1>
+        <p>The complete installation, configuration, and operating guide for Spectrem Director on FiveM.</p>
+        <div class="docs-hero__actions">
+          <a class="docs-btn docs-btn--primary" href="#installation">Start installation</a>
+          <a class="docs-btn" href="https://github.com/Spectrematozoide/SpectremExport/releases" target="_blank" rel="noopener noreferrer">Download Spectrem Export</a>
+          <a class="docs-btn" href="#navigation">Learn the interface</a>
+          <a class="docs-btn" href="#commands">View shortcuts</a>
+        </div>
+      </header>
+
+      <section class="docs-section" id="overview">
+        <div class="docs-section__head"><span class="docs-section__num">01</span><h2>Overview</h2></div>
+        <p><strong>Spectrem Director</strong> is an in-game filmmaking and scene-authoring suite for FiveM. It combines actor placement, saved characters, animations, synchronized scenes, cinematic cameras, object editing, replay tools, custom scene composition, and a multi-track Timeline in one consistent interface.</p>
+        <div class="docs-grid docs-grid--3">
+          <div class="docs-card"><span class="docs-card__icon">&#9678;</span><div class="docs-card__title">Direct actors</div><p>Spawn, dress, animate, arm, position, control, and save reusable peds.</p></div>
+          <div class="docs-card"><span class="docs-card__icon">&#9672;</span><div class="docs-card__title">Build scenes</div><p>Combine actors, vehicles, effects, cameras, delays, and attachments into repeatable scenes.</p></div>
+          <div class="docs-card"><span class="docs-card__icon">&#9635;</span><div class="docs-card__title">Edit time</div><p>Arrange clips on dynamic tracks, trim, split, snap, preview, and save complete projects.</p></div>
+          <div class="docs-card"><span class="docs-card__icon">&#9673;</span><div class="docs-card__title">Author cameras</div><p>Capture keyframes, record live movement, control lenses, focus, shake, guides, and transitions.</p></div>
+          <div class="docs-card"><span class="docs-card__icon">&#9671;</span><div class="docs-card__title">Stage objects</div><p>Use a native gizmo to place peds, props, and vehicles with multi-selection and precise transforms.</p></div>
+          <div class="docs-card"><span class="docs-card__icon">&#8635;</span><div class="docs-card__title">Replay action</div><p>Record Ghost, Ped, and Vehicle takes, then reuse them in larger edits.</p></div>
+        </div>
+        <div class="docs-note docs-note--info"><span class="docs-note__sym">i</span><div><b>Designed for server owners and trusted creators</b>The main entry points support ACE access control. Review the permissions section before making the resource available on a public server.</div></div>
+      </section>
+
+      <section class="docs-section" id="requirements">
+        <div class="docs-section__head"><span class="docs-section__num">02</span><h2>Requirements</h2></div>
+        <div class="docs-table"><table>
+          <thead><tr><th>Component</th><th>Requirement</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>FiveM server</td><td>Current artifact, GTA V, Cerulean</td><td>OneSync is strongly recommended for synchronized entities and nearby playback.</td></tr>
+            <tr><td>Database</td><td>MySQL or MariaDB</td><td>Use a low-latency database with the <code>utf8mb4</code> character set.</td></tr>
+            <tr><td>Dependency</td><td><code>oxmysql</code></td><td>The only mandatory external resource. It must start before Director.</td></tr>
+            <tr><td>Framework</td><td>None</td><td>ESX, QBCore, Qbox, and similar frameworks are not required.</td></tr>
+          </tbody>
+        </table></div>
+        <h3>Recommended database permissions</h3>
+        <p>During initial setup and version migrations, the configured database account should be allowed to run:</p>
+        <p><span class="docs-tag">CREATE</span><span class="docs-tag">ALTER</span><span class="docs-tag">SELECT</span><span class="docs-tag">INSERT</span><span class="docs-tag">UPDATE</span><span class="docs-tag">DELETE</span></p>
+        <div class="docs-note docs-note--tip"><span class="docs-note__sym">&#10003;</span><div><b>No required clothing resource</b>The built-in Native Ped Studio works without an appearance dependency. External clothing systems are optional.</div></div>
+        <p><strong>Ped Studio:</strong> expand Ped, Inheritance, Face Features, Appearance, Clothes, Props or Tattoos in the left column. The adjacent rail controls camera views, rotation, temporary wardrobe visibility, Save and Cancel. Ped provides freemode presets, searchable models and a custom model field when model editing is allowed. Opening a section focuses its relevant camera view. Use clothing arrows or exact values to change variations.</p>
+        <p>Wardrobe visibility only hides clothing during inspection and never changes the saved outfit. Save and Cancel ask you to confirm before leaving. Saved peds retain the existing format for scenes and Timeline.</p>
+      </section>
+
+      <section class="docs-section" id="spectrem-export">
+        <div class="docs-section__head"><span class="docs-section__num">02B</span><h2>Spectrem Export</h2></div>
+        <p><strong>Spectrem Export</strong> is the optional Windows companion for direct MP4 output. Director works without it: <strong>ACTION</strong> continues to record for Rockstar Editor, while <strong>EXPORT</strong> requires the desktop application to be running on the same computer as FiveM/GTA.</p>
+        <div class="docs-hero__actions">
+          <a class="docs-btn docs-btn--primary" href="https://github.com/Spectrematozoide/SpectremExport/releases" target="_blank" rel="noopener noreferrer">Open downloads</a>
+          <a class="docs-btn" href="https://github.com/Spectrematozoide/SpectremExport" target="_blank" rel="noopener noreferrer">View official repository</a>
+        </div>
+        <div class="docs-table"><table>
+          <thead><tr><th>Component</th><th>Requirement</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>Operating system</td><td>Windows 10/11 x64</td><td>The exporter runs beside FiveM/GTA on the player's computer, not on the FiveM server.</td></tr>
+            <tr><td>Runtime</td><td>.NET Framework 4.8</td><td>Required to run <code>SpectremExport.exe</code>.</td></tr>
+            <tr><td>First launch</td><td>HTTPS connection</td><td>The application downloads and verifies its managed FFmpeg copy when it is not already available.</td></tr>
+          </tbody>
+        </table></div>
+        <div class="docs-steps">
+          <div class="docs-step"><div class="docs-step__title">Download the portable package</div><p>Open GitHub Releases, expand <strong>Assets</strong>, and download <code>SpectremExport-&lt;version&gt;-portable.zip</code>. The automatic <strong>Source code</strong> ZIP files are not the ready-to-run application.</p></div>
+          <div class="docs-step"><div class="docs-step__title">Extract the complete archive</div><p>Place all files in a permanent folder. Do not run the executable from inside the ZIP.</p></div>
+          <div class="docs-step"><div class="docs-step__title">Start Spectrem Export</div><p>Run <code>SpectremExport.exe</code> and leave it open with a visible FiveM/GTA window. Its local service uses <code>127.0.0.1:55875</code>.</p></div>
+          <div class="docs-step"><div class="docs-step__title">Export from Director</div><p>Select <strong>EXPORT</strong> in Camera, Custom Scenes, or Timeline. Review the preflight results and begin only when the exporter reports that it is ready.</p></div>
+        </div>
+        <p>The default output folder is <code>%USERPROFILE%\Videos\Spectrem Export</code>. If Windows rejects that location, the application uses <code>%LOCALAPPDATA%\Spectrem Export\captures</code>. For regular use, set the same long random token in the exporter's <code>sharedToken</code> and Director's <code>Config.SpectremRecorder.Token</code>, then restart both.</p>
+        <div class="docs-note docs-note--warning"><span class="docs-note__sym">!</span><div><b>Current capture limits</b>The exporter records the visible game window in real time as H.264 MP4 without audio. The prototype is not digitally signed, so Windows SmartScreen may display a warning on first launch. Download it only from the official repository linked above.</div></div>
+      </section>
+
+      <section class="docs-section" id="installation">
+        <div class="docs-section__head"><span class="docs-section__num">03</span><h2>Installation</h2></div>
+        <div class="docs-steps">
+          <div class="docs-step"><div class="docs-step__title">Stop the server and back up existing data</div><p>Before replacing an older release, back up the database and copy the current resource, especially <code>config.lua</code> and <code>edit.lua</code>.</p></div>
+          <div class="docs-step"><div class="docs-step__title">Extract the production package</div><p>Place it in the server's <code>resources</code> directory and name the final folder exactly <code>spectrem_director</code>.</p></div>
+          <div class="docs-step"><div class="docs-step__title">Install and configure oxmysql</div><p>Set the connection string before oxmysql starts. Confirm that oxmysql can connect before enabling Director.</p></div>
+          <div class="docs-step"><div class="docs-step__title">Add the correct start order</div><p>Start optional providers first, then Director.</p></div>
+          <div class="docs-step"><div class="docs-step__title">Configure permissions and bridges</div><p>Set ACE access in <code>server.cfg</code>, then review <code>config.lua</code> and <code>edit.lua</code>.</p></div>
+          <div class="docs-step"><div class="docs-step__title">Start and verify</div><p>Watch the console until database initialization finishes, join with an authorized account, and complete the first-start checklist.</p></div>
+        </div>
+        <h3>Minimum server.cfg example</h3>
+        <div class="docs-code"><button class="docs-copy" type="button">Copy</button><pre><code>set mysql_connection_string "mysql://USER:PASSWORD@127.0.0.1/DATABASE?charset=utf8mb4"
+set sv_enableNetEventReassembly true
+
+ensure oxmysql
+ensure spectrem_director</code></pre></div>
+        <div class="docs-note docs-note--info"><span class="docs-note__sym">i</span><div><b>Keep latent-event reassembly enabled</b>Director uses FiveM latent transfers for large Ped Replay payloads so they do not overflow the normal reliable-event queue. FiveM enables this feature by default, but declaring <code>set sv_enableNetEventReassembly true</code> explicitly prevents another server preset from disabling it. Restart the complete server after changing this convar.</div></div>
+        <h3 id="scripthook-plugins">Client plugins (Script Hook)</h3>
+        <p>If you use client plugins that require Script Hook, the server administrator must add or update this line in the active <code>server.cfg</code>:</p>
+        <div class="docs-code"><button class="docs-copy" type="button">Copy</button><pre><code>sv_scriptHookAllowed 1</code></pre></div>
+        <p>Write the command without <code>=</code>. <code>1</code> permits Script Hook; <code>0</code> disables it. Check that another loaded configuration does not override the value, restart the complete server, and reconnect. Restarting only Director does not reload <code>server.cfg</code>.</p>
+        <p>This applies to Script Hook-based client plugins. Spectrem Director and normal FiveM appearance or emote resources do not require this setting by themselves.</p>
+        <div class="docs-note docs-note--info"><span class="docs-note__sym">i</span><div><b>Rockstar false positives</b>This setting is not a guarantee against false-positive detections by Rockstar or Cfx.re. The <a href="https://docs.fivem.net/docs/server-manual/server-commands/#sv_scripthookallowed-truefalse" target="_blank" rel="noopener noreferrer">official FiveM reference</a> documents permission to use Script Hook. Follow the plugin author's FiveM compatibility and installation instructions.</div></div>
+        <div class="docs-note docs-note--warning"><span class="docs-note__sym">!</span><div><b>Third-party mods disclaimer</b>Spectrem Scripts is not responsible for account bans or suspensions resulting from the use of third-party mods or plugins. Use these mods only in local environments and make sure you follow the platform rules. Local use does not guarantee protection against sanctions.</div></div>
+        <h3>Optional integration order</h3>
+        <div class="docs-code"><button class="docs-copy" type="button">Copy</button><pre><code>set sv_enableNetEventReassembly true
+
+ensure oxmysql
+ensure illenium-appearance   # Only if selected in edit.lua
+ensure WC_EMOTES_V8          # Only if its bridge remains enabled
+ensure spectrem_director</code></pre></div>
+        <div class="docs-note docs-note--warning"><span class="docs-note__sym">!</span><div><b>Use the automatic database setup</b>A normal installation does not require importing SQL. The resource creates and migrates permanent and staging tables. The included SQL file is an emergency fallback, not the preferred setup path.</div></div>
+        <h3>Expected production structure</h3>
+        <div class="docs-tree">resources/
+└── spectrem_director/
+    ├── shared/
+    ├── modules/              # organized runtime domains
+    ├── stream/
+    ├── web/
+    ├── config.lua            # single global configuration
+    ├── edit.lua
+    ├── fxmanifest.lua
+    └── install.md</div>
+      </section>
+
+      <section class="docs-section" id="access">
+        <div class="docs-section__head"><span class="docs-section__num">04</span><h2>Access, Scene Admin &amp; public camera</h2></div>
+        <p>General Director access and individual feature policies are separate. All configuration stays in the commented sections of <code>config.lua</code>.</p>
+        <h3>Configuration example</h3>
+        <div class="docs-code"><button class="docs-copy" type="button">Copy</button><pre><code>Config.Access = {
+    AdminOnly = true, -- false opens the menu, but feature policies still apply
+    AcePermissions = { 'spectrem_director.use' },
+}
+
+Config.SceneAdmin = {
+    Command = 'sceneadmin',
+    CameraCommand = 'camera',
+    Licenses = {
+        -- 'license:0123456789abcdef0123456789abcdef01234567',
+        -- Replace the example with your real player identifier.
+    },
+    AcePermission = '', -- Optional: 'spectrem_director.manage'
+    AdminsHaveToolAccess = true,
+    AuditLimit = 60,
+    PublicAccess = { camera = true },
+    Defaults = { camera = 'enabled', developer = 'admin' },
+}</code></pre></div>
+        <p>Grant general Director access to a trusted group in <code>server.cfg</code>:</p>
+        <div class="docs-code"><button class="docs-copy" type="button">Copy</button><pre><code>add_ace group.admin spectrem_director.use allow</code></pre></div>
+        <p>To authorize policy management through ACE, configure the optional <code>AcePermission</code> shown above and grant it explicitly:</p>
+        <div class="docs-code"><button class="docs-copy" type="button">Copy</button><pre><code>add_ace group.superadmin spectrem_director.manage allow</code></pre></div>
+<h3>Policy modes and AdminOnly</h3>
+<div class="docs-table"><table><thead><tr><th>Feature mode</th><th><code>AdminOnly = true</code></th><th><code>AdminOnly = false</code></th></tr></thead><tbody><tr><td><code>enabled</code></td><td>Requires normal Director access; <code>PublicAccess.camera = true</code> permits public <code>/camera</code>.</td><td>Available to all players.</td></tr><tr><td><code>admin</code></td><td>Requires a SceneAdmin manager and normal Director access.</td><td>Requires a SceneAdmin manager.</td></tr><tr><td><code>disabled</code></td><td>Blocked for everyone, including managers.</td><td>Blocked for everyone, including managers.</td></tr></tbody></table></div>
+<p>Changing <code>AdminOnly</code> to <code>false</code> opens the main menu to everyone; it does <b>not</b> disable feature policies or authorize everyone to manage them. Keep it <code>true</code> for the public-camera-only setup. The legacy <code>Config.Access.Enabled = true</code> also enables the general access restriction if that field is present.</p>
+<p>A SceneAdmin manager is a player listed in <code>Config.SceneAdmin.Licenses</code> or granted the optional <code>Config.SceneAdmin.AcePermission</code>. Having <code>spectrem_director.use</code> alone grants general Director access, not management of policies or use of features in <code>admin</code> mode. <code>AdminsHaveToolAccess = true</code> gives managers general access automatically; if set to <code>false</code>, they also need general access to use restricted tools, but can still manage policies.</p>
+<h3>Set up and use Scene Admin</h3>
+<ol><li>Edit the commented <b>Scene Admin / Feature Policies</b> section in the existing <code>config.lua</code>; there is no separate <code>config_admin.lua</code>.</li><li>Add full player identifiers, including <code>license:</code> or <code>license2:</code> and their 40-character hexadecimal hash, to <code>Licenses</code>. These are player identifiers, not the server's <code>sv_licenseKey</code>. Documentation examples are placeholders.</li><li>Optionally set <code>AcePermission = 'spectrem_director.manage'</code> and grant that exact ACE to the intended group. An empty string disables this alternative; license authorization continues to work.</li><li>Keep <code>PublicAccess.camera = true</code> and set the camera policy to <code>enabled</code> for public <code>/camera</code>. Setting it to <code>admin</code> or <code>disabled</code> removes public access. <code>PublicAccess.camera = false</code> makes <code>enabled</code> camera use require normal Director access.</li><li>Restart the running resource after editing configuration. For development, use <code>restart spectrem_director_dev</code>; for an installation named <code>spectrem_director</code>, use <code>restart spectrem_director</code>.</li><li>Run <code>/sceneadmin</code>, search or filter by category, change individual modes or apply one mode to the filtered results, then select <b>Save changes</b>. <b>Discard changes</b> cancels the current draft; <b>Refresh</b> reloads the current saved policy. Closing a draft with unsaved changes asks before discarding it. <b>Ctrl+S</b> saves and <b>Esc</b> closes the panel.</li></ol>
+<p><code>Command</code> and <code>CameraCommand</code> are stored without a slash and default to <code>sceneadmin</code> and <code>camera</code>. Managers can also open Scene Admin using the shield button in Director. The panel provides English and Spanish text, counts per mode, pending-change indicators, and a history of who changed each feature, when, and its previous/new mode. <code>AuditLimit</code> defaults to 60 and is bounded to 10–100 entries.</p>
+<h3>Features covered</h3>
+<p>The panel has 33 feature controls:</p>
+<div class="docs-table"><table><thead><tr><th>Category</th><th>Policy IDs</th></tr></thead><tbody><tr><td>Scenes and editing</td><td><code>scenes</code>, <code>scene_preview</code>, <code>custom_scenes</code>, <code>timeline</code>, <code>scene_tools</code>, <code>developer</code></td></tr><tr><td>Cinema and cameras</td><td><code>camera</code>, <code>capture</code>, <code>cutscenes</code>, <code>stage_lighting</code>, <code>cinematic_text</code></td></tr><tr><td>Actors and animations</td><td><code>peds</code>, <code>appearance</code>, <code>ped_control</code>, <code>animations</code>, <code>custom_animations</code>, <code>animation_bridge</code>, <code>actor_sequencer</code>, <code>ped_replay</code></td></tr><tr><td>Objects</td><td><code>spooner</code>, <code>prop_placement</code>, <code>object_motion</code>, <code>door_director</code></td></tr><tr><td>Vehicles</td><td><code>vehicles</code>, <code>mechanic</code>, <code>vehicle_replay</code></td></tr><tr><td>World and environment</td><td><code>traffic_replay</code>, <code>police_chase</code>, <code>weather</code>, <code>density</code>, <code>environment</code>, <code>effects</code>, <code>clubs</code></td></tr></tbody></table></div>
+<p>Combat NPC actions are covered by <code>peds</code>; Ghost Replay uses <code>vehicle_replay</code>. Camera movement recording belongs to the camera workflow; capture/export has its separate policy. Public camera access does not grant the animation workspace, Timeline, Custom Scenes, or capture/export.</p>
+<h3>Persistence, live changes and recovery</h3>
+<p>Saved panel choices survive restarts in this resource's KVP storage. They are not written back into <code>config.lua</code>. Existing saved modes take precedence over <code>Defaults</code>, so changing <code>AdminOnly</code> or editing <code>Defaults</code> does not reset saved feature choices. On first use, omitted defaults become <code>admin</code> when general access is restricted, otherwise <code>enabled</code>. Use <b>Restore configuration defaults</b> in the panel to deliberately reapply the current defaults globally.</p>
+<p>Saving applies policies to connected players. Revoked tools run their cleanup, and active composed previews/recordings may be stopped; saved projects remain. Existing availability limits supported by <code>config.lua</code> and <code>edit.lua</code> still apply: the panel cannot override a feature disabled there. The UI marks these configuration locks.</p>
+<p>Concurrent edits use a revision check. If another manager saves first, your draft is retained but cannot overwrite the newer revision: refresh and reapply the changes. A failed save leaves the active policy unchanged. Invalid saved policy data locks features; an authorized manager can restore defaults from <code>/sceneadmin</code>.</p>
+<h3>Fixes and verification</h3>
+<p>The administration integration validates permissions in server handlers as well as client callbacks and commands. Nested camera, Timeline and Custom Scene actions check their required features. Server identity comes from identifiers/ACE, not a role submitted by the UI. The default access list uses the explicit <code>spectrem_director.use</code> ACE instead of the broad <code>command</code> fallback.</p>
+<p>The public <code>/camera</code> flow opens Camera Controls directly and returns to gameplay on close, including for managers who entered through the command. F5, <code>/director</code> and <code>/tutorial</code> remain separate entry points. The camera's animation shortcut is hidden for public users. Denied or malformed scene-list responses are normalized to an empty array, fixing the Vue render error <b>Cannot read properties of undefined (reading 'length')</b> seen when access was rejected.</p>
+<p>Test with both a manager and a regular player: verify public camera open/close, denied main-menu access with <code>AdminOnly = true</code>, each policy mode, saved settings after restart, and continued restrictions with <code>AdminOnly = false</code>. Automated permission, camera lifecycle, NUI and TypeScript checks passed for this implementation; a live FiveM session is still needed to verify native behavior on your server.</p>
+      </section>
+
+      <section class="docs-section" id="first-start">
+        <div class="docs-section__head"><span class="docs-section__num">05</span><h2>First-start verification</h2></div>
+        <ol>
+          <li>Start the server and confirm <code>oxmysql</code> connects first.</li>
+          <li>Confirm Director starts without a missing dependency, manifest, or NUI error.</li>
+          <li>Wait for the database-ready messages before testing saves.</li>
+          <li>Join with an authorized account and open Director using <kbd>F5</kbd> or <code>/director</code>.</li>
+          <li>Use a configured manager account to open <code>/sceneadmin</code>, save a feature policy and verify that it survives a resource restart.</li>
+          <li>With <code>AdminOnly = true</code>, verify a regular player can use public <code>/camera</code> and return to gameplay on close, while F5, <code>/director</code> and <code>/tutorial</code> remain denied. Also verify that disabling the camera removes that access.</li>
+          <li>Open Cutscene Player using <kbd>F6</kbd> or <code>/cutscenes</code>.</li>
+          <li>Run <code>/tutorial</code>, verify the spotlight and language selector, then finish the tour. Director should remain open.</li>
+          <li>Create, save, and reload one ped.</li>
+          <li>Tune a vehicle, save it under <b>My Vehicles</b>, and spawn it again to verify its mods and liveries.</li>
+          <li>Create, save, close, and reopen a small Custom Scene.</li>
+          <li>Create and save a small Timeline project, then preview it.</li>
+          <li>Preview and cancel a small Object Motion path; confirm the original prop transform is restored.</li>
+          <li>Draw and preview a two-point Actor Sequence route using the persistent Freecam.</li>
+          <li>Select a supported door, test both opening directions, then use Back to restore it.</li>
+          <li>Place one physical Stage Light and verify it in a short Rockstar Editor clip.</li>
+          <li>Test optional integrations only if they are enabled.</li>
+        </ol>
+        <h3>Healthy startup messages</h3>
+        <div class="docs-code"><button class="docs-copy" type="button">Copy</button><pre><code>[Spectrem Director] DB replay work unit: 256 KB
+[Spectrem Director] Database table ready
+[Spectrem Director] Custom scenes, Ghost Replays, and Ped Replays tables ready</code></pre></div>
+        <div class="docs-note docs-note--tip"><span class="docs-note__sym">&#10003;</span><div><b>Test authorization twice</b>Verify one allowed account can open the menu and one unprivileged account is denied. This catches most ACE mistakes before release.</div></div>
+      </section>
+
+      <section class="docs-section" id="configuration">
+        <div class="docs-section__head"><span class="docs-section__num">06</span><h2>Global configuration</h2></div>
+        <p>All supported user options are kept together in the root <code>config.lua</code>. Keep comments and data structures intact, change only values, and preserve a copy outside the resource before updating.</p>
+        <div class="docs-table"><table>
+          <thead><tr><th>Area</th><th>What it controls</th></tr></thead>
+          <tbody>
+            <tr><td>OpenKey / Command</td><td>Main menu key and fallback chat command. Defaults: <code>F5</code> and <code>/director</code>.</td></tr>
+            <tr><td>TutorialCommand</td><td>Guided tutorial chat command, stored without the slash. Default: <code>tutorial</code> (players run <code>/tutorial</code>).</td></tr>
+            <tr><td>Access</td><td>Administrator-only mode and accepted ACE permission names.</td></tr>
+            <tr><td>SceneAdmin</td><td>Manager licenses/optional ACE, <code>/sceneadmin</code>, public <code>/camera</code>, default feature modes and audit limit. Saved panel choices persist separately from this configuration.</td></tr>
+            <tr><td>Language</td><td>Interface language: English (default), Spanish, German, Turkish, French, Arabic, Vietnamese, Polish, or Brazilian Portuguese. Arabic automatically enables right-to-left direction; missing messages safely fall back to English.</td></tr>
+            <tr><td>UITheme / UIScale</td><td>Brand colors and overall NUI size.</td></tr>
+            <tr><td>RandomPeds</td><td>Models available in quick actor selectors.</td></tr>
+            <tr><td>Placement</td><td>Entity placement movement speed, rotation, and camera sensitivity.</td></tr>
+            <tr><td>ScenePreview</td><td>Inspection orbit distance, height, speed, smoothing, FOV and target behavior.</td></tr>
+            <tr><td>ObjectMotion</td><td>Procedural prop layers, keyframe limits and independent camera recorder.</td></tr>
+            <tr><td>StageLighting</td><td>Physical fixtures, verified colors, authoring Freecam and Rockstar Editor behavior.</td></tr>
+            <tr><td>CinematicText</td><td>Unicode text limits, local DUI surface, duration defaults, render distance, and persistent authoring Freecam.</td></tr>
+            <tr><td>CinematicCamera</td><td>Key bindings, movement, lenses, smoothing, focus, guides, recording, and sequence limits.</td></tr>
+            <tr><td>ActorSequencer</td><td>Persistent work camera, route capture speeds, point limits and action durations.</td></tr>
+            <tr><td>DoorDirector</td><td>Door selection, registered map/MLO archetypes, opening ratios and keyframe limits.</td></tr>
+            <tr><td>SceneTools</td><td>Maximum scene entries, collections and safe attachments.</td></tr>
+            <tr><td>Density</td><td>Default local population and traffic settings.</td></tr>
+            <tr><td><code>Config.PoliceChase</code> (Chase)</td><td>Availability, unit limits, vehicle/helicopter catalogues, driving presets, protection, local deployment and retask distances, and on-foot response.</td></tr>
+            <tr><td>Cutscenes</td><td>F6 entry point, command, fades, defaults, and timeouts.</td></tr>
+            <tr><td>TimeSpeed</td><td>Time multiplier presets displayed in Weather &amp; Time.</td></tr>
+            <tr><td>PedReplay / GhostReplay</td><td>Recording, playback, entity, drift, and safety limits.</td></tr>
+            <tr><td>CombatPeds</td><td>Combat actor health, behavior, teams, and cleanup.</td></tr>
+            <tr><td>CustomWeapons</td><td>Additional weapons shown in actor selectors.</td></tr>
+            <tr><td>PropEmotes</td><td>Prop animation attachment and placement behavior.</td></tr>
+            <tr><td>AnimCategoryRemap</td><td>Display grouping for animation categories.</td></tr>
+            <tr><td>CustomScenes</td><td>Configuration-defined synchronized scene entries.</td></tr>
+            <tr><td>CustomAnimations</td><td>Additional solo animations available in Custom Anims.</td></tr>
+          </tbody>
+        </table></div>
+        <h3>Default entry points</h3>
+        <div class="docs-code"><button class="docs-copy" type="button">Copy</button><pre><code>Config.OpenKey = 'F5'
+Config.Command = 'director'
+Config.TutorialCommand = 'tutorial'
+Config.Language = 'en'</code></pre></div>
+        <h3>Language startup behavior</h3>
+        <p><code>Config.Language</code> is the initial, global interface language. Supported codes are <code>en</code> (default), <code>es</code>, <code>de</code>, <code>tr</code>, <code>fr</code>, <code>ar</code>, <code>vi</code>, <code>pl</code>, and <code>pt-br</code> (Brazilian Portuguese). Director loads and caches this value once when the resource and NUI start, so opening the F5 menu does not translate the full interface again. Restart <code>spectrem_director</code> after changing the value.</p>
+        <div class="docs-note docs-note--warning"><span class="docs-note__sym">!</span><div><b>Do not blindly reuse an old configuration</b>New releases may add required fields. Compare your old file with the new one and reapply custom values deliberately.</div></div>
+      </section>
+
+      <section class="docs-section" id="integrations">
+        <div class="docs-section__head"><span class="docs-section__num">07</span><h2>edit.lua &amp; optional integrations</h2></div>
+        <p><code>edit.lua</code> is the supported location for server-specific bridges and editable lifecycle hooks. Avoid changing core files when the integration can be expressed here.</p>
+        <h3>Appearance provider</h3>
+        <p>The default provider is <code>native</code>, which uses the built-in ped studio. External appearance systems are optional.</p>
+        <div class="docs-code"><button class="docs-copy" type="button">Copy</button><pre><code>EDIT.ClothingSystem = "native"</code></pre></div>
+        <p>If you select an external provider, start it before Director and verify the supplied model, appearance, save, and customization hooks with both freemode and non-freemode models.</p>
+        <h3>External animation-menu bridge</h3>
+        <p>The included bridge targets <code>WC_EMOTES_V8</code> and is enabled in the shipped editable file. If that menu is not installed, disable the bridge:</p>
+        <div class="docs-code"><button class="docs-copy" type="button">Copy</button><pre><code>EDIT.AnimationBridge.Enabled = false</code></pre></div>
+        <p>Supporting a different emote menu means adapting the bridge functions inside <code>edit.lua</code>. If you are not comfortable editing them, ask us on Discord and we will help you set it up.</p>
+        <h3>Weather bridge</h3>
+        <p>Local cinematic overrides use GTA natives. Server-wide weather changes require the configured bridge and permission. Keep framework imports in a separate companion resource; do not add another framework's initialization file to Director's manifest.</p>
+        <h3>Other optional resources</h3>
+        <div class="docs-grid">
+          <div class="docs-card"><div class="docs-card__title">Renewed-Weathersync</div><p>Optional synchronization target for server weather and time.</p></div>
+          <div class="docs-card"><div class="docs-card__title">screenshot-basic</div><p>Enables the Camera panel's Photo button. Normal screenshots still work without it.</p></div>
+        </div>
+        <h3>Optional content catalogs</h3>
+        <p>Director discovers the following catalog files when the resource starts. Keep their filenames and paths exactly as shown:</p>
+        <div class="docs-grid">
+          <div class="docs-card"><div class="docs-card__title"><code>modules/cutscenes/data/newcutscene.lua</code></div><p>When present, its entries appear in a dedicated <strong>New</strong> tab in the Cutscene Player, including an entry count. The tab is hidden when the catalog is absent or empty.</p></div>
+          <div class="docs-card"><div class="docs-card__title"><code>modules/scenes/data/scenes_update.lua</code></div><p>Included as a normal client script. FiveM loads it directly, including escrow encryption, before its scenes are appended under <strong>Data Update</strong>. Keep it in the complete resource installation; optional-file detection is no longer used for this catalog.</p></div>
+          <p>If Data Update is missing, check the client <kbd>F8</kbd> console for <code>[Spectrem Director][Catalog]</code> with <code>source=client_script</code>: it reports the path, load status and entry count. Check preceding script-loading errors and install the complete current release. New Cutscenes and STUNT remain optional text catalogs and must retain their packaged <code>escrow_ignore</code> rules before uploading to Portal. Restart the resource after installing a catalog.</p>
+        </div>
+        <div class="docs-note docs-note--info"><span class="docs-note__sym">i</span><div><b>Restart required</b>Restart the Director resource after adding or removing either catalog so its available content is rebuilt.</div></div>
+      </section>
+
+      <section class="docs-section" id="updates">
+        <div class="docs-section__head"><span class="docs-section__num">08</span><h2>Updating safely</h2></div>
+        <ol>
+          <li>Stop the server and back up the Director database tables.</li>
+          <li>Back up the current production resource.</li>
+          <li>Save your edited <code>config.lua</code> and <code>edit.lua</code> separately.</li>
+          <li>Extract the new release into a clean folder.</li>
+          <li>Compare the new <code>config.lua</code> with your backup and reapply custom values.</li>
+          <li>Keep the production folder name <code>spectrem_director</code>.</li>
+          <li>Start the server and allow automatic migrations to complete.</li>
+          <li>Repeat the first-start verification workflow.</li>
+        </ol>
+        <div class="docs-note docs-note--danger"><span class="docs-note__sym">!</span><div><b>Never extract a new release on top of the old folder</b>Always install into a clean folder and move your saved settings across. Extracting over an existing install leaves stale files behind.</div></div>
+      </section>
+
+      <section class="docs-section" id="navigation">
+        <div class="docs-section__head"><span class="docs-section__num">09</span><h2>Navigation basics</h2></div>
+        <p>Open the main interface with <kbd>F5</kbd> or <code>/director</code>. The header provides language selection, saved-scene count, a <code>?</code> Guided Tutorial button, an <b>Interface settings</b> monitor icon, and entry points to the major tools. The same size button is available in Timeline. Choose 75-200% in 5% steps, or restore the recommended size for your screen (including 1440p and 4K). The maximum adapts to keep controls visible. Changes apply immediately to all panels and save on this device; a personal choice takes precedence over <code>Config.UIScale</code>. The same panel also includes <b>Timeline playback opacity</b> (0-100%) for both full and compact playback views, with a live preview and a reset button. At 0% the playback panel is hidden; at 100% it is fully opaque. The default and reset value are 70%; existing personal choices are preserved. New users can run <code>/tutorial</code> directly; Director opens automatically before the tour begins.</p>
+        <div class="docs-grid docs-grid--3">
+          <div class="docs-card"><div class="docs-card__title">Browse</div><p>Use tabs, category filters, favorites, folders, and search fields to find content.</p></div>
+          <div class="docs-card"><div class="docs-card__title">Configure</div><p>Select a card to open its actor, model, weapon, playback, or placement options.</p></div>
+          <div class="docs-card"><div class="docs-card__title">Place &amp; play</div><p>Place content in the game, preview it, then save or add it to a larger composition.</p></div>
+        </div>
+        <h3>General behavior</h3>
+        <ul>
+          <li><kbd>Esc</kbd> or <kbd>Backspace</kbd> returns from the active editor or closes the current panel.</li>
+          <li>During placement, <kbd>Enter</kbd> confirms and <kbd>Backspace</kbd> cancels.</li>
+          <li>Text inputs protect keyboard editing, so Backspace deletes text instead of closing Object Spooner.</li>
+          <li>Timeline preview uses <kbd>Backspace</kbd> to stop and return to the editor.</li>
+        </ul>
+      </section>
+
+      <section class="docs-section" id="controls">
+        <div class="docs-section__head"><span class="docs-section__num">09A</span><h2>Master controls</h2></div>
+        <p>Director controls are context-sensitive and the active workspace always shows its own HUD. Inputs are ignored while typing unless the field explicitly supports a shortcut.</p>
+        <div class="docs-table"><table>
+          <thead><tr><th>Input</th><th>Normal purpose</th></tr></thead>
+          <tbody>
+            <tr><td><kbd>F5</kbd> / <code>/director</code></td><td>Open or close the main Director interface.</td></tr>
+            <tr><td><code>/sceneadmin</code></td><td>Manage feature modes; requires a configured manager license or optional management ACE.</td></tr>
+            <tr><td><code>/camera</code></td><td>Open Camera Controls directly when permitted. Closing returns to gameplay.</td></tr>
+            <tr><td><code>/tutorial</code></td><td>Open Director and start its guided, non-destructive tour.</td></tr>
+            <tr><td><kbd>F6</kbd> / <code>/cutscenes</code></td><td>Open or close Cutscene Player.</td></tr>
+            <tr><td><kbd>Esc</kbd> / <kbd>Backspace</kbd></td><td>Stop the active preview or return to the previous editor. A text field keeps normal Backspace behavior.</td></tr>
+            <tr><td><kbd>E</kbd></td><td>Stop an active Ghost, Ped, or Vehicle Replay recording and start finalization.</td></tr>
+            <tr><td><kbd>F7</kbd></td><td>Return from a controlled spawned ped when no camera editor owns the key.</td></tr>
+          </tbody>
+        </table></div>
+        <h3>Shared authoring Freecam</h3>
+        <div class="docs-table"><table>
+          <thead><tr><th>Input</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr><td>Hold <kbd>RMB</kbd> + <kbd>WASD</kbd></td><td>Look and fly the current authoring camera.</td></tr>
+            <tr><td><kbd>Q</kbd> / <kbd>E</kbd></td><td>Change camera height; follow the active HUD if a specialized tool reverses the order.</td></tr>
+            <tr><td><kbd>Shift</kbd> / <kbd>Ctrl</kbd></td><td>Fast / precision movement.</td></tr>
+            <tr><td>Mouse wheel</td><td>Change movement speed when the current Freecam supports it.</td></tr>
+            <tr><td>Release <kbd>RMB</kbd></td><td>Return the cursor to the interface or native gizmo without closing Freecam.</td></tr>
+          </tbody>
+        </table></div>
+        <h3>Native gizmo</h3>
+        <div class="docs-table"><table>
+          <thead><tr><th>Input</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr><td><kbd>LMB</kbd></td><td>Drag the red X, green Y or blue Z handle/ring.</td></tr>
+            <tr><td><kbd>W</kbd> / <kbd>R</kbd></td><td>Translation mode / rotation rings.</td></tr>
+            <tr><td><kbd>Tab</kbd></td><td>Toggle local and world axes.</td></tr>
+            <tr><td><kbd>Alt</kbd></td><td>Place on ground in supported placement sessions.</td></tr>
+            <tr><td><kbd>G</kbd></td><td>Lock/release the gizmo camera.</td></tr>
+            <tr><td><kbd>Enter</kbd> / <kbd>Backspace</kbd></td><td>Confirm / cancel a temporary placement.</td></tr>
+          </tbody>
+        </table></div>
+        <div class="docs-note docs-note--info"><span class="docs-note__sym">i</span><div><b>Key conflicts</b>FiveM key mappings are user-configurable. Resolve conflicts in Settings &gt; Key Bindings &gt; FiveM and rely on the active workspace HUD for the final context.</div></div>
+      </section>
+
+      <section class="docs-section" id="tutorial">
+        <div class="docs-section__head"><span class="docs-section__num">09B</span><h2>Guided Tutorial</h2></div>
+        <p>Run <code>/tutorial</code> from chat, or select the <code>?</code> button in the Director header to start or restart the tour from step 1. The walkthrough contains <strong>70 steps in nine chapters</strong> and uses a moving spotlight to identify the Director control or entry point being explained. Its 12-step Camera chapter covers capture/replacement, motion recording, timing, independent attachment/look targets, optical focus, look/zoom speed, drone banking, framing, output and saving.</p>
+        <h3>New production workflows</h3>
+        <p>Choose <strong>Chapters → Advanced Authoring</strong> for the replay, traffic, actor and text workflows. These explanations highlight their actual Custom Scene entry buttons; perform the described actions after the tour. The tour never launches a nested recorder, creates traffic or writes a saved scene.</p>
+        <ul>
+          <li><strong>Scene placement:</strong> G ground snap in move, free-camera and aim modes; heading and actor/prop offsets stay intact. This is separate from Camera's G target lock.</li>
+          <li><strong>Environment and timing:</strong> save an environment snapshot, replace it explicitly after live changes, and distinguish clip start from source offset and recorded car delays.</li>
+          <li><strong>Vehicle Replay:</strong> driver/passenger seats, weapon-fire playback off by default, names as labels, server-confirmed saves and safe append to folders already referenced by scenes.</li>
+          <li><strong>Traffic Replay:</strong> generate stopped cars; use Advanced spawn codes or My Vehicles; replace/remove and ground-place cars; draw rounded routes and delays; record, save and reuse the actual motion.</li>
+          <li><strong>Actor Sequence:</strong> walking and weapon styles, waypoint overrides, smooth corners, exact event stops and Preview versus Scrub. Legacy routes retain their old mode until smoothing is enabled.</li>
+          <li><strong>Cinematic Text:</strong> bundled fonts, Fixed/Face camera, gizmo placement, occlusion and timing. Use direct EXPORT for text: Rockstar Editor cannot capture its DUI surface.</li>
+        </ul>
+        <div class="docs-grid docs-grid--3">
+          <div class="docs-card"><div class="docs-card__title">1. Orientation</div><p>Director header, language, scene count, and main navigation.</p></div>
+          <div class="docs-card"><div class="docs-card__title">2. Library</div><p>Scenes, favorites, saved peds, saved vehicles, Animations, and Custom Anims.</p></div>
+          <div class="docs-card"><div class="docs-card__title">3. Live Tools</div><p>Chase, Density, Weather &amp; Time, Environment, Effects, Clubs, and Object Spooner.</p></div>
+          <div class="docs-card"><div class="docs-card__title">4. Camera</div><p>Keyframes, movement, image controls, attachments, preview, recording, and export.</p></div>
+          <div class="docs-card"><div class="docs-card__title">5. Custom Scenes</div><p>Scene creation, entries, delays, Scene Tools, supported layers, testing, and saving.</p></div>
+          <div class="docs-card"><div class="docs-card__title">6. Timeline</div><p>Media library, tracks, clips, inspector, playback range, diagnostics, and project saving.</p></div>
+          <div class="docs-card"><div class="docs-card__title">7. Advanced Authoring</div><p>Replay sources and the specialized authoring layers available to a production.</p></div>
+          <div class="docs-card"><div class="docs-card__title">8. Workflow</div><p>Catalog search, safe creation habits, Rockstar recording, Cutscene Player, and shortcuts.</p></div>
+          <div class="docs-card"><div class="docs-card__title">9. Finish</div><p>How to reopen the tour and continue working in Director.</p></div>
+        </div>
+        <div class="docs-note docs-note--tip"><span class="docs-note__sym">&#10003;</span><div><b>Automatic, visual, and non-destructive</b>Camera, Custom Scenes, and Timeline open automatically as protected visual demonstrations. The tutorial never clicks an underlying control, starts Freecam, plays a scene, records, saves demo data, or modifies the game world. The dark layer blocks accidental interaction while the spotlight leaves the referenced control visible. Exiting restores the previous Director, Custom Scene, Timeline, and Camera state.</div></div>
+        <h3>Language and direction</h3>
+        <p>The selector inside the tutorial changes the explanation immediately between <code>EN</code>, <code>ES</code>, <code>DE</code>, <code>TR</code>, <code>FR</code>, <code>AR</code>, <code>VI</code>, <code>PL</code>, and <code>PT-BR</code>. English is the default. Arabic automatically applies right-to-left direction to both the tour and Director interface.</p>
+        <h3>Buttons and keyboard navigation</h3>
+        <div class="docs-table"><table>
+          <thead><tr><th>Control</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Previous</strong> / <kbd>&larr;</kbd> / <kbd>Page Up</kbd></td><td>Go to the previous step.</td></tr>
+            <tr><td><strong>Next</strong> / <kbd>&rarr;</kbd> / <kbd>Page Down</kbd> / <kbd>Enter</kbd></td><td>Go to the next step. The final button becomes <strong>Finish</strong>.</td></tr>
+            <tr><td><kbd>Home</kbd> / <kbd>End</kbd></td><td>Jump directly to the first / final step.</td></tr>
+            <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Cycle keyboard focus within the tutorial card; focus cannot reach the protected Director controls below it.</td></tr>
+            <tr><td><strong>Chapters</strong></td><td>Open the nine-chapter index and jump to the beginning of any chapter.</td></tr>
+            <tr><td><strong>Restart</strong> / header <code>?</code></td><td>Return to step 1. The header button can start the tour again after it closes.</td></tr>
+            <tr><td><strong>Close</strong> / <kbd>Esc</kbd></td><td>Exit only the walkthrough. Director intentionally remains open.</td></tr>
+          </tbody>
+        </table></div>
+        <h3>Safe startup rules</h3>
+        <p>The tutorial uses the same ACE authorization and integrity gate as Director. To protect unfinished work, it refuses to start during playback, recording, saving, loading, a modal or picker, entity placement, an active Camera, a specialized authoring tool, Object Spooner, an open Timeline, or the separate <kbd>F6</kbd> Cutscene Player. An idle Custom Scene and the normal Director layout are snapshotted and restored automatically. Finish the blocked operation and run <code>/tutorial</code> again; the warning is shown in the configured language.</p>
+        <div class="docs-note docs-note--info"><span class="docs-note__sym">i</span><div><b>Director remains ready</b>Completing the final step or closing the walkthrough removes the spotlight but does not close Director. Continue working immediately, or close the normal menu afterward with F5/Esc.</div></div>
+      </section>
+
+      <section class="docs-section" id="scenes">
+        <div class="docs-section__head"><span class="docs-section__num">10</span><h2>Scenes &amp; Scenes Fav</h2></div>
+        <p>Scenes are ready-made synchronized arrangements with actors, animations, and optional objects. Search by name, filter by category, or star a scene for quick access in <strong>Scenes Fav</strong>.</p>
+        <p>Combine <strong>With props</strong>, <strong>With weapons</strong> and actor-count filters below search. Filters also apply to Favorites. <strong>Place with my character</strong> appears in the cast dialog only for scenes with exactly one actor: position the scene using your current appearance, then confirm to perform it with the actual player. Cancel returns without starting playback. Start on foot; Stop releases the player and restores temporary scene weapons and ammunition. Scenes with multiple actors keep their normal Place workflow, even if other actors are disabled.</p>
+        <h3>Scene workflow</h3>
+        <ol>
+          <li>Select a scene card.</li>
+          <li>Review its actor and object count.</li>
+          <li>Enable or disable individual actors and objects.</li>
+          <li>Choose each actor from presets, a Saved Ped, or a custom model.</li>
+          <li>Assign a preset or custom weapon where applicable.</li>
+          <li>Choose loop behavior.</li>
+          <li>Select <strong>Preview</strong> to inspect the full scene around its first enabled actor.</li>
+          <li>Return with <kbd>Esc</kbd>, make any cast/object changes, then select <strong>Place</strong>, position the origin, and confirm.</li>
+          <li>During placement, press <kbd>G</kbd> to snap the whole scene origin to the surface below it. Works in move, free-camera and aim modes; it leaves aim mode to keep the snapped position. Heading and relative actor/prop offsets are preserved, and the scene's own props are ignored by the ground check. If no surface is detected, nothing moves. Fine-tune height with <kbd>Q</kbd>/<kbd>E</kbd>, then confirm with <kbd>Enter</kbd>. Also available when placing scene entries in Custom Scenes or Timeline.</li>
+          <li>Use the scene controls or parent Custom Scene/Timeline to stop playback.</li>
+        </ol>
+        <div class="docs-note docs-note--info"><span class="docs-note__sym">i</span><div><b>Place Dev</b>You can ignore this button. It exists for fine-tuning scene offsets during authoring &mdash; use <strong>Place</strong> instead.</div></div>
+      </section>
+
+      <section class="docs-section" id="peds">
+        <div class="docs-section__head"><span class="docs-section__num">11</span><h2>My Peds</h2></div>
+        <p>My Peds stores reusable characters and manages NPCs spawned by Director.</p>
+        <div class="docs-grid">
+          <div class="docs-card"><div class="docs-card__title">Create and save</div><ul><li>Create male or female freemode peds.</li><li>Save the current player's model and appearance.</li><li>Name, rename, clone, edit, and delete peds.</li></ul></div>
+          <div class="docs-card"><div class="docs-card__title">Organize</div><ul><li>Create, open, rename, and delete folders.</li><li>Move peds between folders or Root.</li><li>Deleting a folder returns its peds to Root.</li></ul></div>
+        </div>
+        <h3>Saved Ped actions</h3>
+        <p><span class="docs-tag">Spawn as NPC</span><span class="docs-tag">Apply to player</span><span class="docs-tag">Move</span><span class="docs-tag">Rename</span><span class="docs-tag">Clone</span><span class="docs-tag">Edit Outfit</span><span class="docs-tag">Delete</span></p>
+        <h3>Spawned NPC actions</h3>
+        <p><span class="docs-tag">Edit outfit</span><span class="docs-tag">Assign animation</span><span class="docs-tag">Take control</span><span class="docs-tag">Remove</span><span class="docs-tag">Remove last</span><span class="docs-tag">Clear all</span></p>
+        <p>When controlling a spawned NPC, walk, use clothing tools, and assign animations normally. Press <kbd>F7</kbd> or choose <strong>Back to my ped</strong> to return. Director preserves the NPC's configured state and keeps it protected from ambient panic behavior.</p>
+        <div class="docs-note docs-note--tip"><span class="docs-note__sym">&#10003;</span><div><b>Stable character workflow</b>Create the appearance first, spawn the ped, assign its animation, then return to the player. Save reusable looks instead of rebuilding them for every scene.</div></div>
+      </section>
+
+      <section class="docs-section" id="animations">
+        <div class="docs-section__head"><span class="docs-section__num">12</span><h2>Animations &amp; Custom Anims</h2></div>
+        <p>The standard browser supports search, favorites, playback mode, placement type, actor models, weapons, partner actors, and prop variants.</p>
+        <div class="docs-table"><table>
+          <thead><tr><th>Control</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr><td>Normal / Loop</td><td>Play once or keep the animation active.</td></tr>
+            <tr><td>Ground / Fly</td><td>Use grounded placement or free height placement.</td></tr>
+            <tr><td>All / Favorites</td><td>Browse the full list or only starred animations.</td></tr>
+            <tr><td>Place</td><td>Enter placement mode before starting.</td></tr>
+            <tr><td>Play</td><td>Start immediately on the configured actor.</td></tr>
+          </tbody>
+        </table></div>
+        <h3>Using Another Menu</h3>
+        <ol>
+          <li>Open <strong>Custom Anims</strong>.</li>
+          <li>Select <strong>Another Menu</strong>.</li>
+          <li>Choose and start the animation in the external menu.</li>
+          <li>Return to Director.</li>
+          <li>Select the ped that should receive the chosen animation.</li>
+        </ol>
+        <p>If the bridge shows <strong>Offline</strong>, start the configured animation resource or disable the bridge in <code>edit.lua</code>. Stale selections and emotes that are no longer playing are ignored.</p>
+      </section>
+
+      <section class="docs-section" id="live-tools">
+        <div class="docs-section__head"><span class="docs-section__num">13</span><h2>Chase, density, weather &amp; clubs</h2></div>
+        <h3>Chase</h3>
+        <p>Chase builds a local cinematic pursuit whose target is always the current local player. Choose a configured vehicle or valid streamed/add-on spawn name, select the unit count allowed by the server (1&ndash;8 by default), choose Normal, Aggressive, or Ramming, then configure sirens, helicopter support, deployment distance, unit protection, and the optional on-foot response. Classic Chase remains the default until the operator explicitly enables <strong>Advanced Fleet</strong>.</p>
+        <div class="docs-grid docs-grid--3">
+          <div class="docs-card"><div class="docs-card__title">Deployment</div><p>Units spawn behind the player using the configured distance and lateral spacing. Invalid or unavailable models are rejected and the panel stays open so the selection can be corrected.</p></div>
+          <div class="docs-card"><div class="docs-card__title">Live control</div><p>Reopen Director while the pursuit is active to add or remove units, change style, sirens, helicopter, protection, deployment distance or on-foot behavior, and repair the active fleet.</p></div>
+          <div class="docs-card"><div class="docs-card__title">On foot</div><p>When enabled, only NPCs created by Chase can react. After the local player stops and exits a vehicle, nearby officers brake, leave their patrol cars and engage the player. If the player enters another vehicle, they return to their units and resume the pursuit. Distance, weapon, ammo, accuracy and timing are configured globally; disable the toggle to keep them inside.</p></div>
+        </div>
+        <h4>Advanced Fleet (optional)</h4>
+        <p><code>Config.PoliceChase.AdvancedFleet.Enabled</code> makes the advanced controls available but does not replace the classic defaults. Turn on <strong>Advanced Fleet</strong> in the Chase panel only when the shot needs custom casting. <strong>Same setup for all</strong> applies one vehicle, crew and weapon template to every ground unit; <strong>Configure each unit</strong> configures every unit independently.</p>
+        <ul>
+          <li>Choose the default Chase vehicle, enter a valid streamed/add-on model, or select a tuned preset from <strong>My Vehicles</strong>. Saved paint, modifications, extras, lights, liveries and decals are retained.</li>
+          <li>Chase reads the selected vehicle's exact seat capacity. Seat <code>-1</code> is the mandatory driver; seats <code>0+</code> are passengers, and no invalid seat is offered.</li>
+          <li>Assign the default Chase ped, a saved ped with its appearance, or a valid custom ped model to each seat.</li>
+          <li>Choose the on-foot weapon used by that setup if the normal on-foot response conditions are met.</li>
+        </ul>
+        <h4>Workflow</h4>
+        <ol>
+          <li>Open <strong>Chase</strong> and choose the ground vehicle, units and driving style.</li>
+          <li>Optionally enable Advanced Fleet, sirens, helicopter support, protection and on-foot response.</li>
+          <li>Select <strong>Start Chase</strong>. The menu closes only after at least one valid pursuit unit starts.</li>
+          <li>Drive or move normally. Reopen F5 to make live changes.</li>
+          <li>Select <strong>End Chase</strong> when finished. A forced Director shutdown or resource stop also cleans up the pursuit.</li>
+        </ol>
+        <h4>Chase Replay</h4>
+        <p>Chase Replay is a separate tab and replay library for the current active pursuit. One synchronized clock records the target vehicle, every active ground Chase unit, and the Chase helicopter when present, preserving the timing between all participants.</p>
+        <ol>
+          <li>Stage and start a classic or Advanced Fleet Chase.</li>
+          <li>Open <strong>Chase Replay</strong> and select <strong>Record</strong>.</li>
+          <li>Perform the pursuit, then select <strong>Stop</strong>.</li>
+          <li>Name the take and select <strong>Save</strong>.</li>
+          <li>Use the dedicated library to <strong>Play</strong>, <strong>Stop</strong>, or <strong>Delete</strong> a take.</li>
+        </ol>
+        <div class="docs-note docs-note--info"><span class="docs-note__sym">i</span><div><b>Deterministic vehicle take</b>NPC vehicle exit and combat are intentionally disabled while Chase Replay is recording or playing. Chase Replay captures vehicle trajectories, not the live on-foot encounter. Its separate library reuses the existing Vehicle Replay persistence and bounded chunk transport, so an existing installation needs no SQL reinstall or migration.</div></div>
+        <div class="docs-note docs-note--info"><span class="docs-note__sym">i</span><div><b>Local cinematic system</b>Chase intentionally uses local entities (<code>Networked = false</code>) for stable AI timing. Closing the normal F5 menu leaves the session running; End Chase, forced Director shutdown, or resource stop cleans it up.</div></div>
+        <p><code>DefaultDeploymentDistance</code> sets the initial distance behind the local player and is clamped by <code>MinDeploymentDistance</code> / <code>MaxDeploymentDistance</code>. <code>Protection</code> independently controls ground vehicles, drivers, the helicopter, and its pilot.</p>
+        <div class="docs-note docs-note--tip"><span class="docs-note__sym">&#10003;</span><div><b>Server configuration</b><code>Config.PoliceChase</code> is the single source for limits, catalogues, presets, protection and distances. <code>AdvancedFleet.MaxOccupantsPerUnit</code> caps crew rows and <code>AdvancedFleet.Weapons</code> defines the weapon list. <code>ChaseReplay.SampleIntervalMs</code>, <code>MaxDurationSeconds</code>, and <code>MaxVehicles</code> bound capture work. <code>MaxTotalFrames</code> is shared across all tracks to protect client memory and the existing replay upload limit. Set <code>EDIT.DisablePoliceChase = true</code> in <code>edit.lua</code> to block the tool without deleting those settings.</div></div>
+        <h3>Density</h3>
+        <p>Switch between Vanilla and Custom density, then adjust pedestrians, moving vehicles, parked vehicles, random vehicles, and scenario peds from 0&ndash;100%. Empty, Low, Medium, and Full presets apply immediately and locally.</p>
+        <h3>Weather &amp; Time</h3>
+        <p>Use Server Sync when the configured bridge is available, or Local Only for cinematic overrides. Select weather, hour, minute, time speed, freeze, and blackout. Local mode also exposes rain level, wind speed, and artificial lights.</p>
+        <h3>Clubs</h3>
+        <p>Configure theme, atmosphere, podium, sound system, turntables, droplets, neons, bands, lasers, bar setup, resident DJ, dancers, and bartenders. Use Enter Club, Exit Club, and Reset. Club configuration is session-based in the current release.</p>
+      </section>
+
+      <section class="docs-section" id="environment">
+        <div class="docs-section__head"><span class="docs-section__num">14</span><h2>Environment &amp; Effects</h2></div>
+        <h3>Environment groups</h3>
+        <p>During Environment placement, <strong>F5</strong> shows or hides the live controls while keeping the free camera and preview active. Adjust NPCs, formation or animation, then press F5 to resume flying. Confirm placement when finished.</p>
+        <p><strong>Timeline → Environments → New Environment</strong> and <strong>Custom Scene → Environment</strong> open the full Environment editor inside the project. Configure NPCs, formation and animation, place the group with the free camera, confirm, then choose <strong>Save and return</strong>. Timeline inserts the group at the playhead. <strong>Edit Environment</strong> reopens a clip or entry at its saved position while retaining its timing. Cancel discards the draft; saving clears its temporary preview NPCs. Project edits keep an independent copy and leave the standalone library unchanged.</p>
+        <p>Create reusable NPC environments in Single or Group mode. Choose generated NPCs or a Saved Peds folder, then set count, radius, spacing, extension, gender, formation, and animation.</p>
+        <p>Available formations include <span class="docs-tag">Circle</span><span class="docs-tag">Semi-circle</span><span class="docs-tag">Line</span><span class="docs-tag">Grid</span><span class="docs-tag">Scatter</span>. Preview or regenerate before confirming placement. Active environments can change animation or be cleared.</p>
+        <h3>Effects</h3>
+        <p>The library's <strong>eye / Preview</strong> button opens the same orbital viewer as Scene Preview with the selected mode, scale, alpha and RGB. Adjust distance, height, orbit, angle, FOV and smoothing; <strong>Replay effect</strong> repeats bursts or restarts a loop. Fireworks use a wider, elevated frame. <strong>Back / ESC</strong> restores the catalog, search and scroll without adding a scene entry. Looping preview particles stop on close; already emitted one-shot particles fade naturally. Camera defaults use <code>Config.ScenePreview</code> and permissions use <code>effects</code>.</p>
+        <p>Search by effect name or particle asset, filter All, Fireworks, or Favorites, and choose Normal or Loop playback. Selecting an effect starts a live authoring particle: scale, alpha and RGB update in real time before placement. A fixed effect stores a world position; an attached effect follows a supported actor or replay ped through a placed local offset. Looping fireworks use a coordinated show-style behavior.</p>
+        <p>In Timeline, the effect starts when playback reaches the clip's exact start time. Use <strong>View at playhead</strong> to inspect it and <strong>Place Attachment</strong> when it must follow a subject. In Custom Scenes, edit/re-place the entry and use Test. Closing the editor stops the temporary authoring particle and restores the parent scene.</p>
+      </section>
+
+      <section class="docs-section" id="spooner">
+        <div class="docs-section__head"><span class="docs-section__num">15</span><h2>Object Spooner</h2></div>
+        <p>Object Spooner is a complete in-game entity editor for peds, props, and vehicles. Open it from the Director menu or with <code>/spooner</code>.</p>
+        <h3>Spawn and selection</h3>
+        <ul>
+          <li>Search models or browse Peds, Props, and Vehicles.</li>
+          <li>Choose <strong>Place</strong> or <strong>Replace Selected</strong>.</li>
+          <li>Vehicle placement can start with the engine enabled.</li>
+          <li>Use <kbd>Shift</kbd> + <kbd>LMB</kbd> for multi-selection.</li>
+        </ul>
+        <h3>Selected Entity panel</h3>
+        <p>Edit position XYZ, rotation XYZ, opacity, freeze, godmode, and health. Apply numeric changes, copy and paste transforms, or use undo and redo.</p>
+        <div class="docs-table"><table>
+          <thead><tr><th>Input</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr><td><kbd>LMB</kbd></td><td>Select an entity or drag a gizmo axis.</td></tr>
+            <tr><td><kbd>Shift</kbd> + <kbd>LMB</kbd></td><td>Add or remove an entity from the selection.</td></tr>
+            <tr><td>Hold <kbd>RMB</kbd></td><td>Rotate the editor camera. Release to restore the UI cursor.</td></tr>
+            <tr><td><kbd>WASD</kbd></td><td>Move the camera.</td></tr>
+            <tr><td><kbd>Q</kbd> / <kbd>E</kbd></td><td>Lower or raise the camera.</td></tr>
+            <tr><td><kbd>Shift</kbd> / <kbd>Ctrl</kbd></td><td>Fast or precision movement.</td></tr>
+            <tr><td><kbd>W</kbd> / <kbd>R</kbd></td><td>Translation or rotation gizmo.</td></tr>
+            <tr><td><kbd>Tab</kbd></td><td>Switch local and global axes.</td></tr>
+            <tr><td><kbd>H</kbd></td><td>Toggle grid snapping.</td></tr>
+            <tr><td><kbd>Alt</kbd></td><td>Place the selection on the ground.</td></tr>
+            <tr><td><kbd>X</kbd> / <kbd>C</kbd></td><td>Delete or clone the selected entity.</td></tr>
+            <tr><td><kbd>Esc</kbd> / <kbd>Backspace</kbd></td><td>Exit Object Spooner.</td></tr>
+          </tbody>
+        </table></div>
+        <div class="docs-note docs-note--tip"><span class="docs-note__sym">&#10003;</span><div><b>Keyboard protection</b>When a search or numeric field is focused, Backspace edits the field instead of closing Object Spooner.</div></div>
+      </section>
+
+      <section class="docs-section" id="camera">
+        <div class="docs-section__head"><span class="docs-section__num">16</span><h2>Cinematic Camera</h2></div>
+        <p>The camera can run independently or as the editor for a Camera entry opened from Custom Scenes or Timeline. Source-linked editing writes changes back to that source; standalone use does not create a clip automatically.</p>
+        <div class="docs-grid docs-grid--3">
+          <div class="docs-card"><div class="docs-card__title">Views</div><p>Free authoring view in the panel, plus Front, Rear, Left, Right, and Above runtime/config presets.</p></div>
+          <div class="docs-card"><div class="docs-card__title">Movement</div><p>Free flight, drone inertia, walk height, smoothing, precision, collision, follow, and orbit.</p></div>
+          <div class="docs-card"><div class="docs-card__title">Composition</div><p>14&ndash;135 mm lenses, filters, depth of field, focus, shake, aspect ratios, guides, and overlays.</p></div>
+        </div>
+        <h3>Adjust Drone banking</h3>
+        <p>Enable <strong>Drone mode</strong> to reveal the <strong>Drone banking</strong> slider. Set the maximum tilt from <strong>0° to 45°</strong>: 0° smoothly levels the horizon, 15° is the default, and 45° gives stronger banking. This changes tilt when turning, not flight speed or inertia. Fast mouse turns cannot request a tilt beyond the selected limit. The startup default is <code>Config.CinematicCamera.Drone.Banking</code>; live camera recordings store the resulting rotation.</p>
+        <h3>Attach to one entity and look at another</h3>
+        <p><strong>Attachment controls position. Look target controls rotation.</strong> With three cars, attach to the middle car using <kbd>LMB</kbd>, turn toward the right car using <kbd>Alt + RMB</kbd>, then select it with <kbd>RMB</kbd>. To track a passing car from a fixed spot, detach and turn off Follow Player, Allow Player Movement and Auto Orbit; select only a look target.</p>
+        <ul>
+          <li><strong>Click:</strong> RMB locks the aimed entity. Click it again, click empty space, or choose Release to stop tracking.</li>
+          <li><strong>Hold:</strong> RMB tracks the selected entity until mouse-up. Keyboard and panel selections remain locked until released.</li>
+          <li><strong>Free:</strong> RMB rotates manually. Alt + RMB provides manual rotation in the other modes; N toggles free look and releases tracking.</li>
+          <li><kbd>B</kbd> selects the next look target; <kbd>V</kbd> selects the previous one. Neither changes the attachment. Hide the panel with H to use these shortcuts.</li>
+          <li><strong>Target priority:</strong> Scene / Timeline first is the default. Scene / Timeline only excludes world entities. All nearby entities permits unrestricted picking. B/V uses stable entity identity order, not changing distance order.</li>
+          <li>Picking a look target releases composition lock but retains the positional mount. Enabling composition lock again releases the independent look target.</li>
+        </ul>
+        <p><strong>Look speed</strong>, in the Look target section, sets live turning and tracking speed from <strong>1–100%</strong> (default <strong>50%</strong>). Lower values give slow pans; higher values aim quickly. It applies to RMB, B/V, panel targets and G. Very low values lag behind fast-moving subjects. Manual rotation smoothing, attachment movement and Drone banking remain unchanged. Authored keyframe playback is unaffected; Live Camera Record stores the resulting turn. Set the startup default with <code>Config.CinematicCamera.LookSpeed</code>.</p>
+        <p><strong>Zoom speed</strong>, under Movement → Lens, controls live zoom from <strong>1–200%</strong> (default <strong>100%</strong>). Hide the panel with <kbd>H</kbd>, then hold <kbd>Z</kbd> to zoom in or <kbd>C</kbd> to zoom out. Lower values zoom slowly; 100% changes FOV by 25 degrees per second and 200% is twice as fast. This changes FOV, not position. Lens presets still apply directly, authored zoom playback is unchanged, and Live Camera Record captures the resulting FOV. Zoom keys do nothing while the panel is open or a sequence is playing/scrubbing. Startup default: <code>Config.CinematicCamera.ZoomSpeed</code>.</p>
+        <h3>Choose lens focus separately</h3>
+        <p>Enable <strong>Depth of field</strong>, then choose exactly one mode: <strong>Manual distance</strong>, <strong>Autofocus — screen centre</strong>, or <strong>Follow focus — look target</strong>. Follow focus prioritizes the look target, then the attachment or G/sequence target. Focus changes sharpness; it does not steer the camera. Autofocus smooths changes and briefly retains its last valid hit when the ray crosses a gap.</p>
+        <p>Scene look targets are saved per keyframe independently of the positional anchor and re-resolved if Timeline recreates their entities. A missing scene target waits; a deleted world target is released. Live Camera Record bakes gaze and focus, including B/V switches. World entity handles are not saved as portable references. Defaults and B/V bindings are configurable in <code>Config.CinematicCamera</code>.</p>
+        <h3>Capture a keyframed sequence</h3>
+        <ol>
+          <li>Move and frame the camera.</li>
+          <li>Press <kbd>L</kbd> or click <strong>Capture</strong>.</li>
+          <li>Move to the next pose and capture again.</li>
+          <li>Edit keyframe time, FOV, easing, path, speed, and pacing.</li>
+          <li>Use Linear for direct motion or Spline for curved movement.</li>
+          <li>Preview with <kbd>F7</kbd> and stop or rewind with <kbd>F8</kbd>.</li>
+          <li>Use Loop or Close Loop when the sequence must repeat.</li>
+        </ol>
+        <h3>Edit an exact Timeline keyframe</h3>
+        <ol>
+          <li>Select the Camera Sequence clip.</li>
+          <li>Choose <strong>Edit Camera</strong>.</li>
+          <li>Click the desired keyframe diamond to enter at its exact pose and time.</li>
+          <li>Adjust the camera.</li>
+          <li>Click <strong>Save frame</strong> or <strong>Replace</strong> to persist the change.</li>
+        </ol>
+        <h3>Live camera movement recording</h3>
+        <p>Use <strong>Record</strong> to capture a live camera move. Replace starts a new take; Append adds another pass. Adaptive sampling and curve simplification keep the resulting path editable. Duplicate, Distribute, Level, and <kbd>F9</kbd> help refine recorded keyframes.</p>
+        <h3>What each Camera area does</h3>
+        <div class="docs-table"><table>
+          <thead><tr><th>Area or tool</th><th>Specific purpose</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Capture / Save frame / Duplicate / Delete</strong></td><td>Create a complete shot pose, overwrite only the selected keyframe, copy it at the next available interval, or remove it.</td></tr>
+            <tr><td><strong>Record + Replace/Append</strong></td><td>Convert a live camera move into editable keyframes. Replace starts a new take; Append continues after the current take.</td></tr>
+            <tr><td><strong>Scrubber and diamonds</strong></td><td>Inspect an exact time and select the exact keyframe to revise.</td></tr>
+            <tr><td><strong>TIME / EASING / PATH / FOV</strong></td><td>Set when a frame occurs, how speed enters or leaves it, whether its segment is curved or direct, and the stored lens angle.</td></tr>
+            <tr><td><strong>SPEED / PACING</strong></td><td>Scale preview speed and choose authored timing, constant speed per segment, or even speed across the complete route.</td></tr>
+            <tr><td><strong>Loop / Close loop / Distribute / Path</strong></td><td>Repeat playback, close the seam safely, space middle keyframes evenly, or show the authored route in the world.</td></tr>
+            <tr><td><strong>Attach to entity</strong></td><td>Ride a replay vehicle, scene actor, nearby entity, body bone, held weapon, or vehicle bone.</td></tr>
+            <tr><td><strong>Rigid / Lock framing / Follow softness / Auto orbit</strong></td><td>Choose between a bolted mount, an exact relative composition, operator-style trailing, or an automatic orbit with editable distance, height, speed, and direction.</td></tr>
+            <tr><td><strong>Movement</strong></td><td>Tune sensitivity, zoom response, three independent smoothing controls, base speed, lens preset, drone inertia, eye-height walking, and world collision.</td></tr>
+            <tr><td><strong>Image</strong></td><td>Apply a filter, depth of field, autofocus or attached-subject focus, manual focus distance, and camera shake.</td></tr>
+            <tr><td><strong>Scene</strong></td><td>Return control to the player with smart follow, direct the player's gaze, clean the HUD/feed, add bars, and enable non-recorded composition guides.</td></tr>
+            <tr><td><strong>Animations / Photo / Video</strong></td><td>Open the animation browser, capture through optional <code>screenshot-basic</code>, or start/stop a Rockstar Editor recording.</td></tr>
+            <tr><td><strong>Level / Reset / Exit</strong></td><td>Remove roll without changing pitch/heading, restore the camera pose, or return the authored sequence to its source editor.</td></tr>
+          </tbody>
+        </table></div>
+        <h3>Camera controls</h3>
+        <div class="docs-table"><table>
+          <thead><tr><th>Input</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr><td><kbd>WASD</kbd></td><td>Move; <kbd>Q</kbd>/<kbd>E</kbd> lower or raise.</td></tr>
+            <tr><td>Hold <kbd>RMB</kbd></td><td>Rotate. With the panel hidden, <kbd>N</kbd> enables mouse rotation without holding RMB.</td></tr>
+            <tr><td><kbd>Z</kbd> / <kbd>C</kbd></td><td>Zoom; mouse wheel adjusts movement speed.</td></tr>
+            <tr><td>Arrow keys</td><td>Roll the camera left or right.</td></tr>
+            <tr><td><kbd>Shift</kbd> / <kbd>Ctrl</kbd> or <kbd>Alt</kbd></td><td>Turbo or precision movement.</td></tr>
+            <tr><td><kbd>LMB</kbd></td><td>Attach the aimed entity while the panel is hidden.</td></tr>
+            <tr><td><kbd>G</kbd></td><td>Anchor gaze to the selected target.</td></tr>
+            <tr><td><kbd>R</kbd></td><td>Reset the camera pose.</td></tr>
+            <tr><td><kbd>H</kbd></td><td>Hide or show the panel. Enabled guides remain visible for clean composition and disappear during playback.</td></tr>
+            <tr><td><kbd>L</kbd></td><td>Capture a keyframe.</td></tr>
+            <tr><td><kbd>F7</kbd> / <kbd>F8</kbd> / <kbd>F9</kbd></td><td>Play/pause, stop/rewind, or jump to the next keyframe. During Live Record, F7 stops the recording.</td></tr>
+            <tr><td><kbd>Esc</kbd></td><td>Return to the source editor or exit standalone Camera.</td></tr>
+          </tbody>
+        </table></div>
+        <div class="docs-note docs-note--info"><span class="docs-note__sym">i</span><div><b>Photo and video</b>The Photo action uses <code>screenshot-basic</code> when available. The Video action uses GTA's recording natives. Both are optional to the core camera workflow.</div></div>
+      </section>
+
+      <section class="docs-section" id="scene-preview">
+        <div class="docs-section__head"><span class="docs-section__num">16A</span><h2>Scene Preview &amp; object replacement</h2></div>
+        <p>Scene Preview is a lightweight inspection camera separate from Camera Director. It creates local preview actors and objects, follows the first enabled actor and preserves the scene selection dialog when you return.</p>
+        <ol>
+          <li>Choose each actor model and enable only the actors/objects required.</li>
+          <li>Click <strong>Preview</strong>. Adjust distance, height, angle, orbit speed, smoothing and FOV in real time.</li>
+          <li>Play/pause the scene, then press <kbd>Esc</kbd> to return and correct the cast.</li>
+          <li>Click <strong>Place</strong> only when the preview is correct.</li>
+        </ol>
+        <h3>Replace a scene prop</h3>
+        <ol>
+          <li>Choose <strong>Replace</strong> beside the object.</li>
+          <li>Object Spooner opens in prop-selection mode; select the replacement model.</li>
+          <li>The Scene Object Editor plays the scene on its own timeline. Pause or scrub to freeze every actor at the most useful pose.</li>
+          <li>Choose <strong>Adjust prop</strong>, use the native gizmo to set its offset/rotation, and confirm.</li>
+          <li>Select <strong>Use replacement</strong>, or press <kbd>Esc</kbd> to cancel and return to object selection.</li>
+        </ol>
+        <p>The replacement and its transform are stored with the placed scene. The source catalog definition is never changed.</p>
+        <h3>Replace a scene vehicle</h3>
+        <p><strong>Adjust entire scene</strong> is available without <code>/dev</code> from the actor/replacement dialog and the vehicle/prop editor. It includes actors, vehicles, scene objects and actor-attached props. Select a target, pause or scrub to a useful frame, then use <strong>Adjust with gizmo</strong> or the fine-adjustment <strong>− / +</strong> buttons (0.01–0.50 m; 1°, 5° or 15°). Actors use scene axes; vehicles and props use local attachment axes. Actor yaw pivots around the visible ped.</p>
+        <p><strong>Reset this element</strong> restores its loaded state. <strong>Apply alignment</strong> keeps corrections and replacements for this scene selection and placement; <strong>Cancel</strong> discards this editing session. Neither changes the catalog or global defaults. A fresh selection starts fresh, and the scene origin only moves the preview. Check several frames: spatial adjustment does not retarget animation, change model dimensions or add missing bones, and does not add separate animation time offsets. Segmented scenes are not supported in this editor.</p>
+        <p>Scenes with actual vehicle slots show a separate <strong>Scene Vehicles</strong> group. Choose <strong>Replace</strong> to browse the vehicle catalog or search by installed spawn code. In the <strong>Scene Vehicle Editor</strong>, pause or scrub the scene, use <strong>Adjust vehicle</strong> to align the model, then confirm <strong>Use replacement</strong>. Cancel preserves the previous choice; the reset button restores the scene default. Each slot is independent, even when original models repeat.</p>
+        <p>The visible replacement plays the original vehicle animation, including compatible doors, wheels and other animated bones, synchronized to the scene clock. Pausing, scrubbing, slow motion and loop changes preserve that synchronization; the attachment and gizmo still control placement. Choose similar dimensions and inspect actor contacts: missing bones are not created and actor animations are not resized to fit a different car. Scenes without vehicle slots do not show the vehicle section. Invalid model types are rejected. The existing segmented-scene editor restriction still applies.</p>
+      </section>
+
+      <section class="docs-section" id="object-motion">
+        <div class="docs-section__head"><span class="docs-section__num">16B</span><h2>Object Motion</h2></div>
+        <p>Object Motion animates a prop independently from Camera Director. It can combine procedural layers with editable motion keyframes and can be saved into Object Spooner, Custom Scenes or Timeline.</p>
+        <p><strong>Advanced: Physical levitation.</strong> Enable the switch in Object Motion, then set the zone center offset, radius, height, return strength, damping and maximum speed. Start Preview and choose <strong>Interact</strong> to move around and push the floating prop; <kbd>H</kbd> / <kbd>ESC</kbd> returns to the editor. The preview can display the cylindrical boundary. Saved entries retain all zone settings.</p>
+        <p>Physical mode enables collision and replaces scripted motion while active, preserving the stored keyframes. Forces return the object toward the center, with a boundary correction for extreme impacts. Bounds apply to the prop origin. Timeline scrubbing shows the initial hover pose; each playback simulates new interactions. Use models with dynamic physics. This follows Object Motion's local playback and does not create a shared multiplayer physics session.</p>
+        <div class="docs-grid">
+          <div class="docs-card"><div class="docs-card__title">Procedural layers</div><p>Levitate, continuous XYZ rotation, orbit and sway. Presets provide useful starting combinations and all faders update live.</p></div>
+          <div class="docs-card"><div class="docs-card__title">Motion keyframes</div><p>Exact time, world-position offset, rotation and easing, presented on a visual strip that can be scrubbed and redistributed.</p></div>
+        </div>
+        <h3>Camera-style path recording</h3>
+        <p>Object Motion opens with a persistent work freecam that stays active during editing and Preview. <strong>Hold right-click over the central viewport + WASD</strong> to move with the panels visible; release right-click to edit. Q/E changes height, the wheel changes speed, and Shift/Ctrl provide fast/precise movement. <strong>Move camera</strong> enables continuous navigation without hiding panels; <strong>H / ESC</strong> returns cursor control; <strong>Frame object</strong> centers the prop. Physical <strong>Interact</strong>, Object Spooner and Camera Sequence temporarily take over, then restore the work view.</p>
+        <p>Select <strong>Camera sequence</strong>. The prop uses a temporary camera-local mount while recording, but only the resulting world-space prop path is saved. Camera effects are not baked into Object Motion.</p>
+        <div class="docs-table"><table>
+          <thead><tr><th>Input</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr><td><kbd>WASD</kbd>, <kbd>Q</kbd>/<kbd>E</kbd></td><td>Move and change height.</td></tr>
+            <tr><td><kbd>Alt + RMB</kbd> / <kbd>N</kbd></td><td>Rotate manually / toggle free look. RMB alone rotates in Free mode.</td></tr>
+            <tr><td><kbd>RMB</kbd></td><td>Independent look target: Click to lock/release, or Hold to track until mouse-up.</td></tr>
+            <tr><td><kbd>B</kbd> / <kbd>V</kbd></td><td>Next / previous look target without changing attachment. Panel hidden.</td></tr>
+            <tr><td><kbd>Z</kbd>/<kbd>C</kbd>, arrows</td><td>Zoom and roll.</td></tr>
+            <tr><td>Wheel, <kbd>Shift</kbd>/<kbd>Ctrl</kbd></td><td>Change speed; use fast/precision movement.</td></tr>
+            <tr><td><kbd>H</kbd></td><td>Hide/show Object Motion controls and the configured HUD.</td></tr>
+            <tr><td><kbd>L</kbd></td><td>Capture the mounted prop as a keyframe.</td></tr>
+            <tr><td><kbd>F7</kbd> / <kbd>F8</kbd></td><td>Play/pause / stop.</td></tr>
+            <tr><td><kbd>R</kbd> / <kbd>Esc</kbd></td><td>Reset the work camera / return to Object Motion.</td></tr>
+          </tbody>
+        </table></div>
+        <div class="docs-note docs-note--tip"><span class="docs-note__sym">&#10003;</span><div><b>Non-destructive authoring</b>Preview first. Back/Cancel restores the original prop transform; only Add to scene/Timeline commits the authored definition.</div></div>
+      </section>
+
+      <section class="docs-section" id="actor-sequencer">
+        <div class="docs-section__head"><span class="docs-section__num">16C</span><h2>Actor Sequencer</h2></div>
+        <p>Actor Sequencer builds a portable performance through four guided steps: <strong>Route</strong>, <strong>Actor</strong>, <strong>Events</strong> and <strong>Review</strong>.</p>
+        <div class="docs-note"><strong>Smooth actor routes</strong><p>In Route → Route motion, enable <strong>Smooth path</strong> and adjust <strong>Corner radius</strong> (0.20–3.00 m, default 1.25 m). New routes use this mode; old saved routes remain unchanged until enabled. Reopen route Freecam to inspect the green curved line. Leave room for the ped around walls and props.</p></div>
+        <ul><li>Transit corners are rounded, with their radius limited by neighboring segments. A moving look-ahead target keeps native walking/running continuous instead of stopping and snapping heading at every point. Speed commands blend between segments; per-segment walking styles remain active.</li><li>Points containing a pause or any event remain exact destinations with a small arrival tolerance. Events execute once on arrival. Compatible upper-body animations can continue during subsequent movement. Transit orientation follows the curve tangent; at stops, authored headings use a native turn task that a subsequent aiming/turn event can replace.</li><li>The route preview, playback, Timeline inspection and source-offset starts share the same curve geometry. The UI duration estimator is tested against native geometry, but actual walking timing may vary with navigation, gait and obstacles.</li><li>A blocked smooth route retries direct native navigation once, then stops at the waypoint timeout without dragging the ped through obstacles or firing unreached arrival events. Legacy behavior remains available by disabling Smooth path. Near-reversal and navigation-mode boundaries are not rounded.</li><li>Save to Custom Scenes or Timeline to preserve the smooth mode and radius. No server.cfg change, extra resource or migration is needed.</li></ul>
+        <div class="docs-note"><strong>Walking and aiming styles</strong><p>In Actor, choose the default walking and aiming style. In Route, override the gait for each segment or select Use actor style. The catalog offers 23 alternate gaits and 6 alternate aiming styles, plus Default. Walk/run still controls pace; some gaits use generic running clips.</p></div>
+        <ul><li>In Events, equip a weapon before Aim or Shoot. Select a scene actor/vehicle or capture a world point: move Freecam with RMB + WASD, point the center crosshair at a surface, release RMB, then press Use camera crosshair. Fine-tune X/Y/Z if needed.</li><li>Weapon poses depend on the model and weapon; one-handed styles mainly suit pistols. Shoot uses real bullets in playback. Time inspection only shows the aiming pose.</li><li>Animation events search compatible Custom Animations and normal animation favorites (up to 60 results). Paired/prop emotes are excluded. Manual dictionary/clip entry is still available. Choose Once, Loop, or Upper body + loop; disable Wait until event finishes to combine a compatible torso animation with movement.</li><li>Styles and per-point/event overrides save with Custom Scenes and Timeline. Changes appear on the next preview, and reopening route placement preserves them. No rpemotes dependency is required.</li><li>Only used walking clipsets are preloaded. Stop/reset restores changed channels to GTA defaults; unknown styles from another resource must be reapplied by that resource. Legacy sequences without style overrides remain unchanged.</li></ul>
+        <ol>
+          <li>Start drawing the route and click the starting point, then every destination in order.</li>
+          <li>Choose Walk or Run for the segment leading to each new destination.</li>
+          <li>Cast the current player, a stable actor reference or a Saved Ped offered by the parent editor.</li>
+          <li>Add optional waypoint events such as wait, turn, aim, shoot, scenario, animation, weapon changes or vehicle actions.</li>
+          <li>Scrub or preview the full performance. The persistent <kbd>RMB</kbd> + <kbd>WASD</kbd> Freecam remains available for inspection.</li>
+          <li>Save the sequence into its Custom Scene or Timeline parent.</li>
+        </ol>
+        <h3>Route capture controls</h3>
+        <div class="docs-table"><table>
+          <thead><tr><th>Input</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr><td><kbd>WASD</kbd> + mouse</td><td>Fly and look.</td></tr>
+            <tr><td><kbd>LMB</kbd></td><td>Add the next point.</td></tr>
+            <tr><td><kbd>1</kbd> / <kbd>2</kbd></td><td>Make the next segment Walk / Run.</td></tr>
+            <tr><td><kbd>R</kbd></td><td>Toggle the next segment Walk/Run.</td></tr>
+            <tr><td><kbd>Backspace</kbd></td><td>Undo the last point.</td></tr>
+            <tr><td><kbd>Enter</kbd></td><td>Finish after at least two points.</td></tr>
+            <tr><td><kbd>Esc</kbd></td><td>Cancel capture and restore the editor draft.</td></tr>
+          </tbody>
+        </table></div>
+        <div class="docs-note docs-note--info"><span class="docs-note__sym">i</span><div><b>The start point is a spawn marker</b>Movement belongs to the segment from one point to the next, so the starting marker does not need its own Walk or Run value.</div></div>
+      </section>
+
+      <section class="docs-section" id="door-director">
+        <div class="docs-section__head"><span class="docs-section__num">16D</span><h2>Door Director</h2></div>
+        <p>Door Director animates supported entity-backed map/MLO doors and doors registered in GTA's Door System.</p>
+        <ol>
+          <li>Select or change a door. Object Spooner's read-only world selection Freecam opens.</li>
+          <li>Hold <kbd>RMB</kbd> with <kbd>WASD</kbd>, <kbd>Q/E</kbd>, <kbd>Shift</kbd> and <kbd>Ctrl</kbd> to frame it; release RMB and click the physical door once.</li>
+          <li>Choose Open, Close or Open &amp; Close.</li>
+          <li>Choose Side 1 or Side 2 for the signed swing direction.</li>
+          <li>Select Soft, Normal or Fast, or enter the exact movement time.</li>
+          <li>Drag the Door Timeline playhead and markers to inspect or author exact open-ratio keyframes. Optional lock/unlock events use their own lane.</li>
+          <li>Preview, then add to the parent scene/Timeline.</li>
+        </ol>
+        <p>The persistent editor Freecam remains available after selection. Back/<kbd>Esc</kbd> restores the original world state. Baked MLO geometry cannot be animated unless the addon exposes a selectable object or Door System registration; add unexposed addon door archetypes to <code>Config.DoorDirector.RegisteredDoorModels</code>.</p>
+      </section>
+
+      <section class="docs-section" id="scene-tools">
+        <div class="docs-section__head"><span class="docs-section__num">16E</span><h2>Scene Tools</h2></div>
+        <p>Scene Tools organizes the current Custom Scene without modifying source assets.</p>
+        <ul>
+          <li>Create named collections and move entries between them.</li>
+          <li>Select, show/hide and lock entries from one hierarchy.</li>
+          <li>Attach an entity-backed child to an entity-backed parent using a bone and local offset/rotation.</li>
+          <li>Open the clean viewport to inspect the result; <kbd>Esc</kbd> returns without discarding the draft.</li>
+        </ul>
+        <div class="docs-note docs-note--warning"><span class="docs-note__sym">!</span><div><b>Transform ownership</b>Object Motion and replay layers may be attachment parents, but not children, because their runtime owns the world transform. Preview requires control of the child and never requests network ownership automatically.</div></div>
+      </section>
+
+      <section class="docs-section" id="custom-scenes">
+        <div class="docs-section__head"><span class="docs-section__num">17</span><h2>Custom Scenes Composer</h2></div>
+        <p>Custom Scenes combines multiple Director systems into a named, reusable production. Saved scenes support lazy loading, rename, edit, and confirmed deletion.</p>
+        <h3>Supported entries</h3>
+        <p><span class="docs-tag">Camera</span><span class="docs-tag">Stage Light</span><span class="docs-tag">Cinematic Text</span><span class="docs-tag">Object Motion</span><span class="docs-tag">Actor Sequence</span><span class="docs-tag">Door Motion</span><span class="docs-tag">Animation</span><span class="docs-tag">Scene</span><span class="docs-tag">Vehicle Replay</span><span class="docs-tag">Ped Replay</span><span class="docs-tag">Effect</span><span class="docs-tag">Combat Ped</span></p>
+        <h3>Build a scene</h3>
+        <ol>
+          <li>Create a new scene and give it a descriptive name.</li>
+          <li>Add entries in the order that is easiest to manage.</li>
+          <li>Set each entry's start delay: preset or custom.</li>
+          <li>Configure models, positions, replay takes, effects, props, and attachments.</li>
+          <li><strong>Prop placement:</strong> Custom Scenes and Timeline share <strong>Props &gt; Place &amp; Add</strong>, with <strong>Place</strong> for existing attachments. Scene and solo-animation actors play in an isolated preview with an animation timeline. Play, pause or drag the time slider to choose a pose, then click <strong>Adjust prop</strong>. This freezes the animation and detaches the prop before opening the gizmo. <kbd>Enter</kbd> accepts the adjustment and returns to the timeline; <kbd>Backspace</kbd> cancels just that adjustment. <strong>Use placement</strong> returns to Props, then <strong>Save</strong> commits. Vehicle props retain the vehicle root or named bone and use the same gizmo, without ped-animation transport.</li>
+          <li>Edit the camera sequence from its entry.</li>
+          <li>Use <strong>Test</strong> to preview without starting the final action workflow.</li>
+          <li>Correct placement and timing, then save.</li>
+          <li>Use <strong>ACTION!</strong> for the configured countdown and full execution.</li>
+        </ol>
+        <h3>Playback choices</h3>
+        <ul>
+          <li><strong>Test / Stop Test:</strong> local editing preview.</li>
+          <li><strong>ACTION!:</strong> countdown followed by the complete scene.</li>
+          <li><strong>Attach:</strong> prepare static elements and attach the player to a selected entity before action.</li>
+          <li><strong>Nearby synchronization:</strong> share the scene with eligible nearby players.</li>
+          <li><strong>Stop &amp; Save:</strong> stop the active production and retain authoring changes.</li>
+        </ul>
+        <h3 id="stage-lighting">Stage Lighting</h3>
+        <p>Add a <strong>Stage Light</strong> entry from Custom Scenes or Timeline. Every light now uses a physical streamed fixture with an embedded GTA spotlight, allowing the same light visible during authoring to persist in a Rockstar Editor recording. There is no separate native-only output.</p>
+        <ul>
+          <li>The authoring Freecam remains active while Stage Lighting is open. Hold RMB and use WASD, Q/E, Shift, and Ctrl to inspect the scene; release RMB to use the interface.</li>
+          <li>Choose one of 15 verified physical fixtures: three white levels plus soft or bright red, magenta, green, yellow, blue, and cyan. Each choice applies the asset's exact embedded RGB value.</li>
+          <li>Use <strong>Place near me</strong> or <strong>Aim at me</strong> for a quick start. For exact placement, click <strong>Edit fixture with gizmo</strong>, translate or rotate the light, then finish placement to resume its animation.</li>
+          <li>Use <strong>Move camera</strong> for mouse navigation and Esc/RMB to return to controls, or <strong>Frame light</strong> to center the fixture. The Freecam stays active throughout editing.</li>
+          <li><strong>Attachment:</strong> choose a project subject or nearby ped, vehicle or prop, optionally enter a bone, then Attach. Keep position preserves the placement; the gizmo adjusts local offsets and rotation. Detach preserves the world placement. Project targets reconnect on playback; nearby world targets are temporary for the current entity/session.</li>
+          <li>Aim can keep the beam pointed at a separate actor or vehicle. Missing attachment targets hide the light until they become available.</li>
+          <li>Add movement, rotational sweeps, and sway. Pulse and flicker use recordable binary fixture visibility because the embedded brightness is fixed.</li>
+          <li>Use Preview for live authoring. The original scene is unaffected when the editor closes.</li>
+        </ul>
+        <h4>Guided setup order</h4>
+        <ol>
+          <li><strong>Light:</strong> name it, set duration and decide whether procedural motion loops.</li>
+          <li><strong>Place:</strong> place near the player, use exact transform faders or open the native gizmo. Gizmo keys are <kbd>W</kbd> move, <kbd>R</kbd> rotate and <kbd>Tab</kbd> local/world.</li>
+          <li><strong>Look:</strong> choose a verified color and, when needed, choose an actor/vehicle subject with Follow and/or Aim offsets.</li>
+          <li><strong>Motion:</strong> start from Static, Float, Sweep, Pulse or Flicker; Advanced exposes each layer separately.</li>
+          <li><strong>Preview:</strong> verify the correct scene time, daylight and beam direction. Finish the gizmo session before saving.</li>
+          <li><strong>Save:</strong> add it to the parent. <kbd>Esc</kbd>/<kbd>Backspace</kbd> returns and restores temporary preview state.</li>
+        </ol>
+        <p>Stage lights share the Custom Scene playback clock, including delays, pause/stop behavior, static scrubbing, nearby-scene playback, and loop or once duration. Models are preloaded before that clock starts, one managed fixture entity is used per active light, and the entity is removed when playback, preview, or the resource stops. The included fixtures are enabled for all 24 in-game hours.</p>
+        <p>The 15 included fixtures have photometrics compiled into each model: intensity 4, 20 m falloff, 5 degree inner cone, and 15 degree outer cone. Position, rotation, targeting, timing, movement, sweep, and on/off patterns are editable.</p>
+        <div class="docs-note docs-note--tip"><span class="docs-note__sym">i</span><div><b>Artifact updates</b>After updating GTA or the FiveM server artifact, record and reopen one short day clip and one night clip before an important production. Director blocks saving when a required physical fixture cannot be loaded.</div></div>
+        <h3 id="cinematic-text">Cinematic Text</h3>
+        <p><strong>Text attachment:</strong> in Content, refresh the target list, choose a ped, vehicle or object and click <strong>Attach / apply anchor</strong>. Scene and Timeline subjects are listed first. Preview the target clip before opening this tool. Optionally enter a bone name (head, hand, door, wheel…) or a GTA ped bone ID. Empty means the entity origin.</p>
+        <p>Text starts above its anchor unless <strong>Keep current world position</strong> is selected. The gizmo adjusts a saved local offset. <strong>Face camera</strong> follows the target while facing the camera; <strong>Fixed</strong> optionally inherits its rotation. Finish the gizmo before changing the link. <strong>Detach</strong> preserves the current position. The saved link reconnects to registered scene/replay actors, vehicles, Object Motion, scene props and playback Environment NPCs. If the target or bone is absent, the text hides until it returns; keep the target clip active during the text.</p>
+        <div class="callout warn"><div><strong>Temporary world targets:</strong> nearby unregistered entities only work while that entity exists in the current resource session, not after a restart. Use authored Scene/Timeline subjects for reusable playback. Recheck prop links after changing their order. Virtual lights, effects, cameras and other text planes are not physical entity targets. Text attachments do not move, freeze or delete their target, and still require direct EXPORT for capture.</div></div>
+        <p>Cinematic Text is a new guided world-space title system inspired by the strongest authoring ideas from Core Cinematics and Maker Pro, but integrated into Director's existing Custom Scene and Timeline clocks. Open it from Director, add it as a Custom Scene entry, or create/edit its Timeline clip.</p>
+        <p>The font picker previews <strong>40 offline options</strong>: 5 base families and 35 bundled local families. It covers condensed title, elegant serif, modern sans, techno/display, handwritten, and monospaced styles without requiring an Internet connection. Latin and Latin Extended are available across the library, and many families also include Vietnamese glyphs. Arabic, emoji, and glyphs missing from the selected family use compatible system fallbacks, so coverage can vary between families and client installations.</p>
+        <ol>
+          <li><strong>Content:</strong> name the entry, write Unicode or multiline text, and start from Title, Subtitle, Neon, Warning, or a custom style.</li>
+          <li><strong>Appearance:</strong> choose a bundled/system font, color, opacity, alignment, outline, glow, shadow, and world scale.</li>
+          <li><strong>Movement &amp; timing:</strong> enter the exact duration; select None, Fade + slide, Scale, Rise, Typewriter, or Wave and set independent entrance/exit times.</li>
+          <li><strong>Orientation:</strong> use <b>Face camera</b> to face the current camera without interpreting the saved world heading as screen rotation, or <b>Fixed</b> to retain the authored world rotation. Switching to Fixed initially faces the camera, including elevation. Both modes preserve the same world dimensions and texture proportions. A fixed plane is readable from either side, but remains edge-on from its side and can be occluded by world geometry. Finish the gizmo before switching modes; changing facing preserves the preview time and texture.</li>
+          <li><strong>Place:</strong> enable the gizmo to translate or rotate the invisible anchor. Hold <kbd>RMB</kbd> plus <kbd>WASD</kbd>/<kbd>Q</kbd>/<kbd>E</kbd> for the persistent Freecam, <kbd>Shift</kbd> for fast movement, or <kbd>Ctrl</kbd> for precision; release RMB to use the controls.</li>
+          <li><strong>Preview and save:</strong> stop/restart the temporary preview without losing Freecam, then add or update it in the parent production.</li>
+        </ol>
+        <p>Saved definitions live in the normal Custom Scene or Timeline JSON payload, so no SQL migration is required. Runtime instances are lazy and cleaned up on preview stop, parent playback stop, editor close, or resource shutdown.</p>
+        <div class="docs-note docs-note--warning"><span class="docs-note__sym">!</span><div><b>Rockstar Editor</b>The text surface is rendered through FiveM DUI. It appears in live previews and direct <strong>EXPORT</strong> MP4 output, but Rockstar Editor does not capture the DUI layer. Director blocks <strong>ACTION!</strong> for a production containing Cinematic Text rather than creating a recording with missing titles.</div></div>
+        <div class="docs-note docs-note--warning"><span class="docs-note__sym">!</span><div><b>Referenced content</b>A Custom Scene can depend on saved replay sources. Remove the scene or project reference before deleting a source that is still in use.</div></div>
+      </section>
+
+      <section class="docs-section" id="timeline">
+        <div class="docs-section__head"><span class="docs-section__num">18</span><h2>Timeline Editor</h2></div>
+        <p>While editing, keyboard and mouse retain UI focus even with a gamepad connected. Gameplay controls are blocked only in the editor; Freecam, placement and playback release that editing guard.</p>
+        <p><strong>FREECAM</strong> in the top bar, or <strong>Move camera</strong> beside the inspector, inspects the scene without creating camera keyframes. Use WASD / Q / E to move, move the mouse freely to look, and use Shift / Alt for fast / slow movement. <strong>F5 or ESC</strong> returns to Timeline and holds the framing, including while editing effects. <strong>Use shot camera</strong> resumes authored camera scrubbing. Takes without camera clips keep this view; authored cameras take priority during output. Closing Timeline releases Freecam.</p>
+        <ul>
+          <li><strong>Effects:</strong> click once or press + to insert and inspect an effect at the playhead. Search covers the complete loaded catalog. Move effect and Move camera sit beside its settings; placed, unattached effects expose live X/Y/Z coordinates.</li>
+          <li><strong>Animation placement:</strong> choose Ground or Fly above Place in the animation inspector. Ground follows the floor; Fly preserves the placed height. The choice is saved per clip and reused in placement, scrub, Test and output. Existing clips default to Ground.</li>
+          <li><strong>Layer order:</strong> new dedicated layers appear at the top. Duplicates appear directly below their original layer. Dropping onto a row inserts below that row. Shared controls reuse their existing track.</li>
+          <li><strong>Expandable groups:</strong> Vehicle Replay, Ped Replay, animations, effects and other types have parent rows. Click the arrow to collapse or expand their child tracks. The parent retains an occupancy overview; collapsing never disables playback. The project remembers the view. Use the group button beside TRACKS for a flat view, or workspace settings to collapse/expand all groups. New clips expand their group automatically.</li>
+          <li><strong>Layer ON/OFF:</strong> the eye button on each row uses the saved Mute state to exclude that layer from preview and output. It supports undo and is disabled during playback/capture.</li>
+          <li><strong>Reorder type groups:</strong> drag a parent header such as Speech or Animation above or below another type. The insertion line marks the destination; the entire group moves with its tracks and subgroups. Clip times stay unchanged. The order is saved and supports undo/redo; a normal click still expands or collapses.</li>
+          <li><strong>Named subgroups:</strong> click + beside Animation or another type to create Group 1, Group 2, etc. Rename in the group header. Drag a track label or clip onto the subgroup to assign it without changing its time, even if the group is empty or collapsed. Drop on the type header to ungroup. Compatible library items can be dropped directly into a subgroup; gear &gt; Subgroup is also available. Collapse each independently. Removing a group keeps its tracks. Project saving and undo/redo retain the organization; duplicates inherit their source group. The old Collections block has been removed from the clip inspector.</li>
+          <li><strong>Select in view:</strong> activate the button and click an active Timeline actor, vehicle or owned prop. Unattached effects can be selected within 24 screen pixels of their emitter origin; select attached effects from their track. Map objects and inactive clips are excluded.</li>
+        </ul>
+        <p><strong>TEST, Play from, ACTION! and EXPORT</strong> hide the local player's ped during Timeline takes, including the recording countdown. Stop, cancellation, failed preparation and resource shutdown restore the previous visibility.</p>
+        <p>Timeline is a multi-track nonlinear editor. Projects can be created, saved, searched, loaded, renamed, duplicated, and deleted. Unsaved work remains a local draft until saved to the database.</p>
+        <h3>Add and organize clips</h3>
+        <ul>
+          <li>Drag an option onto Timeline or double-click it to add at the playhead.</li>
+          <li>Tracks are created only when needed.</li>
+          <li>Scene, Animation, Stage Light, Cinematic Text, Effect, Vehicle Replay, and Ped Replay clips receive independent tracks for clearer organization.</li>
+          <li>Camera, Speech, and World &amp; Time content share type-specific tracks.</li>
+          <li>Drag track headers or use their arrows to reorder them.</li>
+          <li>Mute tracks to exclude playback and lock them to prevent edits.</li>
+          <li>Resize Timeline vertically using the top handle or the plus/minus controls.</li>
+        </ul>
+        <h3>Edit clips</h3>
+        <p>Move, trim from either edge, split, copy, paste, duplicate, delete, or select multiple clips. Use <kbd>Ctrl</kbd> for individual multi-selection and <kbd>Shift</kbd> for a range. Right-click opens context actions.</p>
+        <h3>Audio reference tracks (FiveManage and YouTube)</h3>
+        <ol>
+          <li>Upload an audio file to FiveManage and copy its <strong>direct HTTPS file link</strong>, such as <code>https://r2.fivemanage.com/...</code> or <code>https://cdn.fivemanage.com/...</code>. MP3, OGG and WAV files are supported when playable by the browser. Dashboard pages are not audio files. You can also paste a YouTube video link, including a shared <code>youtu.be</code> link. A timestamp in the link sets the initial source offset.</li>
+          <li>Move the Timeline playhead to the insertion time. Open the <strong>music-note / Audio</strong> category, enter an optional name, paste the link and choose <strong>Add at playhead</strong>. Wait for the file duration to load; a failed link does not create a clip.</li>
+          <li>Move or trim the new audio clip like other clips. Select it to set <strong>Volume</strong> and <strong>Start within audio</strong> (the source offset in seconds). The clip cannot extend beyond the end of the audio file. You can split, duplicate, mute or solo its track and mix several tracks.</li>
+          <li>Use <strong>Play</strong>, <strong>TEST</strong> or <strong>START</strong>. Audio follows the native Timeline clock and starts at the matching source time, including playback from the middle. Stop/Backspace, completion and leaving the editor silence it. Moving the paused cursor does not play audio.</li>
+          <li>Save the project to retain its link, name, volume and trim. The source remains on its hosting service and must stay available. Use <strong>Edit link / name</strong> to replace an unavailable file; invalid or unsupported links show a load error.</li>
+        </ol>
+        <p><strong>Volume:</strong> use <strong>Listening volume</strong> in the Audio category to control all reference tracks, or select an audio clip and adjust its individual Volume. These settings combine: 50% listening volume with a 50% clip gives 25% output. Zero silences reference audio without changing game sounds. Both settings are saved with the project.</p>
+        <p><strong>YouTube:</strong> the official video player remains visible while listening, including START. Only one YouTube clip can play at a time; move overlapping YouTube clips apart or mute one. If its duration has not loaded, press Play in the player when prompted. Loading, ads, private videos, disabled embedding and player identity restrictions may affect playback or synchronization. Use a direct audio file for precise editing. The player is released on Stop, closing Timeline or completion.</p>
+        <h3>Marks on a specific clip</h3>
+        <ol>
+          <li>Select the clip to annotate, for example <strong>Animation · Countdown2</strong>, and move the blue playhead to a time inside it.</li>
+          <li>Press <strong>M</strong>, the toolbar <strong>Mark</strong> button, or <strong>Mark clip at playhead</strong> in the inspector or clip context menu. A yellow pin appears on that clip's row.</li>
+          <li>Drag the pin to adjust its time, click it to seek there, or rename/delete it in the inspector. Locked tracks cannot be changed.</li>
+          <li>Moving the clip moves its marks too. Trimming hides marks outside the visible source range, and splitting retains marks in the corresponding piece. Undo/redo and project saving retain the marks.</li>
+          <li>Use <strong>Shift+M</strong> for a global ruler mark. Without a selected clip under the playhead, M and the toolbar Mark button also create a global mark.</li>
+        </ol>
+        <p><strong>Editing reference:</strong> this audio is local to your Timeline preview. It is not embedded in ACTION/Rockstar Editor, shared scene playback or exported video. Add it separately to the final video in your editing software.</p>
+        <h3>Snapping and markers</h3>
+        <p>Use the magnet button to toggle snapping. Grid choices include 0.05, 0.1, 0.25, 0.5, and 1 second. Hold <kbd>Alt</kbd> while dragging to bypass snapping. Press <kbd>M</kbd> to add a marker, drag it to move, and right-click it to remove.</p>
+        <p>Complete Scene and Animation blocks keep their natural duration and cannot be stretched. This prevents invalid partial playback. Source-aware camera/replay/authoring clips expose trimming or loop behavior only when their runtime supports it.</p>
+        <h3>Playback modes</h3>
+        <ul>
+          <li><strong>TEST:</strong> preview from the beginning.</li>
+          <li><strong>Play from:</strong> preview from the current playhead.</li>
+          <li><strong>ACTION!:</strong> run the complete edit with a countdown.</li>
+          <li><strong>Attach:</strong> prepare attachment-based staging.</li>
+          <li><strong>Stop &amp; Save:</strong> stop and preserve the current authoring state.</li>
+        </ul>
+        <h3>Timeline shortcuts</h3>
+        <div class="docs-table"><table>
+          <thead><tr><th>Shortcut</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr><td><kbd>Space</kbd> / <kbd>Shift</kbd> + <kbd>Space</kbd></td><td>Preview from the playhead / play the marked In-Out range.</td></tr>
+            <tr><td><kbd>Backspace</kbd></td><td>Stop active preview and return to Timeline.</td></tr>
+            <tr><td><kbd>Ctrl</kbd> + <kbd>S</kbd></td><td>Save the project.</td></tr>
+            <tr><td><kbd>Ctrl</kbd> + <kbd>Z</kbd> / <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Z</kbd> or <kbd>Ctrl</kbd> + <kbd>Y</kbd></td><td>Undo / redo.</td></tr>
+            <tr><td><kbd>Ctrl</kbd> + <kbd>C</kbd> / <kbd>V</kbd></td><td>Copy or paste.</td></tr>
+            <tr><td><kbd>Ctrl</kbd> + <kbd>D</kbd></td><td>Duplicate selected clips.</td></tr>
+            <tr><td><kbd>Delete</kbd> / <kbd>Shift</kbd> + <kbd>Delete</kbd></td><td>Delete / ripple-delete the selection and close its time gap.</td></tr>
+            <tr><td><kbd>&larr;</kbd> / <kbd>&rarr;</kbd></td><td>Move the playhead by one project frame; hold Shift for ten frames.</td></tr>
+            <tr><td><kbd>M</kbd></td><td>Add a marker at the playhead.</td></tr>
+            <tr><td><kbd>I</kbd> / <kbd>O</kbd></td><td>Set range In / Out.</td></tr>
+            <tr><td><kbd>J</kbd> / <kbd>K</kbd> / <kbd>L</kbd></td><td>Reverse shuttle / pause / forward shuttle.</td></tr>
+            <tr><td><kbd>Page Up</kbd> / <kbd>Page Down</kbd></td><td>Jump to the previous / next clip boundary.</td></tr>
+            <tr><td><kbd>Home</kbd> / <kbd>End</kbd></td><td>Jump to project start / end.</td></tr>
+            <tr><td><kbd>Alt</kbd> while dragging</td><td>Temporarily bypass snapping.</td></tr>
+            <tr><td>Wheel / <kbd>Shift</kbd> + wheel / <kbd>Ctrl</kbd> + wheel</td><td>Scroll tracks / horizontal scroll / zoom Timeline.</td></tr>
+            <tr><td><kbd>Esc</kbd> / <kbd>Backspace</kbd></td><td>Close the editor when no preview is active.</td></tr>
+          </tbody>
+        </table></div>
+        <div class="docs-note docs-note--tip"><span class="docs-note__sym">&#10003;</span><div><b>Efficient editing order</b>Set project duration first, organize tracks second, establish timing third, then refine cameras and transitions. This avoids repeatedly moving finished camera keyframes.</div></div>
+      </section>
+
+      <section class="docs-section" id="replays">
+        <div class="docs-section__head"><span class="docs-section__num">19</span><h2>Replay systems</h2></div>
+        <h3>Ghost Replay</h3>
+        <p>Records the controlled subject's movement for repeatable blocking. Press <kbd>E</kbd> to stop, name the take, save it, and add it to a larger production. Use shorter test takes while calibrating routes.</p>
+        <h3>Ped Replay</h3>
+        <p><strong>Adaptive playback:</strong> the recorded route guides native movement while weapon changes, shots, rolls, cover, jumps and reloads can finish. Small differences are accepted and the route is recalculated after actions. Unavailable cover falls back to locomotion; only large, sustained drift outside protected actions triggers recovery. Live takes can vary with the environment, while scrubbing still inspects the recorded pose. Record a new take for combat-roll phases and confirmed shots; older takes cannot supply missing action data. Settings are in <code>Config.PedReplay</code>; <code>PlaybackMode = "legacy"</code> restores the previous controller.</p>
+        <p>Records only the active player, including appearance, movement, actions, combat state, and vehicles used by that player. Nearby NPCs are not scanned or captured. Press <kbd>E</kbd> to finish, then name and save. Before placement, configure the actor model and appearance; prop attachments and drift correction are supported.</p>
+        <h3>Vehicle Replay / Vehicle Sessions</h3>
+        <p><strong>Keep recording in a used folder:</strong> saving another take is allowed even when a saved Custom Scene or Timeline references that folder. Save uploads only the new take; the server appends it to its committed data without replacing or reordering previous takes. You do not need to empty the scene or restart the game. Deleting or fully replacing referenced recordings remains protected.</p>
+        <p>If another save changed the folder during upload, the new take remains pending while the folder refreshes. Press <strong>Save</strong> again after the refresh message. Failed uploads do not replace saved takes. Do not close the game/resource while a take is unsaved. Deploy matching client, server and compiled UI files together; old servers are rejected before append data is uploaded. No SQL migration or server.cfg change is needed.</p>
+        <p><strong>Large folder uploads:</strong> a disconnect naming <code>spectrem:server:updateVehicleSessionChunk</code> concerns network transfer, not a fixed 14-vehicle limit. Updates use 8 KiB latent chunks, with at most four in flight and a combined 256 KiB/s budget. The server acknowledges consecutive blocks before the database commit; progress keeps long uploads alive. Incomplete or stalled uploads are cancelled without committing partial recordings. The existing 32 MiB encoded-folder limit depends on recording duration and detail, not only vehicle count. <strong>No server.cfg changes or SQL reinstall are required.</strong> Update matching client and server resource files and restart when nobody is recording; older servers are rejected before bulk upload.</p>
+        <p>After stopping with <kbd>E</kbd>, name the take, click <b>Save</b>, and wait for confirmation before recording the next take in the same folder. Names are display labels; previous takes load by session ID. A new folder has no ghosts until its first take is saved. The next capture waits for all previous ghost vehicles to spawn. If startup fails, saved takes remain intact; the menu reports the failure and F8 logs beginning with <code>[Spectrem][VehiclePreview]</code> identify the loading or model error. No SQL migration is required.</p>
+        <p>Enter a vehicle first. Open or create a session, record one or more takes after the countdown, and press <kbd>E</kbd> to stop. Finalization briefly freezes the vehicle, removes invalid trailing samples, and restores the player and vehicle to the origin.</p>
+        <p>After recording, save, discard, record another take, test, delete, or select one or multiple takes for Custom Scenes or Timeline. Full paint, mods, extras, lights and liveries are captured with the take. Per-vehicle settings include driver appearance, siren, collision, motion, drift correction, engine, invincibility, visible damage, freeze behavior, and prop or ped attachments.</p>
+        <p>Select a Vehicle Replay clip in Timeline, or open its settings in Custom Scenes, to replace each recorded model with a preset from <b>My Vehicles</b>. The replacement is stored with the production, so editing the library later does not alter the scene.</p>
+        <p><strong>Replay recorded weapon fire is off by default.</strong> Enable it in Vehicle Replay settings only when the take needs gunfire or a water cannon. Real weapon events are still captured; disabling playback does not erase them. Existing saved scenes and timeline clips keep their explicit setting: switch it off there too if it was saved enabled. Unarmed cars no longer treat the shared attack/gesture control as mounted-weapon fire or receive native firing tasks from replay. The global default is <code>Config.GhostReplay.ReplayVehicleWeapons = false</code>.</p>
+        <p>Driver-operated mounted-weapon fire is captured as compact timed events. When enabled, native playback supports GTA weaponized vehicles. Ballistic mode replays a captured weapon hash when the native firing command does not respond; resource-defined turrets, muzzle animations, or weapons that never expose a native hash require a custom bridge.</p>
+        <h3>Traffic Replay: traffic for races and pursuits</h3>
+        <ol>
+          <li>Open/create a <strong>Vehicle Replay folder</strong> and choose <strong>Traffic Replay</strong>.</li>
+          <li><strong>Add here</strong> places a zone at your player position. Use <strong>View scene / move</strong> and <strong>Open controls</strong> to move around and add more zones. The crosshair button moves a center to you; the trash button removes that zone.</li>
+          <li>Set radius (30–180 m), vehicle count, target speed (10–120 km/h) and behavior. <strong>Normal</strong> respects lights; <strong>Flow</strong> ignores lights while still using road routing and avoidance.</li>
+          <li><strong>Generate / refresh</strong> places local cars and drivers <strong>stopped</strong>, with the handbrake on and no driving task. Placement checks road direction, lane count, median gap and obstacles. Check the actual count: occupied/unavailable points can reduce it. Regenerate after editing zone settings.</li>
+          <li>Use <strong>Vehicles in the scene</strong> to review the fleet. Click a car's name to mark it in the world, then use <strong>View scene / move</strong> to inspect it. Select a model from the pool, a customized car from <strong>My Vehicles</strong>, or an installed car model name, then <strong>Apply</strong>. Only that car is replaced; an invalid, oversized or blocked replacement keeps the original. The trash button removes only that generated car. Editing is locked while a replacement loads. <strong>Generate / refresh</strong> resets the fleet and these choices.</li>
+          <li>Optional: select <strong>Advanced · manual placement</strong>. Add cars by spawn code or from <strong>My Vehicles</strong>, without generating a zone. Typing <code>k</code> lists installed car codes starting with <code>k</code>; click a suggestion or press <kbd>Enter</kbd> for the first result. Full addon codes are also accepted. Suggestions use the cached catalog, with no request per keystroke. Saved cars retain their customization; presets are not modified.</li>
+          <li><strong>Add vehicle</strong> places a stopped car 8 m in front of you; keep that spot clear. <strong>Position on ground</strong> opens a translucent vehicle preview using scene-placement controls, without gizmo axes. <kbd>WASD</kbd> moves the car, the <strong>mouse wheel</strong> rotates it, <kbd>Shift</kbd>/<kbd>Ctrl</kbd> select fast/precise movement, and <kbd>Space</kbd> switches to/from free camera (<kbd>WASD</kbd> + <kbd>Q</kbd>/<kbd>E</kbd>, mouse look). <kbd>X</kbd> toggles placement at the camera's aim point. Wheel contact keeps the car grounded and aligned to slopes; Q/E cannot lift the car in move mode. <kbd>Enter</kbd> confirms a clear, grounded position; an invalid position keeps the preview open. <kbd>Backspace</kbd> cancels and restores that car. Opacity, collision and camera/player controls are restored on exit; other cars remain stopped. Adjust speed and behavior independently per car.</li>
+          <li>The placement camera starts behind the car, like scene placement. Movement follows the view: <kbd>D</kbd>/<kbd>A</kbd> move car and camera right/left together, regardless of the car's heading. Wheel rotation stays in place. If the ground rejects a step, neither the car nor its following camera advances.</li>
+          <li><strong>Align to traffic</strong> explicitly snaps one car to a clear nearby lane and its native heading. Failed alignment preserves its previous position. Automatic placement preserves the game's node direction, including one-way roads with reversed edge ordering, and rejects unrelated crossing/parallel-road geometry. Ground placement keeps the wheels supported but does not choose a lane or direction automatically: off-road or wrong-way cars may turn to join the road. Switching modes keeps the fleet; <strong>Generate / refresh</strong> replaces it. Generated and manual cars share the same total limit.</li>
+          <li>On any staged car, expand <strong>Vehicle trajectory</strong> and choose <strong>Draw route</strong>. The first point is anchored to the car. Use <kbd>WASD</kbd> + mouse for Freecam, <kbd>Q</kbd>/<kbd>E</kbd> up/down and <kbd>Shift</kbd>/<kbd>Ctrl</kbd> fast/precise. <strong>Left click</strong> adds road-surface points ahead of the vehicle. <kbd>Backspace</kbd> undoes a point (not the start), <kbd>Enter</kbd> saves, and <kbd>Esc</kbd> cancels without changing the previous route.</li>
+          <li>The blue line previews rounded corners. <strong>Corner smoothing</strong> (2–20 m; default 8) rounds more of each corner, limited by neighboring segments. Keep the line and car body inside the road. Speed reduces ahead of bends; the car stops at the endpoint. <strong>Start delay</strong> (0–30 s, shorter than the recording) coordinates individual departures on the shared clock. Match delays for parallel cars or stagger them for spaced arrivals.</li>
+          <li><strong>Edit route</strong> reopens the points; <strong>Use automatic traffic</strong> removes the route. Replacing a car keeps its route. Confirming ground placement or successfully aligning the car clears it; cancellation or failure preserves it. Regenerating/closing clears the fleet and routes. Save the recorded take to retain the actual motion. Limits: 2–64 points including start, at least 3 m apart, within 600 m of the start and up to 1,500 m total. Avoid walls, steep height changes, reverse starts and extremely sharp turns.</li>
+          <li>Choose a duration and <strong>Record traffic</strong>. The initial stopped frame is captured before cars are released according to their delays. Cars without an authored route keep automatic road AI. Press <kbd>E</kbd> to stop early. Only this tool's generated/manually added vehicles are captured, on a shared clock. Record your race or chase separately.</li>
+          <li>Live traffic is removed on completion. Name and <strong>Save</strong> the take, then <strong>Configure &amp; Place</strong> it in <strong>Custom Scenes</strong> or <strong>Timeline</strong>. NPC drivers are supplied by default and can be changed per seat.</li>
+        </ol>
+        <p>Defaults: 4 zones, 16 vehicles total, 120 seconds, 24,000 samples total. Sampling adapts to the budget. Centers must be within 450 m of the player. Unattended staged fleets expire after 180 seconds. <strong>Cancel</strong> clears only this tool's vehicles; no world traffic or saved recordings are deleted. Zone presets are remembered on the local browser/client; saved takes retain the cars' captured appearance using the existing Vehicle Session database and acknowledged upload path.</p>
+        <p>Zones are <strong>spawn areas</strong>, not barriers. Cars without authored routes follow GTA's road network and may leave the radius. They are not repeatedly assigned random destinations across medians. Shortcuts, oncoming-lane avoidance and off-road avoidance are disabled. Authored routes use physical driving with moving look-ahead targets and anticipatory braking, not per-frame position/rotation writes. Neither mode guarantees collision-free driving: GTA AI can deviate or get stuck on narrow roads, custom maps or in congestion. Sustained route deviation over 12 m ends capture and retains the available take for review. Missing entities also stop capture early. Traffic never respawns or teleports during recording. Route drawing pauses preview expiry. Roadless areas and interiors may not support automatic placement. Traffic is local, not a synchronized multiplayer population; playback follows captured frames, including start delays, instead of making new AI decisions. Configure models, driver, availability, limits and estimated lane spacing (<code>LaneWidth</code>, default 3.25 m) in <code>Config.TrafficReplay</code>. No server.cfg changes, SQL migration or extra resource are required. Finish this capture before another Vehicle/Ped/Chase recording.</p>
+        <h3>Chase Replay</h3>
+        <p>Start a Chase first, then use its separate Chase Replay tab to record the target, all active ground units, and the helicopter on one synchronized clock. Stop and name the recording, save it, then use the dedicated library to play, stop, or delete the complete pursuit take. NPC exit and combat remain locked during capture and playback. Although the library is separate, storage uses the existing Vehicle Replay persistence and chunk transport; no SQL reinstall or migration is required.</p>
+        <div class="docs-note docs-note--warning"><span class="docs-note__sym">!</span><div><b>Allow finalization to finish</b>Do not restart the resource or disconnect while a save indicator is active. Large takes are transferred and stored in bounded chunks.</div></div>
+      </section>
+
+      <section class="docs-section" id="cutscenes">
+        <div class="docs-section__head"><span class="docs-section__num">20</span><h2>Cutscene Player</h2></div>
+        <p>Open with <kbd>F6</kbd> or <code>/cutscenes</code>. Browse Rockstar cutscenes, search, use favorites, and configure playback before starting.</p>
+        <ul>
+          <li>Override cutscene actors with selected or Saved Ped models.</li>
+          <li>Detect eligible nearby NPCs or entities where supported.</li>
+          <li>Choose HUD, audio, fade, and spectator behavior.</li>
+          <li>Use <code>/spectator</code> for the related spectator utility.</li>
+          <li>Stop cleanly before launching another cutscene.</li>
+        </ul>
+      </section>
+
+      <section class="docs-section" id="utilities">
+        <div class="docs-section__head"><span class="docs-section__num">21</span><h2>Mechanic &amp; PropPlace</h2></div>
+        <h3>Mechanic</h3>
+        <p>Run <code>/mechanic</code> while driving a vehicle. The panel discovers the slots actually supported by that GTA or addon model and exposes performance upgrades, all available body/interior mods, wheels, indexed and RGB paint, liveries, extras, tyre options, xenon, neons, plates and model-specific values with live preview.</p>
+        <p>Paint swatches stay fixed under the pointer, including the last metallic gold row. Hover to read the colour name and click to apply it to the chosen surface. You can also use <kbd>Tab</kbd> and <kbd>Enter</kbd>/<kbd>Space</kbd>; the focused swatch has an inset outline.</p>
+        <h3>My Vehicles</h3>
+        <p><strong>Spawned vehicles</strong> lists each copy you create from this library or place for a scene. Identify it by preset name, copy number, model, plate and distance, then click <strong>Remove</strong> on that row. Only that copy leaves the world; other vehicles and saved presets remain. Refresh the list or reopen the tab to update it. The toolbar still offers <strong>Remove all spawned vehicles</strong> for all tracked copies. Traffic and scene/replay entities are managed by their own tools.</p>
+        <ol>
+          <li>Enter and customize the vehicle you want to preserve.</li>
+          <li>Open Director and select <b>My Vehicles</b>.</li>
+          <li>Name the preset and press <b>Save</b>.</li>
+          <li>Use the library to spawn, enter, apply, refresh, rename or delete it, or select it as a Vehicle Replay replacement.</li>
+        </ol>
+        <p>Addon models are supported when their streaming resource is running. A preset keeps the model hash/name and the full supported customization schema.</p>
+        <h3>PropPlace</h3>
+        <p>Run <code>/propplace &lt;model&gt;</code> to attach a temporary prop to the current player. Choose a ped bone and step size, adjust exact XYZ offsets/rotation, then copy the generated Lua configuration. Reset zeroes the transform; closing deletes the temporary prop and restores the player.</p>
+        <div class="docs-table"><table>
+          <thead><tr><th>Freecam input</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr><td>Mouse</td><td>Look around the attached prop and actor.</td></tr>
+            <tr><td><kbd>WASD</kbd> + <kbd>Q</kbd>/<kbd>E</kbd></td><td>Fly; Q raises and E lowers this specialized Freecam.</td></tr>
+            <tr><td><kbd>Shift</kbd></td><td>Move faster.</td></tr>
+            <tr><td>Hold <kbd>Alt</kbd></td><td>Temporarily return the cursor to the PropPlace panel.</td></tr>
+            <tr><td><kbd>Esc</kbd></td><td>Leave Freecam and return to the panel.</td></tr>
+          </tbody>
+        </table></div>
+      </section>
+
+      <section class="docs-section" id="commands">
+        <div class="docs-section__head"><span class="docs-section__num">22</span><h2>Command reference</h2></div>
+        <div class="docs-table"><table>
+          <thead><tr><th>Command / key</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr><td><kbd>F5</kbd> / <code>/director</code></td><td>Open the main Director interface.</td></tr>
+            <tr><td><code>/sceneadmin</code></td><td>Manage 33 feature policies, drafts and audit history. Requires a SceneAdmin manager; configured by <code>Config.SceneAdmin.Command</code>.</td></tr>
+            <tr><td><code>/camera</code></td><td>Open standalone Camera Controls, including public access when enabled. Closing returns to the game; configured by <code>Config.SceneAdmin.CameraCommand</code>.</td></tr>
+            <tr><td><code>/tutorial</code></td><td>Open Director and start the 70-step guided tutorial with protected Camera, Custom Scene, and Timeline demonstrations and new production workflows. The command name is configured by <code>Config.TutorialCommand</code>.</td></tr>
+            <tr><td><kbd>F6</kbd> / <code>/cutscenes</code></td><td>Open Cutscene Player.</td></tr>
+            <tr><td><code>/spooner</code></td><td>Open Object Spooner.</td></tr>
+            <tr><td><code>/spawnobj &lt;model&gt;</code></td><td>Place an object model.</td></tr>
+            <tr><td><code>/spawnveh &lt;model&gt;</code></td><td>Place a vehicle model.</td></tr>
+            <tr><td><code>/spawnped &lt;model&gt;</code></td><td>Place a ped model.</td></tr>
+            <tr><td><code>/mechanic</code></td><td>Open the vehicle mechanic panel while driving.</td></tr>
+            <tr><td><code>/propplace &lt;model&gt;</code></td><td>Open precise prop placement.</td></tr>
+            <tr><td><code>/club</code></td><td>Open the club panel.</td></tr>
+            <tr><td><code>/spectator</code></td><td>Toggle the cutscene spectator utility.</td></tr>
+            <tr><td><kbd>F7</kbd></td><td>Return from a controlled spawned ped to the original player.</td></tr>
+          </tbody>
+        </table></div>
+        <h3>Advanced staff diagnostics</h3>
+        <p>These commands are for authorized development and troubleshooting, not the normal creator workflow. Run them on a development server and read their output in the F8 console.</p>
+        <details><summary>Scene calibration commands</summary><div>
+          <div class="docs-table"><table>
+            <thead><tr><th>Command</th><th>Purpose</th></tr></thead>
+            <tbody>
+              <tr><td><code>/dev</code></td><td>Toggle authorized developer/calibration mode.</td></tr>
+              <tr><td><code>/scene &lt;id or name&gt;</code></td><td>Start a scene calibration preview.</td></tr>
+              <tr><td><code>/scenehelp</code></td><td>Print the complete Scene Calibrator command list to F8.</td></tr>
+              <tr><td><code>/sceneactor &lt;index&gt;</code></td><td>Select the actor whose offset will be edited.</td></tr>
+              <tr><td><code>/sceneadd &lt;x&gt; &lt;y&gt; &lt;z&gt; &lt;h&gt;</code></td><td>Add a position and heading offset.</td></tr>
+              <tr><td><code>/sceneset &lt;x&gt; &lt;y&gt; &lt;z&gt; &lt;h&gt;</code></td><td>Replace the selected actor's offset.</td></tr>
+              <tr><td><code>/scenestep &lt;value&gt;</code></td><td>Set the movement increment; default <code>0.05</code>.</td></tr>
+              <tr><td><code>/scenerot &lt;degrees&gt;</code></td><td>Set the rotation increment; default <code>2.5</code>.</td></tr>
+              <tr><td><code>/sceneorigin</code></td><td>Move the origin in front of the player.</td></tr>
+              <tr><td><code>/sceneplay</code></td><td>Replay the current calibration.</td></tr>
+              <tr><td><code>/sceneprint</code></td><td>Print the current Lua override block.</td></tr>
+              <tr><td><code>/scenesave</code></td><td>Save the override to <code>modules/scenes/data/offsets.lua</code>.</td></tr>
+              <tr><td><code>/scenestop</code></td><td>Stop calibration and restore normal state.</td></tr>
+            </tbody>
+          </table></div>
+        </div></details>
+        <details><summary>Visual Custom Scene Calibrator</summary><div>
+          <p>Enable <code>/dev</code>, open <strong>Scenes</strong>, configure the ped and prop slots for a synchronized scene, then select <strong>Calibrate Scene</strong>.</p>
+          <ol>
+            <li>Move <strong>Whole scene origin</strong> to a clear preview area. This world position is temporary and is not exported.</li>
+            <li>Play or scrub the exact scene timeline, then pause on the clearest alignment frame.</li>
+            <li>Select either actor, an actor-attached prop, or an animated scene prop and choose <strong>Adjust with gizmo</strong>.</li>
+            <li>Use <strong>Copy config</strong> for a complete <code>Config.CustomScenes</code> block, or <strong>Save as default</strong> to write reusable offsets to <code>modules/scenes/data/offsets.lua</code>.</li>
+            <li>Press <kbd>ESC</kbd>, <strong>Back</strong>, or <strong>Cancel</strong> to restore the original scene and return to its setup menu.</li>
+          </ol>
+          <p>If initialization fails, check F8 for <code>[Spectrem][CustomSceneCalibrator]</code>. Restart the resource after adding or updating the calibrator module so FiveM reloads the manifest and client callback.</p>
+        </div></details>
+        <details><summary>Vehicle Replay and siren diagnostics</summary><div>
+          <div class="docs-table"><table>
+            <thead><tr><th>Command</th><th>Purpose</th></tr></thead>
+            <tbody>
+              <tr><td><code>/sdreplaytrace</code></td><td>Arm or disarm a one-shot Vehicle Replay setup trace.</td></tr>
+              <tr><td><code>/sdvehdiag</code></td><td>Print nearby vehicle and factory-reference diagnostics.</td></tr>
+              <tr><td><code>/sd_sirentest</code></td><td>Spawn the local four-vehicle siren test row.</td></tr>
+              <tr><td><code>/sd_sirentest_clear</code></td><td>Remove every siren-test entity.</td></tr>
+            </tbody>
+          </table></div>
+        </div></details>
+      </section>
+
+      <section class="docs-section" id="storage">
+        <div class="docs-section__head"><span class="docs-section__num">23</span><h2>Database &amp; storage</h2></div>
+        <p>Director automatically creates and migrates its storage. Permanent user-data tables include:</p>
+        <div class="docs-tree">spectrem_director_peds
+spectrem_director_ped_folders
+spectrem_director_custom_scenes
+spectrem_director_ghost_replays
+spectrem_director_ped_replays
+spectrem_director_vehicle_sessions
+spectrem_director_saved_vehicles
+spectrem_director_club_presets
+spectrem_director_timeline_projects</div>
+        <p>Temporary staging/support tables may also appear while safely updating large scene and vehicle-session data. Do not delete, truncate, or manually edit Director tables while the resource is running.</p>
+        <h3>Operational guidance</h3>
+        <ul>
+          <li>Back up the database before every resource update.</li>
+          <li>Keep the database on fast local or low-latency storage.</li>
+          <li>Monitor slow queries and storage growth.</li>
+          <li>Do not raise replay or payload limits without profiling memory, network, and database I/O.</li>
+          <li>Wait for active saves to finish before restarting the resource.</li>
+        </ul>
+      </section>
+
+      <section class="docs-section" id="best-practices">
+        <div class="docs-section__head"><span class="docs-section__num">24</span><h2>Production best practices</h2></div>
+        <div class="docs-grid">
+          <div class="docs-card"><div class="docs-card__title">Build small, then combine</div><p>Calibrate actors, vehicles, and cameras in short tests before composing the final Timeline.</p></div>
+          <div class="docs-card"><div class="docs-card__title">Name everything clearly</div><p>Use project, scene, session, take, ped, and folder names that identify location and purpose.</p></div>
+          <div class="docs-card"><div class="docs-card__title">Use references carefully</div><p>Do not delete replay sources that are still used by saved scenes or projects.</p></div>
+          <div class="docs-card"><div class="docs-card__title">Control density</div><p>Reduce crowds, environment radius, traffic, and effects before increasing recording limits.</p></div>
+          <div class="docs-card"><div class="docs-card__title">Save at milestones</div><p>Save after placement, timing, camera, and final-polish passes instead of relying on one final save.</p></div>
+          <div class="docs-card"><div class="docs-card__title">Keep bridges isolated</div><p>Put custom provider logic in edit.lua or a companion resource, not core files.</p></div>
+        </div>
+      </section>
+
+      <section class="docs-section" id="troubleshooting">
+        <div class="docs-section__head"><span class="docs-section__num">25</span><h2>Troubleshooting</h2></div>
+        <details open><summary>The menu does not open</summary><div><ul><li>Test <code>/director</code> in case another resource uses F5.</li><li>Confirm <code>Config.Access</code> and the player's ACE group.</li><li>Check that Director and oxmysql started successfully.</li><li>Inspect the client F8 console for the first NUI error.</li><li>Close other full-screen interfaces that may own focus.</li></ul></div></details>
+        <details><summary>The Guided Tutorial does not start</summary><div><ul><li>Confirm <code>Config.TutorialCommand = 'tutorial'</code>; the config value does not include the slash.</li><li>Verify the account passes the same <code>Config.Access</code> ACE and resource-integrity checks as Director.</li><li>Finish or cancel any active editor, placement, authoring camera, Object Spooner session, preview, or modal.</li><li>Close the separate F6 Cutscene Player before retrying.</li><li>If Director is already open, use its header <code>?</code> button to restart from step 1.</li><li>Director remaining open after Finish or Esc is intentional.</li></ul></div></details>
+        <details><summary>Access is denied unexpectedly</summary><div><ul><li>Check general Director access, the affected feature's saved mode and the SceneAdmin manager role separately.</li><li>Use the explicit <code>spectrem_director.use</code> ACE for general access; it does not grant policy management.</li><li>Public camera-only users must run <code>/camera</code>.</li><li>Changing <code>AdminOnly</code> to <code>false</code> does not clear saved feature restrictions.</li><li>Restart after editing config.lua. Use Scene Admin's restore action to deliberately reapply current defaults.</li></ul></div></details>
+        <details><summary>Scene Admin does not open or a change did not apply</summary><div><ul><li>Add the full player <code>license:</code> or <code>license2:</code> identifier in <code>Config.SceneAdmin.Licenses</code>, or configure and grant the optional management ACE.</li><li>Finish placement, recording or an active camera before opening the panel.</li><li>Save the draft. On a revision conflict, refresh and reapply it.</li><li>Check for a configuration lock or a saved mode overriding Defaults.</li><li>If saved policy data is invalid, an authorized manager can restore configuration defaults from the panel.</li></ul></div></details>
+        <details><summary>Vue reports undefined length after an access denial</summary><div><p>The corrected UI normalizes denied scene-list responses to an empty array. Use the matching client scripts and current compiled <code>web/build</code>, then restart the resource. Public players should open <code>/camera</code>, which does not load the Director scene browser.</p></div></details>
+        <details><summary>Database saves fail or content does not load</summary><div><ul><li>Confirm the connection string and selected database.</li><li>Grant CREATE/ALTER/SELECT/INSERT/UPDATE/DELETE permissions.</li><li>Read the first oxmysql error before later Director messages.</li><li>Do not restart during an active save.</li><li>Remove project/scene references before deleting a used source.</li></ul></div></details>
+        <details><summary>The NUI is blank or reports Failed to fetch</summary><div><ul><li>Re-extract the resource &mdash; a partial or interrupted extraction is the most common cause.</li><li>Clear the FiveM client cache and reconnect.</li><li>Inspect F8 for the first callback name and error.</li><li>Wait for lazy-loaded clips before starting preview.</li></ul></div></details>
+        <details><summary>Ped Replay disconnects with a reliable network event size overflow</summary><div><ul><li>Add <code>set sv_enableNetEventReassembly true</code> to <code>server.cfg</code> and restart the complete server.</li><li>Reconnect the FiveM client so it receives the current client scripts.</li><li>If the reported event is still <code>spectrem:server:savePedReplayChunk</code>, an older Director copy is still running. The current transport uses <code>savePedReplayLatent</code>.</li><li>Do not raise general event-rate limits; use Director's bounded latent transport.</li></ul></div></details>
+        <details><summary>A Script Hook client plugin does not load</summary><div><p>Review <a href="#scripthook-plugins">Client plugins (Script Hook)</a>, including <code>sv_scriptHookAllowed 1</code> in the active <code>server.cfg</code>, then restart the complete server and reconnect. Confirm the plugin supports your FiveM version.</p></div></details>
+        <details><summary>The animation bridge is Offline</summary><div><ul><li>Start the configured external animation resource before Director.</li><li>Enable the bridge in <code>edit.lua</code>.</li><li>Verify event and export names match the provider version.</li><li>Select the external animation before selecting its ped.</li></ul></div></details>
+        <details><summary>Object Spooner cursor or controls feel locked</summary><div><ul><li>Release RMB to return the UI cursor.</li><li>Click outside search or numeric fields before using shortcuts.</li><li>Check FiveM key mappings for conflicting bindings.</li></ul></div></details>
+        <details><summary>Actor Sequencer previews but the actor does not move</summary><div><ul><li>Confirm the route has a starting point and at least one destination.</li><li>Walk/Run belongs to the segment leading to the next point; Start is only the spawn marker.</li><li>Make sure the selected actor source still resolves and is not owned by another preview.</li><li>Stop with Backspace, reopen Review and inspect the first Actor Sequencer message in F8.</li></ul></div></details>
+        <details><summary>Door Director cannot select a map or MLO door</summary><div><ul><li>Release RMB before clicking so the world-selection cursor owns the mouse.</li><li>Entity-backed addon doors are detected automatically.</li><li>A Door System door without a CObject needs its archetype in <code>Config.DoorDirector.RegisteredDoorModels</code>.</li><li>Baked geometry exposed as neither an object nor a Door System entry cannot be animated by script.</li></ul></div></details>
+        <details><summary>Stage Lighting Freecam or fixture cannot start</summary><div><ul><li>Confirm the Stage Lighting YTYP and all 15 physical fixture assets are present in <code>stream/[Stage Lighting]</code>.</li><li>Press Esc/Backspace once to close another authoring camera or full-screen interface, then reopen the light.</li><li>Finish an active gizmo session before Preview or Save.</li><li>After a GTA/FiveM artifact update, test a short day and night Rockstar Editor clip.</li></ul></div></details>
+        <details><summary>Cinematic Text is absent from a recording</summary><div><ul><li>First confirm that the text appears in live Preview and that its Timeline track is not muted.</li><li>Use direct <strong>EXPORT</strong> with Spectrem Export when the final MP4 must include the text.</li><li>Rockstar Editor cannot capture FiveM DUI surfaces; <strong>ACTION!</strong> is intentionally rejected when Cinematic Text is present.</li><li>If live Preview is also blank, close another active authoring tool, reopen Cinematic Text, and inspect the first DUI or Freecam error in F8.</li></ul></div></details>
+        <details><summary>Object Motion camera appears extremely close</summary><div><ul><li>Use the Manual FOV control or Z/C and verify the selected lens.</li><li>Select the affected keyframe and save/replace it after correcting FOV.</li><li>Object Motion has its own work-camera state; camera effects are not baked into the prop path.</li></ul></div></details>
+        <details><summary>A camera keyframe adjustment is not saved</summary><div><p>Select the exact keyframe diamond, adjust the pose, then click <strong>Save frame</strong> or <strong>Replace</strong>. Moving the camera alone does not overwrite a recorded keyframe.</p></div></details>
+        <details><summary>Timeline preview does not start</summary><div><ul><li>Confirm there is at least one valid, unmuted clip.</li><li>Wait until referenced clips finish loading.</li><li>Unlock tracks before editing.</li><li>Press Backspace once to cancel preparation or active playback, then retry.</li><li>Check F8 and the server console for the first reported callback or storage failure.</li></ul></div></details>
+        <details><summary>Performance drops or the server reports hitches</summary><div><ul><li>Make sure you are on the latest release.</li><li>Reduce crowd size, environment radius, density, effect count, and active replay length.</li><li>Avoid several administrators saving large takes simultaneously.</li><li>Monitor database latency and slow queries.</li><li>Keep default bounded transfer and storage settings unless profiling proves a change is safe.</li></ul></div></details>
+      </section>
+
+      <section class="docs-section" id="support">
+        <div class="docs-section__head"><span class="docs-section__num">26</span><h2>Support</h2></div>
+        <p>When requesting help, include the Director version, FiveM artifact, oxmysql version, database type/version, the first relevant server-console error, the first relevant F8 error, exact reproduction steps, and whether the issue persists with optional bridges disabled.</p>
+        <div class="docs-card">
+          <span class="docs-metric">Spectrem Scripts</span>
+          <p>Discord support and product updates:</p>
+          <p><a href="https://discord.gg/yNfaBPqkuH" target="_blank" rel="noopener">discord.gg/yNfaBPqkuH</a></p>
+        </div>
+      </section>
+
+      <footer class="docs-foot">
+        Spectrem Director &copy; 2024&ndash;2026 Spectrem Scripts. All rights reserved.<br>
+        Complete installation and user guide &middot; Version 2.8.0
+      </footer>
+
+    </main>
+  </div>
+</div>
+
+<button class="docs-top" id="docsTop" aria-label="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+</button>
+
+<script>
+(function () {
+  var aside = document.getElementById('docsAside');
+  var toggle = document.getElementById('docsAsideToggle');
+  var search = document.getElementById('docsSearch');
+  var top = document.getElementById('docsTop');
+  var nav = document.getElementById('docsNav');
+  if (!aside || !nav) return;
+
+  var links = Array.prototype.slice.call(nav.querySelectorAll('a'));
+  var sections = Array.prototype.slice.call(document.querySelectorAll('.docs-section[id], h3[id]'));
+
+  // Mobile navigation
+  if (toggle) {
+    toggle.addEventListener('click', function (event) {
+      event.stopPropagation();
+      aside.classList.toggle('is-open');
+    });
+  }
+  links.forEach(function (link) {
+    link.addEventListener('click', function () { aside.classList.remove('is-open'); });
+  });
+  document.addEventListener('click', function (event) {
+    if (window.innerWidth > 900) return;
+    if (!aside.classList.contains('is-open')) return;
+    if (aside.contains(event.target) || event.target === toggle) return;
+    aside.classList.remove('is-open');
+  });
+
+  // Highlight the visible section and update the back-to-top button
+  function sync() {
+    var current = sections.length ? sections[0].id : '';
+    for (var i = 0; i < sections.length; i++) {
+      if (sections[i].getBoundingClientRect().top <= 140) current = sections[i].id;
+    }
+    links.forEach(function (link) {
+      link.classList.toggle('is-active', link.getAttribute('href') === '#' + current);
+    });
+    if (top) top.classList.toggle('is-visible', window.scrollY > 600);
+  }
+  window.addEventListener('scroll', sync, { passive: true });
+  sync();
+
+  // Navigation filter
+  if (search) {
+    search.addEventListener('input', function () {
+      var query = search.value.trim().toLowerCase();
+      links.forEach(function (link) {
+        link.classList.toggle('is-hidden', query && link.textContent.toLowerCase().indexOf(query) === -1);
+      });
+      // Hide groups with no matching results
+      Array.prototype.forEach.call(nav.querySelectorAll('.docs-nav__group'), function (group) {
+        var visible = group.querySelectorAll('a:not(.is-hidden)').length;
+        group.classList.toggle('is-empty', visible === 0);
+      });
+    });
+  }
+
+  // Copy code blocks
+  Array.prototype.forEach.call(document.querySelectorAll('.docs-copy'), function (button) {
+    button.addEventListener('click', function () {
+      var block = button.parentElement.querySelector('code');
+      var text = block ? block.innerText : '';
+      var done = function (label) {
+        var original = button.textContent;
+        button.textContent = label;
+        setTimeout(function () { button.textContent = original; }, 1400);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { done('Copied'); }, function () { done('Select the text'); });
+      } else {
+        done('Select the text');
+      }
+    });
+  });
+
+  if (top) {
+    top.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+  }
+})();
+</script>
+
+</body>
+</html>

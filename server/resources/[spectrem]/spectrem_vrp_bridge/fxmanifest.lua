@@ -1,0 +1,7 @@
+fx_version "cerulean"
+game "gta5"
+lua54 "yes"
+description "Acesso administrativo do Spectrem Director integrado ao vRP da CBR CITY"
+shared_script "@vrp/lib/Utils.lua"
+server_script "server.lua"
+dependency "vrp"
