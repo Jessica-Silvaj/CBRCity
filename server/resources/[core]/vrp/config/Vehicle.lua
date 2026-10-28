@@ -6062,6 +6062,14 @@ local List = {
 		Gemstone = 0,
 		Class = "Vans"
 	},
+	kqbison = {
+		Name = "Bison Lavador",
+		Weight = 40,
+		Price = 1000,
+		Mode = "Work",
+		Gemstone = 0,
+		Class = "Vans"
+	},
 	youga2 = {
 		Name = "Youga 2",
 		Weight = 40,
@@ -7470,7 +7478,30 @@ end)
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- VEHICLESTOCK
 -----------------------------------------------------------------------------------------------------------------------------------------
+-- Estoques definidos pelo painel gestor (Night_Management/data/stocks.json) valem sobre o Stock acima
+StockOverrides = {}
+
+if IsDuplicityVersion() then
+	local function LoadStockOverrides()
+		local Raw = LoadResourceFile("Night_Management","data/stocks.json")
+		local Ok,Data = pcall(json.decode,Raw or "{}")
+		StockOverrides = Ok and type(Data) == "table" and Data or {}
+	end
+
+	CreateThread(LoadStockOverrides)
+	AddEventHandler("Night_Management:stocksChanged",function(Data)
+		StockOverrides = type(Data) == "table" and Data or {}
+	end)
+end
+
 exports("VehicleStock",function(Name)
+	local Override = StockOverrides[Name]
+	if Override == false then
+		return 999999
+	elseif tonumber(Override) then
+		return tonumber(Override)
+	end
+
 	return List[Name] and List[Name].Stock or 999999
 end)
 -----------------------------------------------------------------------------------------------------------------------------------------

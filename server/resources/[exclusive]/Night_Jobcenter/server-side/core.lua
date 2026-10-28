@@ -36,10 +36,12 @@ RegisterNetEvent("Night_Jobcenter:StartJob", function(Work)
 		if Work == "Sair" then
 			TriggerClientEvent("dynamic:Close", source)
 
-			if vRP.Request(source, "Deseja se demitir do seu emprego atual pagando uma taxa de <b>$"..parseInt(PriceNewWork).."</b>?") then
+			if vRP.Request(source, "Central de Empregos", "Deseja se demitir do seu emprego atual pagando uma taxa de <b>$"..parseInt(PriceNewWork).."</b>?") then
 				if vRP.PaymentFull(Passport, PriceNewWork) then
 					Player(source)["state"]["Job"] = nil
                     TriggerClientEvent("Notify", source, "Sucesso", "Você saiu do seu emprego atual.", "verde", 5000)
+				else
+					TriggerClientEvent("Notify", source, "Aviso", "Dinheiro insuficiente para pagar a taxa de demissão.", "amarelo", 5000)
 				end
 			end
 		else
@@ -50,7 +52,7 @@ RegisterNetEvent("Night_Jobcenter:StartJob", function(Work)
                 end
             end
 
-			if vRP.Request(source, "Deseja assinar a carteira no emprego de "..jobName.."?") then
+			if vRP.Request(source, "Central de Empregos", "Deseja assinar a carteira no emprego de "..jobName.."?") then
 				Player(source)["state"]["Job"] = Work
 
 				TriggerClientEvent("Night_Jobcenter:GPS", source, Work)
@@ -85,7 +87,7 @@ AddEventHandler("Night_Jobcenter:Solicitar", function()
     local source = source
     local Passport = vRP.Passport(source)
     if Passport then
-        if vRP.Request(source, "Deseja retirar sua Carteira de Trabalho por R$"..parseInt(PriceWallet).."?") then
+        if vRP.Request(source, "Central de Empregos", "Deseja retirar sua Carteira de Trabalho por R$"..parseInt(PriceWallet).."?") then
 			vRP.GenerateItem(Passport, "trabalho", 1, true)
         end
     end

@@ -37,10 +37,15 @@ $(document).ready(function () {
                     'WEBHOOKS': 'Webhooks',
                     'BATE-PONTOS': 'Services',
                     'GRUPOS': 'Groups',
-                    'PROPS': 'Props'
+                    'PROPS': 'Props',
+                    'ATMS': 'Atms',
+                    'ROUBOS': 'Atms',
+                    'CASAS': 'Atms'
                 };
                 // Props é um módulo novo (server-side/props.lua): libera junto com a categoria ClearArea
                 data.allowedCategories.Props = data.allowedCategories.Props || data.allowedCategories.ClearArea;
+                // ATMs também é módulo novo (server-side/atms.lua): libera junto com Props
+                data.allowedCategories.Atms = data.allowedCategories.Atms || data.allowedCategories.Props;
                 window.categoryMap = categoryMap;
                 $('.nav-category').each(function () {
                     let catText = $(this).find('.category-header span').text().trim();
@@ -832,7 +837,13 @@ $(document).ready(function () {
             "manage-permissions": "Configurar Permissões",
             "manage-webhooks": "Configurar Webhooks",
             "create-service": "Criar Bate Ponto",
-            "manage-services": "Gerenciar Bate Pontos"
+            "manage-services": "Gerenciar Bate Pontos",
+            "manage-robberies": "Gerenciar Roubos",
+            "create-house": "Adicionar Casa",
+            "manage-houses": "Gerenciar Casas",
+            "manage-stocks": "Estoque de Veículos",
+            "create-blip": "Criar Marcação",
+            "manage-blips": "Gerenciar Marcações"
         };
         if (titleMap[page]) {
             $("#page-title").text(titleMap[page]);
@@ -3053,7 +3064,7 @@ $(document).ready(function () {
     });
 
     // Lógica da busca
-    $(document).on('keyup', '.search-input', function () {
+    $(document).on('keyup', '.search-input:not([data-custom-search])', function () {
         let value = $(this).val().toLowerCase();
         let tbody = $(this).closest('.page-content').find('tbody');
         if (tbody.length > 0) {
@@ -4451,5 +4462,363 @@ $(function () {
             distance: parseInt($("#prop-distance").val()) || 100,
             collision: $("#prop-collision").is(":checked")
         });
+    });
+});
+
+// ==========================================
+// CAIXAS ELETRÔNICOS (client-side/atms.lua + server-side/atms.lua)
+// ==========================================
+$(function () {
+    const resourceName = window.GetParentResourceName ? window.GetParentResourceName() : 'Night_Management';
+    const baseUrl = `https://${resourceName}/`;
+
+    function resetAtmForm() {
+        $("#edit-atm-id").val("");
+        $("#atm-kind").val("atm").trigger("change");
+        $("#atm-name").val("");
+        $("#atm-x").val("");
+        $("#atm-y").val("");
+        $("#atm-z").val("");
+        $("#atm-model").val("");
+        $("#atm-open").prop("checked", true);
+        $("#atm-rob").prop("checked", true);
+        $("#atm-start").val("");
+        $("#atm-end").val("");
+    }
+
+    function hasHour(value) {
+        return value !== null && value !== undefined;
+    }
+
+    window.addEventListener("message", function (event) {
+        const data = event.data;
+        if (data.action !== "updateAtms") return;
+
+        const tbody = $("#atms-table tbody");
+        tbody.empty();
+        if (data.atms && data.atms.length > 0) {
+            data.atms.forEach(a => {
+                const options = [];
+                if (a.Open) options.push("Abrir");
+                if (a.Rob) options.push(hasHour(a.StartHour) ? `Roubar (${a.StartHour}h às ${a.EndHour}h)` : "Roubar");
+
+                const row = $(`
+                    <tr>
+                        <td>#${a.id}</td>
+                        <td></td>
+                        <td>${(a.X || 0).toFixed(1)}, ${(a.Y || 0).toFixed(1)}, ${(a.Z || 0).toFixed(1)}</td>
+                        <td></td>
+                        <td class="action-btns">
+                            <button class="btn-icon tp-atm" title="Teleportar"><i class="fa-solid fa-location-dot"></i></button>
+                            <button class="btn-icon edit-atm" title="Editar"><i class="fa-solid fa-pen"></i></button>
+                            <button class="btn-icon delete delete-atm" title="Deletar"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>`);
+                row.find("td").eq(1).append(document.createTextNode(a.Name), "<br>", $("<small>").text(a.Kind === "agency" ? "Agência" : (a.Model || "modelo não detectado")));
+                row.find("td").eq(3).text(options.length ? options.join(" / ") : "Nenhuma");
+                row.find(".tp-atm").on("click", () => $.post(baseUrl + "teleport", JSON.stringify({ x: a.X, y: a.Y, z: a.Z })));
+                row.find(".delete-atm").on("click", () => $.post(baseUrl + "deleteAtm", JSON.stringify({ id: a.id })));
+                row.find(".edit-atm").on("click", () => {
+                    $(".nav-item").removeClass("active");
+                    $("[data-page='create-atm']").addClass("active");
+                    $(".page-content").hide();
+                    $("#create-atm").show();
+                    $("#edit-atm-id").val(a.id);
+                    $("#atm-kind").val(a.Kind || "atm").trigger("change");
+                    $("#atm-name").val(a.Name);
+                    $("#atm-x").val(a.X);
+                    $("#atm-y").val(a.Y);
+                    $("#atm-z").val(a.Z);
+                    $("#atm-model").val(a.Model || "");
+                    $("#atm-open").prop("checked", !!a.Open);
+                    $("#atm-rob").prop("checked", !!a.Rob);
+                    $("#atm-start").val(hasHour(a.StartHour) ? a.StartHour : "");
+                    $("#atm-end").val(hasHour(a.EndHour) ? a.EndHour : "");
+                });
+                tbody.append(row);
+            });
+        } else {
+            tbody.append('<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">Nenhum ATM encontrado.</td></tr>');
+        }
+    });
+
+    $(".nav-item").on("click", function () {
+        const page = $(this).data("page");
+        if (page === "create-atm") {
+            resetAtmForm();
+        } else if (page === "manage-atms") {
+            $.post(baseUrl + "requestAtms", JSON.stringify({}));
+        }
+    });
+
+    $("#atm-here").on("click", function () {
+        $.post(baseUrl + "atmHere", JSON.stringify({ kind: $("#atm-kind").val() }), function (result) {
+            if (typeof result === "string") result = JSON.parse(result);
+            $("#atm-x").val(result.x.toFixed(2));
+            $("#atm-y").val(result.y.toFixed(2));
+            $("#atm-z").val(result.z.toFixed(2));
+            $("#atm-model").val(result.model || "");
+        });
+    });
+
+    $("#save-atm").on("click", function () {
+        const id = $("#edit-atm-id").val();
+        const x = parseFloat($("#atm-x").val());
+        const y = parseFloat($("#atm-y").val());
+        const z = parseFloat($("#atm-z").val());
+        if (isNaN(x) || isNaN(y) || isNaN(z)) return;
+
+        const start = $("#atm-start").val();
+        const end = $("#atm-end").val();
+
+        $.post(baseUrl + "saveAtm", JSON.stringify({
+            id: id ? parseInt(id) : null,
+            name: $("#atm-name").val().trim(),
+            x: x, y: y, z: z,
+            kind: $("#atm-kind").val(),
+            model: $("#atm-model").val(),
+            open: $("#atm-open").is(":checked"),
+            rob: $("#atm-rob").is(":checked"),
+            startHour: start !== "" && end !== "" ? parseInt(start) : null,
+            endHour: start !== "" && end !== "" ? parseInt(end) : null
+        }));
+    });
+});
+$(function () {
+    const resource = window.GetParentResourceName ? window.GetParentResourceName() : 'Night_Management';
+    const post = (name, data = {}) => $.post(`https://${resource}/${name}`, JSON.stringify(data));
+    let houses = [];
+    let interiors = {};
+    let housePage = 0;
+    const pageSize = 50;
+    const fields = [['Police', 0, 1000], ['Delay', 0, 604800], ['Timer', 1, 86400], ['Wanted', 0, 86400], ['Min', 0, 100000000], ['Max', 0, 100000000]];
+
+    $('#atm-kind').on('change', function () {
+        const agency = $(this).val() === 'agency';
+        $('#atm-model').prop('disabled', agency);
+        $('#atm-rob').prop('disabled', agency);
+        $('#atm-start, #atm-end').prop('disabled', agency);
+        if (agency) $('#atm-rob').prop('checked', false);
+    });
+
+    $('.nav-item').on('click', function () {
+        if ($(this).data('page') === 'manage-robberies') post('requestRobberies');
+        if ($(this).data('page') === 'manage-houses') post('requestHouses');
+        if ($(this).data('page') === 'manage-stocks') post('requestStocks');
+        if ($(this).data('page') === 'manage-blips') post('requestBlips');
+        if ($(this).data('page') === 'create-blip') newBlip();
+        if ($(this).data('page') === 'create-house') { newHouse(); post('requestHouses'); }
+    });
+
+    function renderRobberies(entries) {
+        const body = $('#robberies-body').empty();
+        entries.forEach(entry => {
+            const row = $('<tr>');
+            $('<td>').text(`${entry.Name} (${entry.id})`).append($('<small>').text(` — ${entry.Item || 'sem item'}`)).appendTo(row);
+            const enabled = $('<input type="checkbox">').prop('checked', entry.Enabled);
+            $('<td>').append(enabled).appendTo(row);
+            const inputs = {};
+            fields.forEach(([key, min, max]) => {
+                inputs[key] = $('<input type="number" step="1" required>').attr({ min, max, 'aria-label': key }).val(entry[key]).css('width', '95px');
+                $('<td>').append(inputs[key]).appendTo(row);
+            });
+            const save = $('<button class="btn-icon" type="button" title="Salvar">').html('<i class="fa-solid fa-floppy-disk"></i>').on('click', function () {
+                const data = { id: entry.id, Enabled: enabled.is(':checked') };
+                for (const [key] of fields) {
+                    if (!inputs[key][0].reportValidity()) return;
+                    data[key] = Number(inputs[key].val());
+                }
+                if (data.Min > data.Max) { inputs.Min[0].setCustomValidity('O mínimo não pode superar o máximo.'); inputs.Min[0].reportValidity(); inputs.Min[0].setCustomValidity(''); return; }
+                post('saveRobbery', data);
+            });
+            $('<td class="action-btns">').append(save).appendTo(row);
+            body.append(row);
+        });
+    }
+
+    function newHouse() {
+        $('#house-form')[0].reset();
+        $('#house-id').val('');
+        $('#save-house').html('<i class="fa-solid fa-floppy-disk"></i> Salvar Casa');
+        $('#house-interior').trigger('change');
+    }
+    function editHouse(id) {
+        $('.nav-item').removeClass('active');
+        $('[data-page="create-house"]').addClass('active');
+        $('.page-content').hide();
+        $('#create-house').fadeIn(200);
+        $('#page-title').text(`Editar Casa: ${id}`);
+        $('#save-house').html('<i class="fa-solid fa-floppy-disk"></i> Atualizar Casa');
+        $('#house-id').val(id);
+    }
+    function renderHouses() {
+        const body = $('#houses-body').empty();
+        const search = $('#house-search').val().trim().toLowerCase();
+        const filtered = houses.filter(h => `${h.id} ${h.Interior || ''} ${h.X} ${h.Y} ${h.Z}`.toLowerCase().includes(search));
+        housePage = Math.max(0, Math.min(housePage, Math.ceil(filtered.length / pageSize) - 1));
+        filtered.slice(housePage * pageSize, (housePage + 1) * pageSize).forEach(h => {
+            const row = $('<tr>');
+            $('<td>').text(h.id).appendTo(row);
+            $('<td>').text([h.X, h.Y, h.Z].map(v => v.toFixed(2)).join(', ')).appendTo(row);
+            $('<td>').text(h.Interior || 'Escolhido na compra').appendTo(row);
+            $('<td>').text(h.Price ? h.Price.toLocaleString('pt-BR') : 'Conforme interior').appendTo(row);
+            const actions = $('<td class="action-btns">').appendTo(row);
+            $('<button type="button" class="btn-icon" title="Teleportar">').html('<i class="fa-solid fa-location-dot"></i>').on('click', () => post('teleport', { x: h.X, y: h.Y, z: h.Z })).appendTo(actions);
+            $('<button type="button" class="btn-icon" title="Editar">').html('<i class="fa-solid fa-pen"></i>').on('click', () => {
+                editHouse(h.id);
+                for (const key of ['X', 'Y', 'Z']) $(`#house-${key}`).val(h[key]);
+                $('#house-interior').val(h.Interior || Object.keys(interiors)[0]);
+                $('#house-price').val(h.Price || interiors[$('#house-interior').val()]);
+            }).appendTo(actions);
+            body.append(row);
+        });
+        const pager = $('#houses-pager').empty();
+        $('<span>').text(`${filtered.length} casas — Página ${housePage + 1} de ${Math.max(1, Math.ceil(filtered.length / pageSize))}`).appendTo(pager);
+        $('<button type="button" class="btn-secondary">').html('<i class="fa-solid fa-chevron-left"></i> Anterior').prop('disabled', housePage === 0).on('click', () => { housePage--; renderHouses(); }).appendTo(pager);
+        $('<button type="button" class="btn-secondary">').html('Próxima <i class="fa-solid fa-chevron-right"></i>').prop('disabled', (housePage + 1) * pageSize >= filtered.length).on('click', () => { housePage++; renderHouses(); }).appendTo(pager);
+    }
+    let stocks = [];
+    let stockPage = 0;
+    function renderStocks() {
+        const body = $('#stocks-body').empty();
+        const search = $('#stock-search').val().trim().toLowerCase();
+        const filtered = stocks.filter(s => `${s.Name} ${s.id} ${s.Class}`.toLowerCase().includes(search));
+        stockPage = Math.max(0, Math.min(stockPage, Math.ceil(filtered.length / pageSize) - 1));
+        filtered.slice(stockPage * pageSize, (stockPage + 1) * pageSize).forEach(s => {
+            const row = $('<tr>');
+            $('<td>').text(s.Name).append($('<small>').text(` — ${s.id}${s.Custom ? ' (editado)' : ''}`)).appendTo(row);
+            $('<td>').text(s.Class).appendTo(row);
+            $('<td>').text(s.Sold).appendTo(row);
+            const input = $('<input type="number" step="1" min="0" max="100000" placeholder="Ilimitado">').attr('aria-label', 'Estoque').val(s.Stock ?? '').css('width', '110px');
+            $('<td>').append(input).appendTo(row);
+            const free = s.Stock == null ? 'Ilimitado' : Math.max(0, s.Stock - s.Sold);
+            $('<td>').text(free).css('color', free === 0 ? 'var(--danger, #e74c3c)' : '').appendTo(row);
+            const actions = $('<td class="action-btns">').appendTo(row);
+            $('<button class="btn-icon" type="button" title="Salvar">').html('<i class="fa-solid fa-floppy-disk"></i>').on('click', () => {
+                if (!input[0].reportValidity()) return;
+                const value = input.val().trim();
+                post('saveStock', { id: s.id, Stock: value === '' ? null : Number(value) });
+            }).appendTo(actions);
+            if (s.Custom) {
+                $('<button class="btn-icon" type="button" title="Restaurar valor do config">').html('<i class="fa-solid fa-rotate-left"></i>').on('click', () => post('saveStock', { id: s.id, Reset: true })).appendTo(actions);
+            }
+            body.append(row);
+        });
+        const pager = $('#stocks-pager').empty();
+        $('<span>').text(`${filtered.length} veículos — Página ${stockPage + 1} de ${Math.max(1, Math.ceil(filtered.length / pageSize))}`).appendTo(pager);
+        $('<button type="button" class="btn-secondary">').html('<i class="fa-solid fa-chevron-left"></i> Anterior').prop('disabled', stockPage === 0).on('click', () => { stockPage--; renderStocks(); }).appendTo(pager);
+        $('<button type="button" class="btn-secondary">').html('Próxima <i class="fa-solid fa-chevron-right"></i>').prop('disabled', (stockPage + 1) * pageSize >= filtered.length).on('click', () => { stockPage++; renderStocks(); }).appendTo(pager);
+    }
+    $('#stock-search').on('input', () => { stockPage = 0; renderStocks(); });
+
+    // Cores de blip do GTA (ID → nome / cor aproximada)
+    const blipColors = [
+        [0, 'Branco', '#fefefe'], [1, 'Vermelho', '#e03232'], [2, 'Verde', '#71cb71'], [3, 'Azul', '#5db6e5'],
+        [4, 'Branco 2', '#f0f0f0'], [5, 'Amarelo', '#eec64e'], [6, 'Vermelho claro', '#c25050'], [7, 'Roxo', '#9c6eaf'],
+        [8, 'Rosa', '#fe7ac3'], [9, 'Laranja claro', '#f59d79'], [10, 'Marrom claro', '#b18f83'], [11, 'Verde água', '#8dcea7'],
+        [12, 'Azul piscina', '#70a8ae'], [13, 'Lilás', '#d3d1e7'], [15, 'Azul ciano', '#2dd5e5'], [17, 'Laranja', '#ea8e50'],
+        [18, 'Azul claro', '#8bacdb'], [19, 'Rosa escuro', '#d3627c'], [21, 'Marrom', '#a06c3d'], [25, 'Verde escuro', '#3b8f3e'],
+        [26, 'Azul escuro', '#486cbc'], [27, 'Roxo escuro', '#a65fbd'], [29, 'Azul marinho', '#3a64bf'], [38, 'Azul royal', '#2c6ebb'],
+        [40, 'Cinza escuro', '#4b4b4b'], [43, 'Verde limão', '#9ae44a'], [46, 'Dourado', '#ecf029'], [47, 'Laranja escuro', '#f9a52a'],
+        [48, 'Rosa choque', '#f43ea8'], [49, 'Vermelho escuro', '#e04d4d'], [52, 'Verde musgo', '#418f5f'], [57, 'Azul petróleo', '#3bb6c5'],
+        [59, 'Vermelho vinho', '#a61e1e'], [62, 'Cinza', '#7e7e7e'], [69, 'Verde neon', '#69e463'], [81, 'Laranja neon', '#f3901f'],
+        [83, 'Roxo neon', '#a14ee5'], [85, 'Preto', '#252525']
+    ];
+    blipColors.forEach(([id, name, hex]) => $('#blip-color').append($('<option>').val(id).text(`${id} — ${name}`).css('color', hex)));
+    const blipColorName = id => (blipColors.find(c => c[0] === id) || [id, `Cor ${id}`])[1];
+    const blipColorHex = id => (blipColors.find(c => c[0] === id) || [0, '', '#ffffff'])[2];
+
+    let blips = [];
+    function newBlip() {
+        $('#blip-form')[0].reset();
+        $('#blip-id').val('');
+        $('#blip-color').val(0);
+        $('#save-blip').html('<i class="fa-solid fa-floppy-disk"></i> Salvar Marcação');
+    }
+    function editBlip(b) {
+        $('.nav-item').removeClass('active');
+        $('[data-page="create-blip"]').addClass('active');
+        $('.page-content').hide();
+        $('#create-blip').fadeIn(200);
+        $('#page-title').text(`Editar Marcação: ${b.Name}`);
+        $('#blip-id').val(b.id);
+        $('#blip-name').val(b.Name);
+        $('#blip-sprite').val(b.Sprite);
+        if (!$('#blip-color option').filter((_, o) => Number(o.value) === b.Color).length) $('#blip-color').append($('<option>').val(b.Color).text(`${b.Color} — Cor ${b.Color}`));
+        $('#blip-color').val(b.Color);
+        $('#blip-scale').val(b.Scale);
+        $('#blip-shortrange').val(b.ShortRange ? '1' : '0');
+        for (const key of ['X', 'Y', 'Z']) $(`#blip-${key}`).val(b[key]);
+        $('#save-blip').html('<i class="fa-solid fa-floppy-disk"></i> Atualizar Marcação');
+    }
+    function renderBlips() {
+        const body = $('#blips-body').empty();
+        blips.forEach(b => {
+            const row = $('<tr>');
+            $('<td>').text(b.Name).appendTo(row);
+            $('<td>').text(b.Sprite).appendTo(row);
+            $('<td>').append($('<span>').css({ display: 'inline-block', width: '10px', height: '10px', borderRadius: '50%', background: blipColorHex(b.Color), marginRight: '6px' })).append(document.createTextNode(blipColorName(b.Color))).appendTo(row);
+            $('<td>').text(b.Scale).appendTo(row);
+            $('<td>').text([b.X, b.Y, b.Z].map(v => Number(v).toFixed(2)).join(', ')).appendTo(row);
+            const actions = $('<td class="action-btns">').appendTo(row);
+            $('<button type="button" class="btn-icon" title="Teleportar">').html('<i class="fa-solid fa-location-dot"></i>').on('click', () => post('teleport', { x: b.X, y: b.Y, z: b.Z })).appendTo(actions);
+            $('<button type="button" class="btn-icon" title="Editar">').html('<i class="fa-solid fa-pen"></i>').on('click', () => editBlip(b)).appendTo(actions);
+            // Dois cliques para excluir (confirm() não funciona no NUI)
+            const remove = $('<button type="button" class="btn-icon" title="Excluir">').html('<i class="fa-solid fa-trash"></i>').on('click', () => {
+                if (remove.data('armed')) return post('deleteBlip', { id: b.id });
+                remove.data('armed', true).attr('title', 'Clique de novo para excluir').css('color', '#e74c3c');
+                setTimeout(() => remove.data('armed', false).attr('title', 'Excluir').css('color', ''), 3000);
+            }).appendTo(actions);
+            body.append(row);
+        });
+        if (!blips.length) body.append($('<tr>').append($('<td colspan="6">').css('color', 'var(--text-muted)').text('Nenhuma marcação criada.')));
+    }
+    $('#blip-here').on('click', () => post('houseHere').done(result => {
+        if (typeof result === 'string') result = JSON.parse(result);
+        for (const key of ['X', 'Y', 'Z']) $(`#blip-${key}`).val(result[key].toFixed(2));
+    }));
+    $('#blip-form').on('submit', function (event) {
+        event.preventDefault();
+        const data = {
+            id: $('#blip-id').val() || null,
+            Name: $('#blip-name').val().trim(),
+            Sprite: Number($('#blip-sprite').val()),
+            Color: Number($('#blip-color').val()),
+            Scale: Number($('#blip-scale').val()),
+            ShortRange: $('#blip-shortrange').val() === '1'
+        };
+        for (const key of ['X', 'Y', 'Z']) data[key] = Number($(`#blip-${key}`).val());
+        post('saveBlip', data);
+        if (!data.id) newBlip();
+    });
+
+    window.addEventListener('message', event => {
+        const message = event.data;
+        if (message.action === 'updateRobberies') renderRobberies(message.data);
+        if (message.action === 'updateStocks') { stocks = message.data; renderStocks(); }
+        if (message.action === 'updateBlips') { blips = message.data; renderBlips(); }
+        if (message.action === 'updateHouses') {
+            houses = message.data.houses;
+            if (message.data.selected && $('#create-house').is(':visible')) editHouse(message.data.selected);
+            interiors = message.data.interiors;
+            const selected = $('#house-interior').val();
+            $('#house-interior').empty();
+            Object.keys(interiors).sort().forEach(name => $('#house-interior').append($('<option>').val(name).text(name)));
+            if (selected && interiors[selected]) $('#house-interior').val(selected);
+            if (!$('#house-price').val()) $('#house-interior').trigger('change');
+            renderHouses();
+        }
+    });
+    $('#house-search').on('input', () => { housePage = 0; renderHouses(); });
+    $('#house-interior').on('change', function () { $('#house-price').val(interiors[$(this).val()] || ''); });
+    $('#house-here').on('click', () => post('houseHere').done(result => {
+        if (typeof result === 'string') result = JSON.parse(result);
+        for (const key of ['X', 'Y', 'Z']) $(`#house-${key}`).val(result[key].toFixed(2));
+    }));
+    $('#house-form').on('submit', function (event) {
+        event.preventDefault();
+        const data = { id: $('#house-id').val(), Interior: $('#house-interior').val(), Price: Number($('#house-price').val()) };
+        for (const key of ['X', 'Y', 'Z']) data[key] = Number($(`#house-${key}`).val());
+        post('saveHouse', data);
     });
 });

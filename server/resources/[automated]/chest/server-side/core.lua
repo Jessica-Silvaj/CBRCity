@@ -96,7 +96,9 @@ local ChestItens = {
 			["WEAPON_ASSAULTRIFLE"] = true,
 			["WEAPON_ASSAULTRIFLE_MK2"] = true,
 			["WEAPON_ASSAULTSMG"] = true,
-			["WEAPON_GUSENBERG"] = true
+			["WEAPON_GUSENBERG"] = true,
+			["WEAPON_PARAFAL"] = true,
+			["WEAPON_KATANA"] = true
 		}
 	},
 	["medicbag"] = {

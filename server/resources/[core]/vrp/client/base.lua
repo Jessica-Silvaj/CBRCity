@@ -169,6 +169,21 @@ end
 RegisterCommand("+Information",PassportEnable)
 RegisterCommand("-Information",PassportDisable)
 RegisterKeyMapping("+Information","Visualizar passaporte.","keyboard","F7")
+
+-- /id mostra os passaportes por 10 segundos
+local PassportTimer = 0
+RegisterCommand("id",function()
+	PassportTimer = GetGameTimer() + 10000
+	if not Information then
+		PassportEnable()
+	end
+
+	SetTimeout(10000,function()
+		if GetGameTimer() >= PassportTimer then
+			PassportDisable()
+		end
+	end)
+end)
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- THREADSYSTEM
 -----------------------------------------------------------------------------------------------------------------------------------------

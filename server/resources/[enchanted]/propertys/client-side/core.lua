@@ -55,17 +55,21 @@ CreateThread(function()
 							if Consult then
 								if Consult == "Nothing" then
 									for Line,v in next,Informations do
-										Dynamic:AddMenu(Line,"Informações sobre o interior.",Line,nil,v.Image)
-										Dynamic:AddButton("Credenciais","Máximo <yellow>1</yellow> proprietário e <yellow>3</yellow> adicionais.","","",Line,false)
-										Dynamic:AddButton("Visitar","Visitar o interior.","propertys:Visit",Name.."-"..Line,Line,false)
+										local Managed = ManagedHouses[Name]
+										if not Managed or Managed.Interior == Line then
+											local Price = Managed and Managed.Price or v.Price
+											Dynamic:AddMenu(Line,"Informações sobre o interior.",Line,nil,v.Image)
+											Dynamic:AddButton("Credenciais","Máximo <yellow>1</yellow> proprietário e <yellow>3</yellow> adicionais.","","",Line,false)
+											Dynamic:AddButton("Visitar","Visitar o interior.","propertys:Visit",Name.."-"..Line,Line,false)
 
-										if v.Price then
-											Dynamic:AddButton("Comprar com Dinheiro","Custo de <yellow>"..Currency..Dotted(v.Price).."</yellow>.","propertys:Buy",Name.."-"..Line.."-Dollar",Line,true)
-										end
+											if Price then
+												Dynamic:AddButton("Comprar com Dinheiro","Custo de <yellow>"..Currency..Dotted(Price).."</yellow>.","propertys:Buy",Name.."-"..Line.."-Dollar",Line,true)
+											end
 
-										if v.Gemstone then
-											Dynamic:AddButton("Comprar com Diamantes","Custo de <yellow>"..Dotted(v.Gemstone).."</yellow>.","propertys:Buy",Name.."-"..Line.."-Gemstone",Line,true)
-										end
+											if v.Gemstone and not Managed then
+												Dynamic:AddButton("Comprar com Diamantes","Custo de <yellow>"..Dotted(v.Gemstone).."</yellow>.","propertys:Buy",Name.."-"..Line.."-Gemstone",Line,true)
+											end
+									end
 									end
 
 									Dynamic:Open()
@@ -618,3 +622,9 @@ AddEventHandler("propertys:DynamicButton",function(Data)
 
 	TriggerServerEvent("inventory:StoreObjects",Selected,Event)
 end)
+
+RegisterNetEvent("propertys:managedSync",function(Entries)
+    ApplyManagedHouses(Entries)
+    TriggerEvent("propertys:OwnedBlips",vSERVER.OwnedProperties())
+end)
+CreateThread(function() TriggerServerEvent("propertys:managedLoad") end)

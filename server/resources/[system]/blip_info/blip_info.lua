@@ -23,7 +23,6 @@ local BlipImages = {
 	"loja_de_penhores",
 	"loja_de_roupas",
 	"loja_de_tatuagem",
-	"manicure",
 	"mercado_central",
 	"moo_moo_cafe",
 	"posto_de_combustivel",

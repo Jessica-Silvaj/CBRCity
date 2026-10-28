@@ -503,25 +503,21 @@ RegisterNetEvent("night_totem:handleAction",function(action,data)
             return
         end
 
+        for _,entry in ipairs(order) do
+            if not vRP.CheckWeight(Passport,entry.item,entry.quantity) or vRP.MaxItens(Passport,entry.item,entry.quantity) then
+                TriggerClientEvent("Notify",source,"Erro","Mochila cheia ou limite do item atingido.","vermelho",5000)
+                return
+            end
+        end
+
         if not vRP.PaymentFull(Passport,total,true) then
             TriggerClientEvent("Notify",source,"Erro","Pagamento recusado.","vermelho",5000)
             return
         end
 
-        local delivered = {}
-
+        -- vRP.GenerateItem nao retorna valor, entao a entrega e validada antes do pagamento
         for _,entry in ipairs(order) do
-            if state.items[entry.item].stock < entry.quantity or not vRP.GenerateItem(Passport,entry.item,entry.quantity,true) then
-                for deliveredItem,deliveredAmount in pairs(delivered) do
-                    vRP.TakeItem(Passport,deliveredItem,deliveredAmount,false)
-                end
-
-                vRP.GiveBank(Passport,total,true)
-                TriggerClientEvent("Notify",source,"Erro","Nao foi possivel entregar os itens.","vermelho",5000)
-                return
-            end
-
-            delivered[entry.item] = (delivered[entry.item] or 0) + entry.quantity
+            vRP.GenerateItem(Passport,entry.item,entry.quantity,true)
             state.items[entry.item].stock = state.items[entry.item].stock - entry.quantity
         end
 

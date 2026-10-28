@@ -74,10 +74,6 @@ local BlipCards = {
 		Image = "loja_de_tatuagem",
 		Text = "Agulha, tinta e uma história gravada na pele para sempre. Escolha bem: aqui não tem botão de desfazer."
 	},
-	["Manicure"] = {
-		Image = "manicure",
-		Text = "Unhas impecáveis para quem não passa despercebido. Formatos, estampas e cores feitas com carinho pelas manicures."
-	},
 	["Mercado Central"] = {
 		Image = "mercado_central",
 		Text = "Feira cheia, preços justos e ingredientes frescos. Abasteça a cozinha de casa ou o estoque do seu negócio."

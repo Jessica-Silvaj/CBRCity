@@ -2,6 +2,7 @@
 -- PROPS DA CIDADE (painel gestor) - salvos em data/props.json
 -----------------------------------------------------------------------------------------------------------------------------------------
 local PropsVRP = module("vrp","lib/Proxy").getInterface("vRP")
+local PropsVRPC = module("vrp","lib/Tunnel").getInterface("vRP")
 local Resource = GetCurrentResourceName()
 local File = "data/props.json"
 local Props = {}
@@ -54,20 +55,42 @@ AddEventHandler("Night_Management:requestProps",function()
 	end
 end)
 
-RegisterServerEvent("Night_Management:saveProp")
-AddEventHandler("Night_Management:saveProp",function(Data)
+-- Mesma mecânica de mobiliar a casa (inventory/server-side/itens.lua): H posiciona, F cancela, Q/E giram, Z troca o modo
+RegisterServerEvent("Night_Management:placeProp")
+AddEventHandler("Night_Management:placeProp",function(Data)
 	local source = source
 	if not IsAdmin(source) or type(Data) ~= "table" then
 		return
 	end
 
-	local X,Y,Z,H = tonumber(Data.x),tonumber(Data.y),tonumber(Data.z),tonumber(Data.h)
 	local Model = tostring(Data.model or "")
-	if not X or not Y or not Z or not H or not Model:match("^[%w_%-]+$") then
+	if not Model:match("^[%w_%-]+$") then
 		return
 	end
 
 	local Id = tonumber(Data.id)
+	if Id and not Props[tostring(Id)] then
+		Id = nil
+	end
+
+	Player(source).state.Buttons = true
+	TriggerClientEvent("Night_Management:propsEditing",source,Id)
+
+	local Application,Coords = PropsVRPC.ObjectControlling(source,Model)
+
+	TriggerClientEvent("Night_Management:propsEditing",source,nil)
+	Player(source).state.Buttons = false
+
+	if not Application or not Coords then
+		TriggerClientEvent("Notify",source,"Aviso","Posicionamento cancelado.","amarelo",5000)
+		return
+	end
+
+	local X,Y,Z,H = tonumber(Coords[1]),tonumber(Coords[2]),tonumber(Coords[3]),tonumber(Coords[4])
+	if not X or not Y or not Z or not H then
+		return
+	end
+
 	if not Id or not Props[tostring(Id)] then
 		Id = 0
 		for _,Prop in pairs(Props) do

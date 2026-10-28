@@ -355,4 +355,14 @@ AddEventHandler("onResourceStop", function(resourceName)
 			end
 		end
 	end
+end)-----------------------------------------------------------------------------------------------------------------------------------------
+-- ATMS DO PAINEL GESTOR
+-----------------------------------------------------------------------------------------------------------------------------------------
+RegisterNetEvent("Night_Management:atmsSync", function(List)
+	Config.LoadAtms(List)
+end)
+
+-- Se o c4 reiniciar sozinho, pede a lista de novo
+CreateThread(function()
+	TriggerServerEvent("Night_Management:atmsLoad")
 end)

@@ -116,19 +116,20 @@ end
 -----------------------------------------------------------------------------------------------------------------------------------------
 local CachedPDMs = {}
 
-RegisterNetEvent("Night_Management:requestPdms")
-AddEventHandler("Night_Management:requestPdms", function()
-    local source = source
-    if source ~= "" and source ~= nil then return end
-	CachedPDMs = exports.oxmysql:executeSync("SELECT * FROM pdm") or {}
-	TriggerClientEvent("pdm:reloadDynamicPdms", -1)
-end)
+-- Relê a tabela e só manda os clientes recarregarem (marcação, target) quando algo mudou
+local function RefreshPDMs()
+	local Fresh = exports.oxmysql:executeSync("SELECT * FROM pdm") or {}
+	if json.encode(Fresh) ~= json.encode(CachedPDMs) then
+		CachedPDMs = Fresh
+		TriggerClientEvent("pdm:reloadDynamicPdms", -1)
+	end
+end
 
-AddEventHandler("pdm:updateCache", function()
-    if CachedPDMs and #CachedPDMs > 0 then
-        CachedPDMs = exports.oxmysql:executeSync("SELECT * FROM pdm") or {}
-    end
-end)
+-- O painel pede a lista depois de criar, editar ou apagar uma concessionária
+RegisterNetEvent("Night_Management:requestPdms")
+AddEventHandler("Night_Management:requestPdms", RefreshPDMs)
+
+AddEventHandler("pdm:updateCache", RefreshPDMs)
 
 function Creative.RequestPDMs()
 	if not CachedPDMs or #CachedPDMs == 0 then

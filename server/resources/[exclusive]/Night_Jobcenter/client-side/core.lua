@@ -73,4 +73,31 @@ CreateThread(function()
 			}
 		}
 	})
+end)-----------------------------------------------------------------------------------------------------------------------------------------
+-- SAIRDOEMPREGO
+-----------------------------------------------------------------------------------------------------------------------------------------
+RegisterCommand("SairDoEmprego",function()
+	if IsPauseMenuActive() or LocalPlayer.state.Commands or LocalPlayer.state.Handcuff then
+		return
+	end
+
+	if not LocalPlayer.state.Job then
+		TriggerEvent("Notify","Atenção","Você não tem nenhum emprego assinado no momento.","amarelo",5000)
+		return
+	end
+
+	TriggerServerEvent("Night_Jobcenter:StartJob","Sair")
+end)
+
+
+RegisterKeyMapping("SairDoEmprego","Sair do emprego atual.","keyboard","F5")
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- AVISO F5
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- Vale para todos os empregos: avisa ao assinar a carteira (ou ao entrar já empregado) como sair pelo F5
+AddStateBagChangeHandler("Job",("player:%s"):format(GetPlayerServerId(PlayerId())),function(_,_,Value)
+	if Value then
+		local Name = (Works and Works[Value]) or Value
+		TriggerEvent("Notify","Central de Empregos","Você está empregado como <b>"..Name.."</b>. Para sair do emprego, aperte <b>F5</b>.","default",8000)
+	end
 end)

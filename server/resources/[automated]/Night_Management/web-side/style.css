@@ -334,6 +334,8 @@ body {
     margin-top: 24px;
     display: flex;
     justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 12px;
 }
 
 .classes-container {

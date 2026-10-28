@@ -137,7 +137,7 @@ function Creative.Finish(Selected,Points,Vehicle)
 			end
 		end
 
-		Valuation = math.floor(Valuation)
+		Valuation = math.random(RewardMin,RewardMax)
 		
 		if Valuation < 1 then
 			Valuation = 1

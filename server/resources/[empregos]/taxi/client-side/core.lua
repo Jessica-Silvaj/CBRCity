@@ -74,7 +74,7 @@ AddEventHandler("taxi:Init",function()
 			return false
 		end
 
-		TriggerEvent("Notify","Central de Empregos","Você acaba de dar inicio a sua jornada de trabalho, lembrando que a sua vida não se resume só a isso.","default",5000)
+		TriggerEvent("Notify","Central de Empregos","Você acaba de dar inicio a sua jornada de trabalho. Para sair do emprego, aperte <b>F5</b>.","default",5000)
 		exports.target:LabelText("WorkTaxi","Finalizar Expediente")
 		MarkedPassenger()
 		Service = true

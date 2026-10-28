@@ -8,6 +8,8 @@ local CONTROLS = { 37,204,211,349,192,157,158,159,160,161,162,163,164,165 }
 local SpawnedBlips = {}
 -- Reduz pela metade a densidade ambiente configurada no painel gestor.
 local AmbientDensityMultiplier = 0.5
+-- +20% para NPCs andando e carros circulando (estacionados mantidos).
+local TrafficPedMultiplier = AmbientDensityMultiplier * 1.2
 local CurrentDensity = {
     VehicleDensity = 0.0,
     RandomVehicleDensity = 0.0,
@@ -522,11 +524,11 @@ CreateThread(function()
 		SetRandomTrains(false)
 		SetRandomBoats(false)
 
-		SetVehicleDensityMultiplierThisFrame(CurrentDensity.VehicleDensity * AmbientDensityMultiplier)
-		SetRandomVehicleDensityMultiplierThisFrame(CurrentDensity.RandomVehicleDensity * AmbientDensityMultiplier)
+		SetVehicleDensityMultiplierThisFrame(CurrentDensity.VehicleDensity * TrafficPedMultiplier)
+		SetRandomVehicleDensityMultiplierThisFrame(CurrentDensity.RandomVehicleDensity * TrafficPedMultiplier)
 		SetParkedVehicleDensityMultiplierThisFrame(CurrentDensity.ParkedVehicleDensity * AmbientDensityMultiplier)
-		SetScenarioPedDensityMultiplierThisFrame(CurrentDensity.ScenarioPedDensity * AmbientDensityMultiplier, CurrentDensity.ScenarioPedDensity * AmbientDensityMultiplier)
-		SetPedDensityMultiplierThisFrame(CurrentDensity.PedDensity * AmbientDensityMultiplier)
+		SetScenarioPedDensityMultiplierThisFrame(CurrentDensity.ScenarioPedDensity * TrafficPedMultiplier, CurrentDensity.ScenarioPedDensity * TrafficPedMultiplier)
+		SetPedDensityMultiplierThisFrame(CurrentDensity.PedDensity * TrafficPedMultiplier)
 
 		if IsPedArmed(Ped,6) then
 			DisableControlAction(0,140,true)
@@ -724,6 +726,43 @@ CreateThread(function()
                 ClearAreaOfVehicles(area.X + 0.0, area.Y + 0.0, area.Z + 0.0, area.Radius + 0.0, false, false, false, false, false)
             end
         end
+    end
+end)
+------------------------------------------------------------------------------------------
+-- AREASSEMNPC
+------------------------------------------------------------------------------------------
+-- Áreas fixas sem NPCs a pé. Carros de NPC circulando são mantidos.
+local NoNpcAreas = {
+    { Name = "Praca", X = 195.17, Y = -933.77, Z = 30.69, Radius = 80.0 }
+}
+
+CreateThread(function()
+    for _, area in ipairs(NoNpcAreas) do
+        area.Pop = AddPopMultiplierSphere(area.X, area.Y, area.Z, area.Radius, 0.0, 1.0, false, true)
+    end
+
+    while true do
+        local coords = GetEntityCoords(PlayerPedId())
+        for _, area in ipairs(NoNpcAreas) do
+            if #(coords - vec3(area.X, area.Y, area.Z)) <= area.Radius + 150.0 then
+                for _, ped in ipairs(GetGamePool("CPed")) do
+                    if not IsPedAPlayer(ped) and not IsPedInAnyVehicle(ped, true) and #(GetEntityCoords(ped) - vec3(area.X, area.Y, area.Z)) <= area.Radius then
+                        local population = GetEntityPopulationType(ped)
+                        if population >= 1 and population <= 5 and NetworkHasControlOfEntity(ped) then
+                            DeleteEntity(ped)
+                        end
+                    end
+                end
+            end
+        end
+        Wait(500)
+    end
+end)
+
+AddEventHandler("onResourceStop", function(resource)
+    if resource ~= GetCurrentResourceName() then return end
+    for _, area in ipairs(NoNpcAreas) do
+        if area.Pop then RemovePopMultiplierSphere(area.Pop, false) end
     end
 end)
 ------------------------------------------------------------------------------------------

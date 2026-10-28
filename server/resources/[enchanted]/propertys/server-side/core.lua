@@ -201,7 +201,7 @@ function Creative.Propertys(Name)
 
 	local Interior = Saved[Name]
 	local CurrentTimer = os.time()
-	local Price = Informations[Interior].Price * 0.25
+	local Price = (ManagedHouses[Name] and ManagedHouses[Name].Price or Informations[Interior].Price) * 0.25
 	local Tax = CompleteTimers(Consult.Tax - CurrentTimer)
 
 	if CurrentTimer > Consult.Tax then
@@ -269,7 +269,11 @@ AddEventHandler("propertys:Buy",function(Name)
 	end
 
 	local Name,Interior,Mode = Split[1],Split[2],Split[3]
-	local Consult = vRP.SingleQuery("propertys/Exist",{ Name = Name })
+	local Managed = ManagedHouses[Name]
+    if not Propertys[Name] or not Informations[Interior] or not Internal[Interior] or (Mode ~= "Dollar" and Mode ~= "Gemstone") then return false end
+    if Managed and (Managed.Interior ~= Interior or Mode ~= "Dollar") then return false end
+    local Price = Managed and Managed.Price or Informations[Interior].Price
+    local Consult = vRP.SingleQuery("propertys/Exist",{ Name = Name })
 
 	if Consult then
 		return false
@@ -283,7 +287,7 @@ AddEventHandler("propertys:Buy",function(Name)
 
 	local Payment = false
 	if Mode == "Dollar" then
-		Payment = vRP.PaymentFull(Passport,Informations[Interior].Price)
+		Payment = vRP.PaymentFull(Passport,Price)
 	elseif Mode == "Gemstone" then
 		Payment = vRP.PaymentGems(Passport,Informations[Interior].Gemstone)
 	end
@@ -301,7 +305,7 @@ AddEventHandler("propertys:Buy",function(Name)
 	TriggerClientEvent("Notify",source,"Propriedades","Compra concluída.","verde",10000)
 
 	if Mode == "Dollar" then
-		exports.bank:AddTaxes(Passport,"Propriedades",Informations[Interior].Price,"Compra de propriedade.")
+		exports.bank:AddTaxes(Passport,"Propriedades",Price,"Compra de propriedade.")
 	end
 
 	vRP.Query("propertys/Buy",{
@@ -389,7 +393,7 @@ AddEventHandler("propertys:Sell",function(Name)
 
 	TriggerClientEvent("dynamic:Close",source)
 
-	local Price = Informations[Consult.Interior].Price * 0.25
+	local Price = (ManagedHouses[Name] and ManagedHouses[Name].Price or Informations[Consult.Interior].Price) * 0.25
 	if vRP.Request(source,"Propriedades","Vender por <b>"..Currency..Dotted(Price).."</b>?") then
 		if Markers[Name] then
 			Markers[Name] = nil
@@ -900,3 +904,25 @@ end)
 function Creative.Markers()
 	return Markers
 end
+
+AddEventHandler("Night_Management:housesChanged",function(Entries)
+    ApplyManagedHouses(Entries)
+    TriggerClientEvent("propertys:managedSync",-1,ManagedHouses)
+end)
+RegisterNetEvent("propertys:managedLoad",function()
+    TriggerClientEvent("propertys:managedSync",source,ManagedHouses)
+end)
+exports("ManagementHouses",function()
+    local List,Interiors = {},{}
+    for Name,Entry in pairs(Informations) do
+        if Internal[Name] then Interiors[Name] = Entry.Price end
+    end
+    for Name,Coords in pairs(Propertys) do
+        if Name:match("^Propertys%d+$") then
+            local Entry = ManagedHouses[Name] or {}
+            List[#List + 1] = { id = Name,X = Coords.x,Y = Coords.y,Z = Coords.z,Interior = Entry.Interior,Price = Entry.Price }
+        end
+    end
+    table.sort(List,function(a,b) return (tonumber(a.id:match("%d+")) or 0) < (tonumber(b.id:match("%d+")) or 0) end)
+    return { houses = List,interiors = Interiors }
+end)

@@ -48,7 +48,7 @@ AddEventHandler("towed:Init",function(Data)
 		return false
 	end
 
-	TriggerEvent("Notify","Central de Empregos","Você acabou de iniciar sua jornada de trabalho, lembre-se de equilibrar trabalho e descanso.","default",5000)
+	TriggerEvent("Notify","Central de Empregos","Você acabou de iniciar sua jornada de trabalho. Para sair do emprego, aperte <b>F5</b>.","default",5000)
 	exports.target:LabelText("Towed:"..Data,"Finalizar Expediente")
 	Locale = Data
 

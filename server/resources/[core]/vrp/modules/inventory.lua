@@ -248,12 +248,12 @@ function vRP.ItemAmountOffline(Passport, Item)
     local Passport = parseInt(Passport)
     local ItemSplit = SplitOne(Item)
 
-    local data = vRP.Query("playerdata/GetData", { Passport = Passport, dkey = "Datatable" })
-    if not data[1] or not data[1].dvalue then
+    local data = vRP.Query("playerdata/GetData", { Passport = Passport, Name = "Datatable" })
+    if not data[1] or not data[1].Information then
         return 0
     end
 
-    local datatable = json.decode(data[1].dvalue)
+    local datatable = json.decode(data[1].Information)
     local Inventory = datatable.Inventory or {}
 
     local Amount = 0

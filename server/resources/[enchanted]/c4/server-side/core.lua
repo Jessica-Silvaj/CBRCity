@@ -319,3 +319,16 @@ CreateThread(function()
 		end
 	end
 end)
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- ATMS DO PAINEL GESTOR
+-----------------------------------------------------------------------------------------------------------------------------------------
+AddEventHandler("Night_Management:atmsChanged", function(List)
+	Config.LoadAtms(List)
+end)
+
+-- O Night_Management sobe depois do c4 e avisa pelo evento acima; isto cobre o c4 reiniciando sozinho
+CreateThread(function()
+	if GetResourceState("Night_Management") == "started" then
+		Config.LoadAtms(exports.Night_Management:AtmList())
+	end
+end)

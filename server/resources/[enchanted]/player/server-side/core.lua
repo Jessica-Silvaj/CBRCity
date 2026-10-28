@@ -58,12 +58,20 @@ RegisterServerEvent("player:Debug")
 AddEventHandler("player:Debug",function()
 	local source = source
 	local Passport = vRP.Passport(source)
-	if Passport and not Debug[Passport] or os.time() > Debug[Passport] then
-		TriggerClientEvent("target:Debug",source)
-		TriggerEvent("DebugObjects",Passport)
-		Debug[Passport] = os.time() + 300
-		vRPC.ReloadCharacter(source)
+	if not Passport then
+		return
 	end
+
+	if Debug[Passport] and os.time() < Debug[Passport] then
+		TriggerClientEvent("Notify",source,"Aviso","Aguarde <b>"..(Debug[Passport] - os.time()).." segundos</b> para desbugar novamente.","amarelo",5000)
+		return
+	end
+
+	TriggerClientEvent("target:Debug",source)
+	TriggerEvent("DebugObjects",Passport)
+	Debug[Passport] = os.time() + 300
+	vRPC.ReloadCharacter(source)
+	TriggerClientEvent("Notify",source,"Sucesso","Personagem recarregado.","verde",5000)
 end)
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- PLAYER:STRESS

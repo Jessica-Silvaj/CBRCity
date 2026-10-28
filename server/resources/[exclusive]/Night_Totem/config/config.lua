@@ -5,7 +5,7 @@ Totem = {}
 
 -- Cor hexadecimal padrao exibida nos paineis do totem
 -- Pode ser sobrescrita individualmente em cada entrada de Totem.Restaurants
-Totem.DefaultThemeColor = "ffffffff"
+Totem.DefaultThemeColor = "#2E8B57"
 
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- MOEDA
@@ -263,7 +263,7 @@ Totem.Interaction = {
 
 Totem.Restaurants = {
     CatCafe = {
-        ThemeColor = "#ffffffff",
+        ThemeColor = "#2E8B57",
         Banner = "assets/totem.png",
 
         Machine = {
@@ -390,7 +390,7 @@ Totem.Restaurants = {
         },
     },
     MooMooCafe = {
-        ThemeColor = "#ffffffff",
+        ThemeColor = "#2E8B57",
         Banner = "assets/totem.png",
 
         Machine = {

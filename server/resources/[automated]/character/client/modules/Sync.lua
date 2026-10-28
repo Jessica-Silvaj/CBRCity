@@ -40,3 +40,12 @@ RegisterNetEvent("character:Client:Sync:Start", function(data)
         end
     end
 end)
+
+-- Reaplica aparência, tatuagens e roupas (usado pelo "Desbugar")
+RegisterNetEvent("character:Client:Reload", function()
+    Sync.applied = false
+
+    if Skinshop and Skinshop.defaultClothes then
+        Utils.UpdateClothes(PlayerPedId(), Skinshop.defaultClothes)
+    end
+end)

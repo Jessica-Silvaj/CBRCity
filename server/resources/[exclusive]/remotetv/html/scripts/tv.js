@@ -28,23 +28,40 @@ function GetUrlId(link) {
     }
 }
 
+// Player leve (só vídeo, sem chat) e com qualidade limitada: lives em 1080p60 derrubavam o jogo
 function PlayTwitchVideo(data) {
     const options = {
         width: "100%",
         height: "100%",
-        volume: 1.0,
-        layout: "video",
-        theme: 'dark'
+        autoplay: true,
+        muted: false,
+        parent: [window.location.hostname || "localhost"]
     };
 
-    if (data.videoType == 'stream') options.channel = data.id;
-    else if (data.videoType == 'video') options.video = data.id;
+    if (data.videoType == 'stream') options.channel = data.id.split(/[/?#]/)[0];
+    else if (data.videoType == 'video') options.video = data.id.split(/[/?#]/)[0];
 
-    player = new Twitch.Embed("video-embed", options);
+    player = new Twitch.Player("video-embed", options);
 
-    player.addEventListener(Twitch.Embed.VIDEO_READY, function () {
+    player.addEventListener(Twitch.Player.READY, function () {
+        const qualities = (player.getQualities && player.getQualities()) || [];
+        const preferred = ['480p30', '480p', '360p30', '360p', '720p30'];
+        const found = preferred.find(q => qualities.some(item => (item.group || item) === q));
+        if (found) player.setQuality(found);
         player.setMuted(false);
     });
+}
+
+function DestroyPlayer() {
+    if (!player) return;
+
+    try {
+        if (typeof player.destroy === 'function') player.destroy();
+        else if (typeof player.pause === 'function') player.pause();
+    } catch (e) { }
+
+    $('#video-embed').empty();
+    player = null;
 }
 
 function PlayYoutubeVideo(video_data, data, paused) {
@@ -77,12 +94,9 @@ function SetVideo(video_data) {
 
     const data = GetUrlId(url)
 
-    playerData = data
+    DestroyPlayer()
 
-    if (player) {
-        player.destroy()
-        player = null;
-    }
+    playerData = data
 
     if (data) {
         if (data.type == "youtube") {

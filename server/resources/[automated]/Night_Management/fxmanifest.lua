@@ -16,14 +16,18 @@ client_scripts {
     "@vrp/config/Global.lua",
     "shared-side/*.lua",
     "client-side/client.lua",
-    "client-side/props.lua"
+    "client-side/props.lua",
+    "client-side/atms.lua",
+    "client-side/catalogs.lua"
 }
 
 server_scripts {
     "@vrp/lib/Utils.lua",
     "shared-side/*.lua",
     "server-side/server.lua",
-    "server-side/props.lua"
+    "server-side/props.lua",
+    "server-side/atms.lua",
+    "server-side/catalogs.lua"
 }
 
 files {

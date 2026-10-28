@@ -3,7 +3,6 @@
 -----------------------------------------------------------------------------------------------------------------------------------------
 local Props = {}
 local Spawned = {}
-local Placing = false
 local Editing = nil
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- SPAWN / DESPAWN
@@ -95,125 +94,16 @@ AddEventHandler("onResourceStop",function(Resource)
 	end
 end)
 -----------------------------------------------------------------------------------------------------------------------------------------
--- POSICIONAMENTO NO JOGO
+-- POSICIONAMENTO NO JOGO (mesma mecânica de mobiliar a casa: vRP.ObjectControlling, chamada pelo servidor)
 -----------------------------------------------------------------------------------------------------------------------------------------
-local function RotationToDirection(Rotation)
-	local X,Z = math.rad(Rotation.x),math.rad(Rotation.z)
-	return vector3(-math.sin(Z) * math.abs(math.cos(X)),math.cos(Z) * math.abs(math.cos(X)),math.sin(X))
-end
-
-local function CameraRaycast(Ignore)
-	local Origin = GetGameplayCamCoord()
-	local Target = Origin + RotationToDirection(GetGameplayCamRot(2)) * 30.0
-	local Ray = StartExpensiveSynchronousShapeTestLosProbe(Origin.x,Origin.y,Origin.z,Target.x,Target.y,Target.z,1 | 16,Ignore,4)
-	local _,Hit,Coords = GetShapeTestResult(Ray)
-
-	return Hit == 1 and Coords or nil
-end
-
-local function HelpText()
-	BeginTextCommandDisplayHelp("STRING")
-	AddTextComponentSubstringPlayerName("Mire com a câmera~n~~INPUT_WEAPON_WHEEL_NEXT~ Girar~n~")
-	AddTextComponentSubstringPlayerName("~INPUT_SCRIPTED_FLY_ZUP~ / ~INPUT_SCRIPTED_FLY_ZDOWN~ Subir / descer~n~")
-	AddTextComponentSubstringPlayerName("~INPUT_CONTEXT~ Confirmar~n~~INPUT_FRONTEND_RRIGHT~ / ~INPUT_AIM~ Cancelar")
-	EndTextCommandDisplayHelp(0,false,false,-1)
-end
-
-local function StartPlacement(Data)
-	if Placing then
-		return
+-- Esconde o prop original enquanto ele está sendo reposicionado
+RegisterNetEvent("Night_Management:propsEditing")
+AddEventHandler("Night_Management:propsEditing",function(Id)
+	Editing = Id
+	if Id then
+		Despawn(Id)
 	end
-
-	local Model = tostring(Data.model or "")
-	local Hash = GetHashKey(Model)
-	if not LoadModel(Hash) then
-		TriggerEvent("Notify","Erro","Modelo <b>"..Model.."</b> não encontrado.","vermelho",5000)
-		return
-	end
-
-	Placing = true
-
-	local Ped = PlayerPedId()
-	local Start = Data.id and Props[tonumber(Data.id)]
-	local Heading = Start and Start.H or GetEntityHeading(Ped)
-	local Height = 0.0
-
-	if Start then
-		Editing = Start.id
-		Despawn(Start.id)
-	end
-
-	local Ghost = CreateObjectNoOffset(Hash,GetEntityCoords(Ped),false,false,false)
-	SetEntityAlpha(Ghost,180,false)
-	SetEntityCollision(Ghost,false,false)
-	FreezeEntityPosition(Ghost,true)
-	SetModelAsNoLongerNeeded(Hash)
-
-	local Position = Start and vector3(Start.X,Start.Y,Start.Z) or GetEntityCoords(Ped)
-	local Confirmed = false
-
-	while Placing do
-		HelpText()
-
-		DisableControlAction(0,24,true)
-		DisableControlAction(0,25,true)
-		DisableControlAction(0,140,true)
-		DisableControlAction(0,141,true)
-		DisableControlAction(0,142,true)
-		DisableControlAction(0,14,true)
-		DisableControlAction(0,15,true)
-		DisableControlAction(0,16,true)
-		DisableControlAction(0,17,true)
-		DisableControlAction(0,37,true)
-
-		local Hit = CameraRaycast(Ghost)
-		if Hit then
-			Position = Hit
-		end
-
-		if IsDisabledControlPressed(0,15) or IsDisabledControlJustPressed(0,15) then
-			Heading = (Heading + 5.0) % 360.0
-		elseif IsDisabledControlPressed(0,14) or IsDisabledControlJustPressed(0,14) then
-			Heading = (Heading - 5.0) % 360.0
-		end
-
-		if IsControlPressed(0,10) then
-			Height = Height + 0.01
-		elseif IsControlPressed(0,11) then
-			Height = Height - 0.01
-		end
-
-		SetEntityCoordsNoOffset(Ghost,Position.x,Position.y,Position.z + Height,false,false,false)
-		SetEntityHeading(Ghost,Heading)
-
-		if IsControlJustPressed(0,38) then
-			Confirmed = true
-			Placing = false
-		elseif IsControlJustPressed(0,194) or IsDisabledControlJustPressed(0,25) then
-			Placing = false
-		end
-
-		Wait(0)
-	end
-
-	local Final = GetEntityCoords(Ghost)
-	DeleteEntity(Ghost)
-	ClearAllHelpMessages()
-	Editing = nil
-
-	if Confirmed then
-		TriggerServerEvent("Night_Management:saveProp",{
-			id = Data.id,
-			name = Data.name,
-			model = Model,
-			x = Final.x, y = Final.y, z = Final.z, h = Heading,
-			distance = Data.distance,
-			collision = Data.collision
-		})
-	else
-		TriggerEvent("Notify","Aviso","Posicionamento cancelado.","amarelo",5000)
-	end
-end
+end)
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- NUI
 -----------------------------------------------------------------------------------------------------------------------------------------
@@ -229,7 +119,13 @@ end)
 
 -- O painel já foi fechado pelo callback "close" antes deste
 RegisterNUICallback("placeProp",function(Data,Callback)
-	CreateThread(function() StartPlacement(Data) end)
+	local Model = tostring(Data.model or "")
+	if not IsModelInCdimage(GetHashKey(Model)) then
+		TriggerEvent("Notify","Erro","Modelo <b>"..Model.."</b> não encontrado.","vermelho",5000)
+	else
+		TriggerServerEvent("Night_Management:placeProp",Data)
+	end
+
 	Callback("ok")
 end)
 

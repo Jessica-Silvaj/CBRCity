@@ -1,0 +1,128 @@
+/* Padrão visual da cidade (mesmo das Capinhas): verde #2E8B57, painel escuro sólido e fonte Montserrat.
+   O index.css é o build original; este arquivo só sobrescreve por cima dele. */
+:root {
+    --main: 46 139 87;
+    --from: 12 12 12;
+    --to: 22 22 22;
+    --accept-letter: 255 255 255;
+    --accept-background: 46 139 87;
+    --accept-background-hover: 60 179 113;
+}
+
+* {
+    font-family: Montserrat, sans-serif !important;
+}
+
+.fa, .fas, .fa-solid, .fa-regular, .fab {
+    font-family: "Font Awesome 6 Free" !important;
+}
+
+.fab {
+    font-family: "Font Awesome 6 Brands" !important;
+}
+
+/* painel lateral sólido: o jogo e outros menus não aparecem por trás */
+.container[data-v-3537fbe7] {
+    /* verde escuro do pause */
+    background-image: linear-gradient(to right, rgba(12, 38, 26, .97) 0%, rgba(12, 38, 26, .9) 35%, rgba(12, 38, 26, .7) 60%, rgba(12, 38, 26, .55) 100%);
+}
+
+/* desenho do fundo em verde, como no pause; sem o brilho branco que deixava o fundo esbranquiçado */
+.bg-effects[data-v-3537fbe7] {
+    background-image: none;
+    opacity: 1;
+}
+
+.shadow-circle[data-v-3537fbe7] {
+    display: none !important;
+}
+
+.svg-bg[data-v-3537fbe7] {
+    color: #2E8B57;
+    opacity: .55;
+}
+
+.sidebar[data-v-3537fbe7] {
+    padding: 1.25rem;
+    background: linear-gradient(180deg, #161616f7, #0c0c0cf7);
+    border: 1px solid rgba(255, 255, 255, .06);
+    border-radius: .25rem;
+    box-shadow: 0 24px 72px #0000008c;
+}
+
+.header p[data-v-3537fbe7] {
+    color: rgba(255, 255, 255, .55);
+}
+
+/* abas */
+.nav-main[data-v-3537fbe7] {
+    background-color: rgba(24, 24, 24, .85);
+    border: 1px solid rgba(255, 255, 255, .06);
+}
+
+.nav-main-item.active[data-v-3537fbe7] {
+    background-color: #2E8B57;
+    color: #fff;
+}
+
+/* cartões */
+.roulette-container[data-v-3537fbe7] {
+    background-color: rgba(18, 18, 18, .78);
+    border-color: rgba(255, 255, 255, .06);
+}
+
+.info-card[data-v-3537fbe7] {
+    background-color: rgba(24, 24, 24, .85);
+    border-color: rgba(255, 255, 255, .06);
+}
+
+.info-card.highlight[data-v-3537fbe7] {
+    background-color: rgba(46, 139, 87, .25);
+    border-color: #2E8B57;
+}
+
+.roulette-description[data-v-3537fbe7] {
+    background-color: rgba(24, 24, 24, .85);
+    border-left-color: #2E8B57;
+}
+
+.sortable-area[data-v-3537fbe7] {
+    background-color: rgba(10, 10, 10, .6);
+    border-color: rgba(255, 255, 255, .06);
+}
+
+/* botões */
+.spin-button[data-v-3537fbe7] {
+    background-color: #2E8B57;
+    border-color: #2E8B57;
+}
+
+.spin-button[data-v-3537fbe7]:hover:not(:disabled) {
+    background-color: #3cb371;
+    border-color: #3cb371;
+    filter: none;
+}
+
+.btn-back[data-v-3537fbe7] {
+    background: rgba(24, 24, 24, .85);
+    border-color: rgba(255, 255, 255, .14);
+}
+
+.btn-back[data-v-3537fbe7]:hover {
+    background: rgba(46, 139, 87, .25);
+    border-color: #2E8B57;
+}
+
+.plushie-details-overlay[data-v-3537fbe7] {
+    background: linear-gradient(180deg, #161616f7, #0c0c0cf7);
+    border-color: rgba(255, 255, 255, .06);
+}
+
+.win-progress-fill[data-v-3537fbe7] {
+    background: #2E8B57;
+    box-shadow: 0 0 10px rgba(46, 139, 87, .7);
+}
+
+::-webkit-scrollbar-thumb {
+    background: #2E8B57;
+}

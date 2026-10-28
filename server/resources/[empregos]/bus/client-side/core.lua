@@ -52,7 +52,7 @@ AddEventHandler("bus:Init",function(Mode)
 		return false
 	end
 
-	TriggerEvent("Notify","Central de Empregos","Você acaba de dar início à sua jornada de trabalho, lembrando que a sua vida não se resume só a isso.","default",5000)
+	TriggerEvent("Notify","Central de Empregos","Você acaba de dar início à sua jornada de trabalho. Para sair do emprego, aperte <b>F5</b>.","default",5000)
 	Active = true
 	Route = Mode
 	MakeBlips()

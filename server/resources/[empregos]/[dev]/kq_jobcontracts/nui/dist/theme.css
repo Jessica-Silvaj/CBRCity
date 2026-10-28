@@ -1,0 +1,11 @@
+/* Padrão visual do servidor (igual à Central de Empregos): fonte Inter, bordas #262626, verde #2e8b57 */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+html, body, #app, #app * {
+    font-family: 'Inter', sans-serif !important;
+}
+
+#app ::-webkit-scrollbar { width: 6px; }
+#app ::-webkit-scrollbar-track { background: transparent; }
+#app ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+#app ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }

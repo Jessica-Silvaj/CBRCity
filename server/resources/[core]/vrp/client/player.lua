@@ -85,9 +85,8 @@ end
 -- RELOADCHARACTER
 -----------------------------------------------------------------------------------------------------------------------------------------
 function tvRP.ReloadCharacter()
--- 	exports.skinshop:Apply()
--- 	exports.barbershop:Apply()
--- 	exports.tattooshop:Apply()
+	exports.vrp:ReloadCharacter()
+	TriggerEvent("character:Client:Reload")
 end
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- VRP:ACTIVE
@@ -128,6 +127,21 @@ AddEventHandler("vRP:Active",function(Passport,Name,Inventory)
 			end
 		end
 	end)
+end)
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- NPCHEADSHOT
+-----------------------------------------------------------------------------------------------------------------------------------------
+CreateThread(function()
+	while true do
+		-- NPCs não morrem com um tiro na cabeça
+		for _,Entitys in ipairs(GetGamePool("CPed")) do
+			if not IsPedAPlayer(Entitys) then
+				SetPedSuffersCriticalHits(Entitys,false)
+			end
+		end
+
+		Wait(1000)
+	end
 end)
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- HEALTHRECHARGE
@@ -195,7 +209,10 @@ exports("ReloadCharacter",function()
 	SetBlipAlpha(GetNorthRadarBlip(),0)
 	ReplaceHudColourWithRgba(116,255,255,255,225)
 	ReplaceHudColourWithRgba(140,255,255,255,150)
-	ReplaceHudColourWithRgba(142,255,255,255,225)
+	-- Rota e marcador do GPS ao selecionar um destino no mapa.
+	ReplaceHudColourWithRgba(142,46,204,113,255)
+	ReplaceHudColourWithRgba(150,125,224,156,255)
+	ReplaceHudColourWithRgba(151,23,128,65,255)
 
 	SetAudioFlag("ActivateSwitchWheelAudio",false)
 	SetAudioFlag("AllowAmbientSpeechInSlowMo",false)

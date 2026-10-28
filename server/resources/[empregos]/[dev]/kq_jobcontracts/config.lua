@@ -41,19 +41,20 @@ Config.ui = {
     layout = 'sidebar',  -- "centered" or "sidebar"
 }
 
+-- Cores no padrão do servidor (Central de Empregos): fundo #0a0a0a, superfície #121212, verde #2e8b57
 Config.uiStyling = {
-    ['color-background'] = '20, 22, 21',
-    ['color-background-light'] = '30, 33, 31',
+    ['color-background'] = '10, 10, 10',
+    ['color-background-light'] = '18, 18, 18',
 
-    ['color-primary-dark'] = '120, 170, 0',
-    ['color-primary'] = '178, 243, 0',
-    ['color-primary-light'] = '211, 252, 98',
+    ['color-primary-dark'] = '31, 99, 61',
+    ['color-primary'] = '46, 139, 87',
+    ['color-primary-light'] = '143, 209, 172',
 
-    ['color-secondary'] = '193, 207, 176',
-    ['color-secondary-light'] = '226, 245, 203',
-    ['color-secondary-dark'] = '111, 117, 103',
+    ['color-secondary'] = '163, 163, 163',
+    ['color-secondary-light'] = '212, 212, 212',
+    ['color-secondary-dark'] = '38, 38, 38',
 
-    ['color-white'] = '251, 251, 251',
+    ['color-white'] = '255, 255, 255',
     ['color-black'] = '10, 10, 10',
 }
 

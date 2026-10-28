@@ -39,6 +39,7 @@ vRP.Prepare("night_adminv2/updateWarningTime", "UPDATE night_punicoes SET tempo_
 vRP.Prepare("night_adminv2/deletePunicao", "DELETE FROM night_punicoes WHERE user_id = @user_id AND status = @status AND contagem = @contagem")
 vRP.Prepare("characters/getBank", "SELECT bank FROM characters WHERE id = @user_id LIMIT 1")
 vRP.Prepare("night_adminv2/AllUsers","SELECT id FROM characters ORDER BY id ASC")
+vRP.Prepare("night_adminv2/UserPermissions", "SELECT Name FROM entitydata WHERE Name LIKE 'Permissions:%' AND Information LIKE @Key")
 vRP.Prepare("night_adminv2/getHouseVaults", "SELECT Name, Information FROM entitydata WHERE Name LIKE @Name")
 vRP.Prepare("night_adminv2/CheckPhone", "SELECT id FROM characters WHERE Phone = @Phone")
 vRP.Prepare("night_adminv2/UpdatePhonePhones", "UPDATE phone_phones SET phone_number = @Phone WHERE owner_id = @Passport")
@@ -251,13 +252,28 @@ function Creative.SeeInformationsProfile(SelectedPassport)
         BankMoney = tonumber(BankResult[1].bank)
     end
 
-    local SelectedWork = vRP.GetUserType(SelectedPassport, "Work") or "Desempregado"
+    -- Uma única consulta traz os grupos do jogador, em vez de uma consulta por grupo existente
+    local UserGroups = {}
+    for _, Row in ipairs(vRP.Query("night_adminv2/UserPermissions", { Key = '%"'..SelectedPassport..'":%' })) do
+        local Permission = Row.Name:sub(13)
+        if vRP.HasPermission(SelectedPassport, Permission) then
+            UserGroups[Permission] = true
+        end
+    end
+
+    local SelectedWork = "Desempregado"
+    for Permission in pairs(UserGroups) do
+        if vRP.GroupType(Permission) == "Work" then
+            SelectedWork = Permission
+            break
+        end
+    end
 
     local Vips = {}
 
     if Config.Perms.VipRoles then
         for _, vipRole in ipairs(Config.Perms.VipRoles) do
-            if vRP.HasPermission(SelectedPassport, vipRole.perm) then
+            if UserGroups[vipRole.perm] then
                 table.insert(Vips, vipRole.name)
             end
         end

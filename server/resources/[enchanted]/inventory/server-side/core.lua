@@ -749,6 +749,8 @@ function Creative.Use(Slot,Amount)
 				else
 					TriggerClientEvent("inventory:Notify",source,"Atenção","O armamento não possui suporte ao componente.","vermelho")
 				end
+			else
+				TriggerClientEvent("inventory:Notify",source,"Atenção","Equipe uma arma para usar o componente.","amarelo")
 			end
 		elseif Use[Item] and exports.vrp:ItemTypeCheck(Full,"Consumível") then
 			Use[Item](source,Passport,Amount,Slot,Full,Item,Split)

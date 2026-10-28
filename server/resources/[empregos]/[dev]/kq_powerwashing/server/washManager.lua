@@ -305,7 +305,9 @@ function WashManager.IsTaskFullyClean(self, taskId)
 
     -- cleanPixels es fraccion 0-1 por pixel, totalMax es numero de pixeles
     -- => cleanPixels/totalMax ya es 0-1, multiplicamos por 100 para comparar con threshold
-    local avgCleanPct       = (totalClean / totalMax) * 100
+    -- Arredonda para cima igual ao cliente (washRenderer usa math.ceil): se a tela mostra 100%, conclui.
+    -- Antes 99,x% aparecia como 100% mas nunca atingia o limite de 100 e a tarefa não avançava.
+    local avgCleanPct       = math.ceil((totalClean / totalMax) * 100)
     local avgThresholdPct   = totalThreshold / areaCount
     return avgCleanPct >= avgThresholdPct
 end

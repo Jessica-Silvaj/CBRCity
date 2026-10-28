@@ -333,12 +333,14 @@ CreateThread(function()
 
 			if (Ammo <= 0 or (Weapon == "WEAPON_PETROLCAN" and Ammo <= 50 and IsPedShooting(Ped))) and CurrentTimer >= Cooldown then
 				Cooldown = CurrentTimer + 1000
-				TriggerEvent("inventory:CleanWeapons")
 
 				if Types ~= "" then
+					TriggerEvent("inventory:CleanWeapons")
 					vSERVER.RemoveThrowing(Types)
 				else
+					-- Sem munição a arma continua na mão, pronta para recarregar
 					vSERVER.PreventWeapons(Weapon,Ammo)
+					Actived = false
 				end
 			end
 
@@ -434,8 +436,33 @@ end
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- GIVECOMPONENT
 -----------------------------------------------------------------------------------------------------------------------------------------
+function ApplyComponent(Ped,WeaponName,Component)
+	if not Component or WeaponName == "" then
+		return
+	end
+
+	local WeaponHash = GetHashKey(WeaponName)
+	local ComponentHash = type(Component) == "string" and GetHashKey(Component) or Component
+
+	-- O modelo do componente precisa estar carregado, senão ele não aparece na arma
+	local Model = GetWeaponComponentTypeModel(ComponentHash)
+	if Model and Model ~= 0 and not HasModelLoaded(Model) then
+		RequestModel(Model)
+		local Timeout = GetGameTimer() + 3000
+		while not HasModelLoaded(Model) and GetGameTimer() < Timeout do
+			Wait(10)
+		end
+	end
+
+	GiveWeaponComponentToPed(Ped,WeaponHash,ComponentHash)
+
+	if Model and Model ~= 0 then
+		SetModelAsNoLongerNeeded(Model)
+	end
+end
+
 function Creative.GiveComponent(Component)
-	GiveWeaponComponentToPed(PlayerPedId(),Weapon,Component)
+	ApplyComponent(PlayerPedId(),Weapon,Component)
 end
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- TAKEWEAPON
@@ -468,7 +495,7 @@ function Creative.TakeWeapon(Name,Ammo,Components,Type,Skin)
 		if Components then
 			for Item in pairs(Components) do
 				local Component = exports.vrp:WeaponAttach(SplitOne(Item),Weapon)
-				GiveWeaponComponentToPed(Ped,Weapon,Component)
+				ApplyComponent(Ped,Weapon,Component)
 			end
 		end
 	end

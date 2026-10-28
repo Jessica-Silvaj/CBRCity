@@ -111,6 +111,45 @@
                 </div>
                 <div class="nav-category">
                     <div class="category-header">
+                        <span><i class="fa-solid fa-mask" style="margin-right: 6px;"></i> ROUBOS</span>
+                        <i class="fa-solid fa-chevron-down chevron"></i>
+                    </div>
+                    <div class="nav-items-wrapper">
+                        <div class="nav-item" data-page="manage-robberies">
+                            <i class="fa-solid fa-list"></i> Gerenciar Roubos
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-category">
+                    <div class="category-header">
+                        <span><i class="fa-solid fa-house" style="margin-right: 6px;"></i> CASAS</span>
+                        <i class="fa-solid fa-chevron-down chevron"></i>
+                    </div>
+                    <div class="nav-items-wrapper">
+                        <div class="nav-item" data-page="create-house">
+                            <i class="fa-solid fa-plus"></i> Adicionar Casa
+                        </div>
+                        <div class="nav-item" data-page="manage-houses">
+                            <i class="fa-solid fa-list"></i> Gerenciar Casas
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-category">
+                    <div class="category-header">
+                        <span><i class="fa-solid fa-money-bill-transfer" style="margin-right: 6px;"></i> ATMS</span>
+                        <i class="fa-solid fa-chevron-down chevron"></i>
+                    </div>
+                    <div class="nav-items-wrapper">
+                        <div class="nav-item" data-page="create-atm">
+                            <i class="fa-solid fa-plus"></i> Adicionar ponto bancário
+                        </div>
+                        <div class="nav-item" data-page="manage-atms">
+                            <i class="fa-solid fa-list"></i> Gerenciar pontos bancários
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-category">
+                    <div class="category-header">
                         <span><i class="fa-solid fa-cart-shopping" style="margin-right: 6px;"></i> LOJAS</span>
                         <i class="fa-solid fa-chevron-down chevron"></i>
                     </div>
@@ -384,6 +423,23 @@
                         </div>
                         <div class="nav-item" data-page="manage-pdms">
                             <i class="fa-solid fa-list"></i> Gerenciar PDMs
+                        </div>
+                        <div class="nav-item" data-page="manage-stocks">
+                            <i class="fa-solid fa-boxes-stacked"></i> Estoque de Veículos
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-category">
+                    <div class="category-header">
+                        <span><i class="fa-solid fa-map-location-dot" style="margin-right: 6px;"></i> MARCAÇÕES NO MAPA</span>
+                        <i class="fa-solid fa-chevron-down chevron"></i>
+                    </div>
+                    <div class="nav-items-wrapper">
+                        <div class="nav-item" data-page="create-blip">
+                            <i class="fa-solid fa-location-dot"></i> Criar Marcação
+                        </div>
+                        <div class="nav-item" data-page="manage-blips">
+                            <i class="fa-solid fa-list"></i> Gerenciar Marcações
                         </div>
                     </div>
                 </div>
@@ -1721,7 +1777,7 @@
                         </div>
                     </div>
 
-                    <p style="color: var(--text-muted); margin: 8px 0 16px;">O painel fecha e o prop aparece na sua mira. Gire com a roda do mouse, suba/desça com Page Up/Page Down, confirme com E e cancele com Backspace ou botão direito.</p>
+                    <p style="color: var(--text-muted); margin: 8px 0 16px;">O painel fecha e o prop segue a sua mira, igual mobiliar a casa: <b>H</b> posiciona, <b>F</b> cancela, <b>Q</b>/<b>E</b> giram e <b>Z</b> troca para o modo fino (setas movem, <b>+</b>/<b>-</b> sobem e descem).</p>
 
                     <div class="form-actions">
                         <button id="place-prop" class="btn-primary"><i class="fa-solid fa-hand-pointer"></i> Posicionar no Jogo</button>
@@ -1736,6 +1792,256 @@
                                     <th>ID</th>
                                     <th>Nome / Modelo</th>
                                     <th>Coordenadas</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Rows generated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Managed catalogs -->
+                <div class="page-content" id="manage-robberies" style="display: none;">
+                    <p style="color: var(--text-muted); margin-bottom: 16px;">Ative cada tipo e ajuste policiais, tempos em segundos e recompensa. Caixa eletrônico (Eletronic): recompensa e duração de explosão são controladas pelo sistema C4; os valores desta aba aplicam-se ao inventory.</p>
+                    <div class="table-container">
+                        <table id="robberies-table">
+                            <thead>
+                                <tr>
+                                    <th>Tipo</th>
+                                    <th>Ativo</th>
+                                    <th>Policiais</th>
+                                    <th>Cooldown (s)</th>
+                                    <th>Duração (s)</th>
+                                    <th>Procurado (s)</th>
+                                    <th>Mínimo</th>
+                                    <th>Máximo</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="robberies-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="page-content" id="create-house" style="display: none;">
+                    <form id="house-form">
+                        <input id="house-id" type="hidden">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Interior</label>
+                                <select id="house-interior" required></select>
+                            </div>
+                            <div class="form-group">
+                                <label>Preço ($)</label>
+                                <input id="house-price" type="number" min="1" max="1000000000" step="1" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label>X</label><input id="house-X" type="number" step="any" required></div>
+                            <div class="form-group"><label>Y</label><input id="house-Y" type="number" step="any" required></div>
+                            <div class="form-group"><label>Z</label><input id="house-Z" type="number" step="any" required></div>
+                        </div>
+                        <div class="form-actions" style="justify-content: flex-start; margin-bottom: 16px;">
+                            <button type="button" class="btn-primary" id="house-here"><i class="fa-solid fa-location-crosshairs"></i> Usar minha posição</button>
+                        </div>
+                        <p style="color: var(--text-muted); margin: 8px 0 16px;">Fique no local da porta e clique em <b>Usar minha posição</b>. Casas com proprietário têm edição bloqueada.</p>
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary" id="save-house"><i class="fa-solid fa-floppy-disk"></i> Salvar Casa</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="page-content" id="manage-houses" style="display: none;">
+                    <div class="search-bar-container">
+                        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                        <input type="text" class="search-input" id="house-search" data-custom-search placeholder="Procurar (ID, interior ou coordenada)...">
+                    </div>
+                    <div class="table-container">
+                        <table id="houses-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Posição</th>
+                                    <th>Interior</th>
+                                    <th>Preço</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="houses-body"></tbody>
+                        </table>
+                    </div>
+                    <div class="form-actions" id="houses-pager" style="align-items: center; color: var(--text-muted);"></div>
+                </div>
+
+                <div class="page-content" id="create-blip" style="display: none;">
+                    <form id="blip-form">
+                        <input id="blip-id" type="hidden">
+                        <div class="form-row">
+                            <div class="form-group" style="flex: 2;">
+                                <label>Nome</label>
+                                <input id="blip-name" type="text" maxlength="60" placeholder="Ex: Hospital Central" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Ícone (ID do sprite)</label>
+                                <input id="blip-sprite" type="number" min="0" max="1000" step="1" value="1" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Cor</label>
+                                <select id="blip-color" required></select>
+                            </div>
+                            <div class="form-group">
+                                <label>Tamanho (0.1 a 3.0)</label>
+                                <input id="blip-scale" type="number" min="0.1" max="3" step="0.1" value="0.8" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Visibilidade</label>
+                                <select id="blip-shortrange">
+                                    <option value="0">Sempre visível no mapa</option>
+                                    <option value="1">Só quando estiver perto</option>
+                                </select>
+                            </div>
+                        </div>
+                        <small style="color:var(--text-muted);font-size:11px;display:block;margin:-6px 0 14px;">Lista de ícones: <b>docs.fivem.net/docs/game-references/blips</b> (use o número do ícone).</small>
+                        <div class="form-row">
+                            <div class="form-group"><label>X</label><input id="blip-X" type="number" step="any" required></div>
+                            <div class="form-group"><label>Y</label><input id="blip-Y" type="number" step="any" required></div>
+                            <div class="form-group"><label>Z</label><input id="blip-Z" type="number" step="any" required></div>
+                        </div>
+                        <div class="form-actions" style="justify-content: flex-start; margin-bottom: 16px;">
+                            <button type="button" class="btn-primary" id="blip-here"><i class="fa-solid fa-location-crosshairs"></i> Usar minha posição</button>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary" id="save-blip"><i class="fa-solid fa-floppy-disk"></i> Salvar Marcação</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="page-content" id="manage-blips" style="display: none;">
+                    <div class="table-container">
+                        <table id="blips-table">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Ícone</th>
+                                    <th>Cor</th>
+                                    <th>Tamanho</th>
+                                    <th>Posição</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="blips-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="page-content" id="manage-stocks" style="display: none;">
+                    <p style="color: var(--text-muted); margin-bottom: 16px;">O estoque é o total de unidades de cada modelo que podem existir na cidade. Deixe o campo vazio para estoque ilimitado. "Restaurar" volta ao valor original do config.</p>
+                    <div class="search-bar-container">
+                        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                        <input type="text" class="search-input" id="stock-search" data-custom-search placeholder="Procurar (nome, modelo ou classe)...">
+                    </div>
+                    <div class="table-container">
+                        <table id="stocks-table">
+                            <thead>
+                                <tr>
+                                    <th>Veículo</th>
+                                    <th>Classe</th>
+                                    <th>Vendidos</th>
+                                    <th>Estoque</th>
+                                    <th>Disponível</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="stocks-body"></tbody>
+                        </table>
+                    </div>
+                    <div class="form-actions" id="stocks-pager" style="align-items: center; color: var(--text-muted);"></div>
+                </div>
+                <!-- ATMS -->
+                <div class="page-content" id="create-atm" style="display: none;">
+                    <input type="hidden" id="edit-atm-id" value=""><div class="form-group"><label>Tipo de ponto</label><select id="atm-kind"><option value="atm">ATM</option><option value="agency">Agência</option></select></div>
+
+                    <div class="form-group">
+                        <label>Nome do ATM (Identificação no Painel)</label>
+                        <input type="text" id="atm-name" placeholder="Ex: ATM da praça">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>X</label>
+                            <input type="number" step="0.01" id="atm-x">
+                        </div>
+                        <div class="form-group">
+                            <label>Y</label>
+                            <input type="number" step="0.01" id="atm-y">
+                        </div>
+                        <div class="form-group">
+                            <label>Z</label>
+                            <input type="number" step="0.01" id="atm-z">
+                        </div>
+                        <div class="form-group">
+                            <label>Modelo</label>
+                            <select id="atm-model">
+                                <option value="">Não detectado</option>
+                                <option value="prop_atm_01">prop_atm_01</option>
+                                <option value="prop_atm_02">prop_atm_02</option>
+                                <option value="prop_atm_03">prop_atm_03</option>
+                                <option value="prop_fleeca_atm">prop_fleeca_atm</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-actions" style="justify-content: flex-start; margin-bottom: 16px;">
+                        <button id="atm-here" class="btn-primary"><i class="fa-solid fa-location-crosshairs"></i> Usar minha posição</button>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group"
+                            style="flex: 0.5; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+                            <label>Abrir (Banco)?</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="atm-open" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="form-group"
+                            style="flex: 0.5; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+                            <label>Pode Roubar?</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="atm-rob" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>Roubo a partir de (hora)</label>
+                            <input type="number" min="0" max="23" id="atm-start" placeholder="Vazio = qualquer hora">
+                        </div>
+                        <div class="form-group">
+                            <label>Roubo até (hora)</label>
+                            <input type="number" min="0" max="23" id="atm-end" placeholder="Ex: 2">
+                        </div>
+                    </div>
+
+                    <p style="color: var(--text-muted); margin: 8px 0 16px;">Fique em frente ao caixa e clique em <b>Usar minha posição</b>: o painel pega a coordenada e o modelo do caixa mais próximo (o modelo é obrigatório para o roubo). Horário vazio libera o roubo a qualquer hora.</p>
+
+                    <div class="form-actions">
+                        <button id="save-atm" class="btn-primary"><i class="fa-solid fa-floppy-disk"></i> Salvar ponto bancário</button>
+                    </div>
+                </div>
+
+                <div class="page-content" id="manage-atms" style="display: none;">
+                    <div class="table-container">
+                        <table id="atms-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nome / Modelo</th>
+                                    <th>Coordenadas</th>
+                                    <th>Opções</th>
                                     <th>Ações</th>
                                 </tr>
                             </thead>

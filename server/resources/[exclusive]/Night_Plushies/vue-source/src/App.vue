@@ -698,6 +698,7 @@ onUnmounted(() => {
                   ]"
                 >
                   <div class="roulette-visual-img" :style="{ backgroundImage: `url(${getPlushieImage(item)})` }"></div>
+                  <span class="roulette-item-name" :title="item?.name">{{ item?.name }}</span>
                 </div>
               </div>
               <div class="sortable-arrow-top"></div>
@@ -1588,6 +1589,7 @@ onUnmounted(() => {
 }
 
 .sortable-item {
+  position: relative;
   width: 6.5rem;
   height: 6.5rem;
   flex-shrink: 0;
@@ -1633,11 +1635,29 @@ onUnmounted(() => {
 
 .roulette-visual-img {
   width: 80%;
-  height: 80%;
+  height: 62%;
+  margin-bottom: 1.4rem;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
   filter: drop-shadow(0 0 5px rgba(0,0,0,0.5));
+}
+
+.roulette-item-name {
+  position: absolute;
+  bottom: 0.35rem;
+  left: 0.3rem;
+  right: 0.3rem;
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .roulette-visual {

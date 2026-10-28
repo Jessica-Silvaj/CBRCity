@@ -21,6 +21,10 @@
 
     let pending = false;
 
+    const tip = document.createElement("div");
+    tip.className = "cbr-collection-tip";
+    document.body.appendChild(tip);
+
     async function openCollection(item) {
         if (pending) return;
         pending = true;
@@ -61,6 +65,15 @@
             button.title = item.label;
             button.setAttribute("aria-label", item.label);
             button.innerHTML = `<svg ${ICON_ATTRS}>${item.icon}</svg>`;
+            // nome em balão ao passar o mouse, como no botão de Skin; fica no body porque a barra corta o que passa da borda
+            button.addEventListener("mouseenter", () => {
+                const rect = button.getBoundingClientRect();
+                tip.textContent = item.label;
+                tip.style.left = `${rect.left + rect.width / 2}px`;
+                tip.style.top = `${rect.top - 8}px`;
+                tip.classList.add("show");
+            });
+            button.addEventListener("mouseleave", () => tip.classList.remove("show"));
             button.addEventListener("click", (event) => {
                 event.preventDefault();
                 event.stopPropagation();

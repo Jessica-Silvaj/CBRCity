@@ -48,7 +48,7 @@ files {
     'nui/dist/nui.html',
     'nui/dist/app.js',
     'nui/dist/app.css',
-    'nui/dist/assets/*.*',
+    'nui/dist/theme.css',
 
     'shared/utils.lua',
     'shared/settings.lua',

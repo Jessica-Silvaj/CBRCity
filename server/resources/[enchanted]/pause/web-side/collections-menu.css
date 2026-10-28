@@ -1,3 +1,11 @@
 /* Os botões de Pelúcias e Capinhas usam as classes nativas da barra (iguais ao da Skin de arma).
    Aqui fica só o que esconde o pause enquanto a coleção abre. */
+.cbr-collection-tip {
+    position: fixed; transform: translate(-50%, -100%);
+    padding: 4px 10px; border-radius: 4px; background: rgba(13, 13, 13, .95); border: 1px solid rgba(255, 255, 255, .08);
+    color: #fff; font-size: 12px; font-weight: 600; white-space: nowrap; pointer-events: none;
+    opacity: 0; transition: opacity .15s ease; z-index: 9999;
+}
+.cbr-collection-tip.show { opacity: 1; }
+html.cbr-collection-open .cbr-collection-tip { display: none; }
 html.cbr-collection-open #app { visibility: hidden !important; pointer-events: none !important; }

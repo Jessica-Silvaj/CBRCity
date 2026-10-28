@@ -230,6 +230,40 @@ local Config = {
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- INVENTORY:ROBBERYACTIVE
 -----------------------------------------------------------------------------------------------------------------------------------------
+
+-- Persistent management settings. Runtime cooldowns remain in Config.
+local function ApplyManagementRobberies(Entries)
+    for Mode,Entry in pairs(Entries or {}) do
+        local Setting = Config[Mode]
+        if Setting then
+            Setting.Enabled = Entry.Enabled ~= false
+            for _,Key in ipairs({ "Police","Delay","Timer","Wanted" }) do
+                if type(Entry[Key]) == "number" then Setting[Key] = Entry[Key] end
+            end
+            local Payment = Setting.Payment and Setting.Payment.List and Setting.Payment.List[1]
+            if Payment then Payment.Min,Payment.Max = Entry.Min or Payment.Min,Entry.Max or Payment.Max end
+        end
+    end
+end
+local RawManagementRobberies = LoadResourceFile("Night_Management","data/robberies.json")
+if RawManagementRobberies then
+    local Ok,Entries = pcall(json.decode,RawManagementRobberies)
+    if Ok and type(Entries) == "table" then ApplyManagementRobberies(Entries) end
+end
+AddEventHandler("Night_Management:robberiesChanged",ApplyManagementRobberies)
+exports("ManagementRobberies",function()
+    local List = {}
+    for Mode,Entry in pairs(Config) do
+        local Payment = Entry.Payment and Entry.Payment.List and Entry.Payment.List[1] or {}
+        List[#List + 1] = { id = Mode,Name = Entry.Name,Enabled = Entry.Enabled ~= false,
+            Police = Entry.Police or 0,Delay = Entry.Delay or 3600,Timer = Entry.Timer or 30,
+            Wanted = Entry.Wanted or 60,Min = Payment.Min or 0,Max = Payment.Max or 0,
+            Item = Payment.Item,Explosion = Entry.Explosion == true }
+    end
+    table.sort(List,function(a,b) return a.id < b.id end)
+    return List
+end)
+
 AddEventHandler("inventory:RobberyActive",function(Mode,Number)
 	local Configuration = Config[Mode]
 	if Configuration then
@@ -251,7 +285,7 @@ AddEventHandler("inventory:Robbery",function(Number,Mode)
 	local Configuration = Config[Mode]
 	local Passport = vRP.Passport(source)
 
-	if not Passport or Active[Passport] or not Configuration then
+	if not Passport or Active[Passport] or not Configuration or Configuration.Enabled == false then
 		return false
 	end
 
@@ -288,6 +322,7 @@ AddEventHandler("inventory:Robbery",function(Number,Mode)
 		end
 	end
 
+	Configuration = json.decode(json.encode(Configuration))
 	Player(source).state.Buttons = true
 	Robberys[Passport] = { Mode = Mode, Number = Number }
 	Active[Passport] = CurrentTimer + (Configuration.Timer or 30)

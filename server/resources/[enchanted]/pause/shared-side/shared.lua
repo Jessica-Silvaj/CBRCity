@@ -4,8 +4,8 @@
 MarketplaceTax = 0.03 -- Taxa em cima do valor do item anunciado.
 SalaryCooldown = 1800 -- Quantidade de segundos.
 HomeBoxes = { 1,2,3 } -- ID das caixas que vão aparecer no inicio
-ShopAllDisplay = false -- Mostra a opção "Todos" na Loja
-FurnituresAllDisplay = false -- Mostra a opção "Todos" na Loja de Móveis
+ShopAllDisplay = true -- Mostra a opção "Todos" na Loja
+FurnituresAllDisplay = true -- Mostra a opção "Todos" na Loja de Móveis
 BattlepassPoints = 500 -- Pontos para resgatar cada item
 BattlepassPrice = 10000 -- Valor para comprar o passe
 StatisticsMessage = "As informações apresentadas nesta página não devem ser utilizadas dentro do roleplay.<br>Todo o conteúdo aqui exibido tem caráter informativo e de consulta pessoal apenas.<br>O uso dessas informações para obter vantagens, reproduzir situações ou influenciar eventos dentro do servidor é estritamente proibido e pode resultar em punições administrativas." -- Mensagem que aparece nas estatisticas, false para remover
@@ -846,16 +846,6 @@ ShopItens = {
 		Discount = 1.0,
 		Category = "Domésticos"
 	},
-	furniture_pooltable = {
-		Price = 5000,
-		Discount = 1.0,
-		Category = "Outros"
-	},
-	pooltablecue = {
-		Price = 1000,
-		Discount = 1.0,
-		Category = "Outros"
-	}
 }
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- FURNITURESITENS

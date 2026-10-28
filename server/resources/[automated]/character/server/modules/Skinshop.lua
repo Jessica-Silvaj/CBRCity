@@ -119,20 +119,28 @@ AddEventHandler("skinshop:Send",function()
 	end
 
 	local OtherSource = vRPC.ClosestPed(source)
-	if not OtherSource or vRP.GetHealth(OtherSource) <= 100 then
+	local OtherPassport = OtherSource and vRP.Passport(OtherSource)
+	if not OtherPassport or vRP.GetHealth(OtherSource) <= 100 then
+		TriggerClientEvent("Notify",source,"Aviso","Nenhuma pessoa próxima.","amarelo",5000)
 		return false
 	end
 
 	if vRP.ModelPlayer(source) ~= vRP.ModelPlayer(OtherSource) then
-		TriggerClientEvent("Notify",source,"Aviso","Vestimentas recusadas.","amarelo",5000)
+		TriggerClientEvent("Notify",source,"Aviso","As vestimentas não servem nesse modelo de personagem.","amarelo",5000)
 		return false
 	end
 
-	if vRP.Request(OtherSource,false,"Aceitar vestimentas de <b>"..vRP.FullName(Passport).."</b>?") then
+	local vCLIENT = Tunnel.getInterface("character")
+	local clothes = vCLIENT.getCustomization(source)
+	if type(clothes) ~= "table" then
+		TriggerClientEvent("Notify",source,"Aviso","Não foi possível ler suas vestimentas.","amarelo",5000)
+		return false
+	end
+
+	if vRP.Request(OtherSource,"Vestimentas","Aceitar vestimentas de <b>"..vRP.FullName(Passport).."</b>?") then
 		TriggerClientEvent("Notify",source,"Sucesso","Vestimentas enviadas.","verde",5000)
-		local vCLIENT = Tunnel.getInterface("character")
-		local clothes = vCLIENT.getCustomization(source)
 		TriggerClientEvent("character:Client:Skinshop:SaveDefault",OtherSource,clothes)
+		vRP.setCharacterData(OtherPassport,"Clothings",clothes)
 	else
 		TriggerClientEvent("Notify",source,"Aviso","Vestimentas recusadas.","amarelo",5000)
 	end

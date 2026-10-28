@@ -1222,3 +1222,18 @@ Propertys = {
 exports("Coords",function(Name)
 	return Propertys[Name] or vec3(0.0,0.0,0.0)
 end)
+-- Managed entries supplement the original coordinates; identifiers stay stable.
+ManagedHouses = {}
+function ApplyManagedHouses(Entries)
+    for Name,Entry in pairs(Entries or {}) do
+        if type(Name) == "string" and Name:match("^Propertys%d+$") and type(Entry) == "table" then
+            Propertys[Name] = vec3(Entry.X,Entry.Y,Entry.Z)
+        end
+    end
+    ManagedHouses = Entries or {}
+end
+if IsDuplicityVersion() then
+    local Raw = LoadResourceFile("Night_Management","data/houses.json")
+    local Ok,Entries = pcall(json.decode,Raw or "{}")
+    if Ok and type(Entries) == "table" then ApplyManagedHouses(Entries) end
+end

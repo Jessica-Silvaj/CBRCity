@@ -275,6 +275,22 @@ AddEventHandler("Energetic",function(Timer,Number)
 	-- Não acumula: usar de novo renova para o tempo do item (30 s), em vez de somar
 	Energetic = math.max(Energetic,Timer)
 	SetRunSprintMultiplierForPlayer(PlayerId(),Number)
+	RestorePlayerStamina(PlayerId(),1.0)
+end)
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- THREADENERGETIC
+-----------------------------------------------------------------------------------------------------------------------------------------
+CreateThread(function()
+	while true do
+		local TimeDistance = 1000
+		if Energetic > 0 then
+			TimeDistance = 100
+			-- Mantém a estamina cheia enquanto durar o efeito
+			RestorePlayerStamina(PlayerId(),1.0)
+		end
+
+		Wait(TimeDistance)
+	end
 end)
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- THREADMETH
