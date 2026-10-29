@@ -5,12 +5,12 @@ lua54 "yes"
 ui_page "web-side/index.html"
 
 client_scripts {
-    '@vrp/lib/utils.lua',
+    '@vrp/lib/Utils.lua',
 	"client-side/*"
 }
 
 server_scripts {
-    '@vrp/lib/utils.lua',
+    '@vrp/lib/Utils.lua',
 	"server-side/*"
 }
 
@@ -19,6 +19,6 @@ files {
 }
 
 shared_scripts {
-    '@vrp/lib/utils.lua',
+    '@vrp/lib/Utils.lua',
 	"shared-side/*"
 }

@@ -5,7 +5,7 @@ lua54 "yes"
 description "Vape com tanque recarregável, sabores e vapor colorido visível para todos"
 
 shared_scripts {
-	"@vrp/lib/utils.lua",
+	"@vrp/lib/Utils.lua",
 	"config.lua"
 }
 

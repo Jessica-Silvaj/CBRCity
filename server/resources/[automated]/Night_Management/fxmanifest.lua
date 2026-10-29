@@ -5,7 +5,7 @@ lua54 "yes"
 ui_page 'web-side/index.html'
 
 shared_scripts {
-    '@vrp/lib/utils.lua',
+    '@vrp/lib/Utils.lua',
     '@vrp/config/Vehicle.lua',
     "shared-side/*.lua",
 }

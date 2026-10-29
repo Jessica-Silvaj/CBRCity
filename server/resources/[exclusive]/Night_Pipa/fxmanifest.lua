@@ -7,7 +7,7 @@ data_file 'DLC_ITYP_REQUEST' 'stream/vdg_pipas.ytyp'
 data_file 'DLC_ITYP_REQUEST' 'stream/myc_carretel.ytyp'
 
 shared_scripts {
-    '@vrp/lib/utils.lua',
+    '@vrp/lib/Utils.lua',
     'lib/*.lua',
     'config/*.lua',
 }

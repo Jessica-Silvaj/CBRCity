@@ -4,7 +4,7 @@ game "gta5"
 ui_page "web-side/index.html"
 
 shared_scripts {
-    "@vrp/lib/utils.lua",
+    "@vrp/lib/Utils.lua",
 }
 
 client_script {

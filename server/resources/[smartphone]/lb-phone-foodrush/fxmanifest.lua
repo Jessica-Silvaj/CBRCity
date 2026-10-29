@@ -4,7 +4,7 @@ version "1.0.0"
 lua54 "yes"
 
 shared_script {
-    "@vrp/lib/utils.lua",
+    "@vrp/lib/Utils.lua",
     "lib/lib.lua",
     "lib/config.lua"
 }

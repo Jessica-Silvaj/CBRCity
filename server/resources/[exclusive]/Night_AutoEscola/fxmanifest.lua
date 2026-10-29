@@ -7,7 +7,7 @@ version '1.0.0'
 ui_page "web-side/dist/index.html"
 
 shared_scripts {
-    "@vrp/lib/utils.lua",
+    "@vrp/lib/Utils.lua",
     "cfg/lang.lua",
     "cfg/perguntas.lua",
     "cfg/config.lua",

@@ -13,7 +13,7 @@ client_scripts {
 }
 
 shared_scripts {
-    "@vrp/lib/utils.lua",
+    "@vrp/lib/Utils.lua",
     "shared-side/config.lua",
     "shared-side/core.lua"
 }

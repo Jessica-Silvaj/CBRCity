@@ -7,7 +7,7 @@ dependency_check 'warn'
 ui_page 'client/nui/index.html'
 
 shared_scripts {
-    '@vrp/lib/utils.lua',
+    '@vrp/lib/Utils.lua',
     '@vrp/config/Global.lua',
     'Config.lua',
     'config/*.lua'

@@ -4,12 +4,12 @@ game { 'gta5' }
 ui_page('html/index.html')
 
 client_scripts {
-    '@vrp/lib/utils.lua',
+    '@vrp/lib/Utils.lua',
     'config.lua',
     'client.lua'
 }
 server_scripts{
-    '@vrp/lib/utils.lua',
+    '@vrp/lib/Utils.lua',
     'config.lua',
     'server.lua'
 }

@@ -5,7 +5,7 @@ lua54 "yes"
 description "Mecânico de NPC: /mec chama um guincho que repara o motor do veículo"
 
 shared_scripts {
-	"@vrp/lib/utils.lua",
+	"@vrp/lib/Utils.lua",
 	"config.lua"
 }
 

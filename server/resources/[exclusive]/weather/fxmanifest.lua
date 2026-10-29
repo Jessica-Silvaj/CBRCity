@@ -4,7 +4,7 @@ game 'gta5'
 lua54 'yes'
 
 shared_scripts {
-    '@vrp/lib/utils.lua',
+    '@vrp/lib/Utils.lua',
     'config.lua'
 }
 
