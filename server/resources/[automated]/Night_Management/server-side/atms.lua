@@ -53,9 +53,9 @@ local function Hour(Value)
 	return math.floor(Value)
 end
 
-Load()
-
 exports("AtmList",List)
+
+Load()
 
 AddEventHandler("onResourceStart",function(Name)
 	if Name == Resource then

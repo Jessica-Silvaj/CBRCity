@@ -19,40 +19,63 @@ local function Decode(Raw)
 	return Ok and type(Data) == "table" and Data or {}
 end
 
-exports.oxmysql:query_async([[
-	CREATE TABLE IF NOT EXISTS `night_management` (
-		`Name` VARCHAR(64) NOT NULL,
-		`Data` LONGTEXT NOT NULL,
-		`Updated` INT(11) NOT NULL DEFAULT 0,
-		PRIMARY KEY (`Name`)
-	) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
-]])
+-- O carregamento é feito no primeiro Read/Write: as consultas ao banco pausam o script,
+-- e se rodassem aqui o FiveM carregaria props.lua/atms.lua antes de Storage.Read existir.
+local State = "idle"
 
-local Rows = {}
-for _,Row in ipairs(exports.oxmysql:query_async("SELECT `Name`,`Data` FROM `night_management`") or {}) do
-	Rows[Row.Name] = Row.Data
-end
-
-for _,File in ipairs(Files) do
-	if Rows[File] then
-		Cache[File] = Decode(Rows[File])
-	else
-		local Raw = LoadResourceFile(Resource,File)
-		Cache[File] = Decode(Raw)
-		if Raw and next(Cache[File]) then
-			exports.oxmysql:query_async("INSERT IGNORE INTO `night_management` (`Name`,`Data`,`Updated`) VALUES (?,?,?)",{ File,json.encode(Cache[File]),os.time() })
-			print("^2[Night_Management]^7 "..File.." importado para o banco.")
-		end
+local function Init()
+	if State == "ready" then
+		return
 	end
 
-	Mirror(File,Cache[File])
+	if State == "loading" then
+		while State ~= "ready" do
+			Wait(0)
+		end
+		return
+	end
+
+	State = "loading"
+
+	exports.oxmysql:query_async([[
+		CREATE TABLE IF NOT EXISTS `night_management` (
+			`Name` VARCHAR(64) NOT NULL,
+			`Data` LONGTEXT NOT NULL,
+			`Updated` INT(11) NOT NULL DEFAULT 0,
+			PRIMARY KEY (`Name`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+	]])
+
+	local Rows = {}
+	for _,Row in ipairs(exports.oxmysql:query_async("SELECT `Name`,`Data` FROM `night_management`") or {}) do
+		Rows[Row.Name] = Row.Data
+	end
+
+	for _,File in ipairs(Files) do
+		if Rows[File] then
+			Cache[File] = Decode(Rows[File])
+		else
+			local Raw = LoadResourceFile(Resource,File)
+			Cache[File] = Decode(Raw)
+			if Raw and next(Cache[File]) then
+				exports.oxmysql:query_async("INSERT IGNORE INTO `night_management` (`Name`,`Data`,`Updated`) VALUES (?,?,?)",{ File,json.encode(Cache[File]),os.time() })
+				print("^2[Night_Management]^7 "..File.." importado para o banco.")
+			end
+		end
+
+		Mirror(File,Cache[File])
+	end
+
+	State = "ready"
 end
 
 function Storage.Read(File)
+	Init()
 	return Cache[File] and json.decode(json.encode(Cache[File])) or {}
 end
 
 function Storage.Write(File,Data)
+	Init()
 	local Ok,Result = pcall(function()
 		return exports.oxmysql:query_async("INSERT INTO `night_management` (`Name`,`Data`,`Updated`) VALUES (?,?,?) ON DUPLICATE KEY UPDATE `Data` = VALUES(`Data`), `Updated` = VALUES(`Updated`)",{ File,json.encode(Data),os.time() })
 	end)
