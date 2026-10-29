@@ -158,3 +158,18 @@ function Creative.PolyZone(Service)
 
 	return Poly[Service] and Poly[Service]:isPointInside(Coords)
 end
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- SAIR DO EMPREGO
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- Ao sair do emprego (F5) remove as marcações dos sacos de lixo do mapa
+AddStateBagChangeHandler("Job",("player:%s"):format(GetPlayerServerId(PlayerId())),function(_,_,Value)
+	if Value ~= "Garbageman" and next(Blips) then
+		for _,v in pairs(Blips) do
+			if DoesBlipExist(v) then
+				RemoveBlip(v)
+			end
+		end
+
+		Blips = {}
+	end
+end)

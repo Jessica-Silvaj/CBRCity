@@ -266,3 +266,17 @@ function BlipMarked()
 	AddTextComponentString("Caminhoneiro")
 	EndTextCommandSetBlipName(Blip)
 end
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- SAIR DO EMPREGO
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- Ao sair do emprego (F5) finaliza o expediente e limpa a rota do mapa
+AddStateBagChangeHandler("Job",("player:%s"):format(GetPlayerServerId(PlayerId())),function(_,_,Value)
+	if Package and Value ~= "Trucker" then
+		Package = false
+
+		if DoesBlipExist(Blip) then
+			RemoveBlip(Blip)
+			Blip = nil
+		end
+	end
+end)

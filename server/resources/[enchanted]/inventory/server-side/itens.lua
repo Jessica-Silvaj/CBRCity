@@ -1900,6 +1900,11 @@ Use = {
 		local OtherCoords = vec3(-1891.97,-1729.96,0.54)
 
 		if #(Coords - OtherCoords) <= 300 then
+			if not vRP.ConsultItem(Passport,"bait") then
+				TriggerClientEvent("Notify",source,"Atenção","Precisa de <b>1x Isca</b> para pescar.","amarelo",5000)
+				return
+			end
+
 			Active[Passport] = os.time() + 100
 			Player(source).state.Buttons = true
 			TriggerClientEvent("inventory:Close",source)
@@ -1927,6 +1932,8 @@ Use = {
 
 			Player(source).state.Buttons = false
 			Active[Passport] = nil
+		else
+			TriggerClientEvent("Notify",source,"Atenção","Você está longe da área de pesca. Vá até a praia de <b>Vespucci</b> marcada no GPS da Central de Empregos.","amarelo",5000)
 		end
 	end,
 
@@ -1940,6 +1947,11 @@ Use = {
 		local OtherCoords = vec3(-1891.97,-1729.96,0.54)
 
 		if #(Coords - OtherCoords) <= 300 then
+			if not vRP.ConsultItem(Passport,"bait") then
+				TriggerClientEvent("Notify",source,"Atenção","Precisa de <b>1x Isca</b> para pescar.","amarelo",5000)
+				return
+			end
+
 			Active[Passport] = os.time() + 100
 			Player(source).state.Buttons = true
 			TriggerClientEvent("inventory:Close",source)
@@ -1968,6 +1980,8 @@ Use = {
 
 			Player(source).state.Buttons = false
 			Active[Passport] = nil
+		else
+			TriggerClientEvent("Notify",source,"Atenção","Você está longe da área de pesca. Vá até a praia de <b>Vespucci</b> marcada no GPS da Central de Empregos.","amarelo",5000)
 		end
 	end,
 
@@ -1981,6 +1995,11 @@ Use = {
 		local OtherCoords = vec3(-1891.97,-1729.96,0.54)
 
 		if #(Coords - OtherCoords) <= 300 then
+			if not vRP.ConsultItem(Passport,"bait") then
+				TriggerClientEvent("Notify",source,"Atenção","Precisa de <b>1x Isca</b> para pescar.","amarelo",5000)
+				return
+			end
+
 			Active[Passport] = os.time() + 100
 			Player(source).state.Buttons = true
 			TriggerClientEvent("inventory:Close",source)
@@ -2011,6 +2030,8 @@ Use = {
 
 			Player(source).state.Buttons = false
 			Active[Passport] = nil
+		else
+			TriggerClientEvent("Notify",source,"Atenção","Você está longe da área de pesca. Vá até a praia de <b>Vespucci</b> marcada no GPS da Central de Empregos.","amarelo",5000)
 		end
 	end,
 
@@ -2024,6 +2045,11 @@ Use = {
 		local OtherCoords = vec3(-1891.97,-1729.96,0.54)
 
 		if #(Coords - OtherCoords) <= 300 then
+			if not vRP.ConsultItem(Passport,"bait") then
+				TriggerClientEvent("Notify",source,"Atenção","Precisa de <b>1x Isca</b> para pescar.","amarelo",5000)
+				return
+			end
+
 			Active[Passport] = os.time() + 100
 			Player(source).state.Buttons = true
 			TriggerClientEvent("inventory:Close",source)
@@ -2056,6 +2082,8 @@ Use = {
 
 			Player(source).state.Buttons = false
 			Active[Passport] = nil
+		else
+			TriggerClientEvent("Notify",source,"Atenção","Você está longe da área de pesca. Vá até a praia de <b>Vespucci</b> marcada no GPS da Central de Empregos.","amarelo",5000)
 		end
 	end,
 
@@ -2069,6 +2097,11 @@ Use = {
 		local OtherCoords = vec3(-1891.97,-1729.96,0.54)
 
 		if #(Coords - OtherCoords) <= 300 then
+			if not vRP.ConsultItem(Passport,"bait") then
+				TriggerClientEvent("Notify",source,"Atenção","Precisa de <b>1x Isca</b> para pescar.","amarelo",5000)
+				return
+			end
+
 			Active[Passport] = os.time() + 100
 			Player(source).state.Buttons = true
 			TriggerClientEvent("inventory:Close",source)
@@ -2103,6 +2136,8 @@ Use = {
 
 			Player(source).state.Buttons = false
 			Active[Passport] = nil
+		else
+			TriggerClientEvent("Notify",source,"Atenção","Você está longe da área de pesca. Vá até a praia de <b>Vespucci</b> marcada no GPS da Central de Empregos.","amarelo",5000)
 		end
 	end,
 

@@ -212,3 +212,12 @@ function MarkedPassenger()
 	AddTextComponentString("Taxista")
 	EndTextCommandSetBlipName(Blip)
 end
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- SAIR DO EMPREGO
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- Ao sair do emprego (F5) finaliza o expediente e limpa a rota do mapa
+AddStateBagChangeHandler("Job",("player:%s"):format(GetPlayerServerId(PlayerId())),function(_,_,Value)
+	if Service and Value ~= "Taxi" then
+		TriggerEvent("taxi:Init")
+	end
+end)

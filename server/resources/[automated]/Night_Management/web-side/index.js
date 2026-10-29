@@ -4689,7 +4689,7 @@ $(function () {
             $('<td>').text(s.Name).append($('<small>').text(` — ${s.id}${s.Custom ? ' (editado)' : ''}`)).appendTo(row);
             $('<td>').text(s.Class).appendTo(row);
             $('<td>').text(s.Sold).appendTo(row);
-            const input = $('<input type="number" step="1" min="0" max="100000" placeholder="Ilimitado">').attr('aria-label', 'Estoque').val(s.Stock ?? '').css('width', '110px');
+            const input = $('<input type="number" step="1" min="0" max="100000" placeholder="Ilimitado" class="table-input">').attr('aria-label', 'Estoque').val(s.Stock ?? '');
             $('<td>').append(input).appendTo(row);
             const free = s.Stock == null ? 'Ilimitado' : Math.max(0, s.Stock - s.Sold);
             $('<td>').text(free).css('color', free === 0 ? 'var(--danger, #e74c3c)' : '').appendTo(row);
@@ -4796,7 +4796,7 @@ $(function () {
         const message = event.data;
         if (message.action === 'updateRobberies') renderRobberies(message.data);
         if (message.action === 'updateStocks') { stocks = message.data; renderStocks(); }
-        if (message.action === 'updateBlips') { blips = message.data; renderBlips(); }
+        if (message.action === 'updateBlips') { blips = Array.isArray(message.data) ? message.data : Object.values(message.data || {}); renderBlips(); }
         if (message.action === 'updateHouses') {
             houses = message.data.houses;
             if (message.data.selected && $('#create-house').is(':visible')) editHouse(message.data.selected);

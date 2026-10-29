@@ -5,6 +5,7 @@ local Peds = nil
 local Locate = 1
 local Selected = 1
 local Checkouts = 0
+local Searching = false
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- INIT
 -----------------------------------------------------------------------------------------------------------------------------------------
@@ -144,6 +145,16 @@ end)
 -- CEMITERY:BODY
 -----------------------------------------------------------------------------------------------------------------------------------------
 AddEventHandler("cemitery:Body",function()
+	-- Só conta a revista quando o corpo existe e a anterior (10s no servidor) já terminou
+	if not Peds or Searching then
+		return false
+	end
+
+	Searching = true
+	SetTimeout(10500,function()
+		Searching = false
+	end)
+
 	TriggerServerEvent("inventory:Products","Cemitery")
 	Checkouts = Checkouts + 1
 

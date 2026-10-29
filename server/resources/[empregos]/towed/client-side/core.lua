@@ -203,3 +203,12 @@ function MarkedVehicle()
 	AddTextComponentString("Veículo")
 	EndTextCommandSetBlipName(Blip)
 end
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- SAIR DO EMPREGO
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- Ao sair do emprego (F5) finaliza o expediente e limpa a rota do mapa
+AddStateBagChangeHandler("Job",("player:%s"):format(GetPlayerServerId(PlayerId())),function(_,_,Value)
+	if Service and Locale and Value ~= "Towed" then
+		TriggerEvent("towed:Init",Locale)
+	end
+end)

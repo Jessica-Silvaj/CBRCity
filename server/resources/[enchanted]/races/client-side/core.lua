@@ -61,7 +61,7 @@ CreateThread(function()
 				end
 			else
 				if Selected and RouteData and #(Coords - RouteData.Init) > 100 then
-					StopCircuit()
+					StopCircuit(false,"corrida não está ativa no servidor e você está a mais de 100m da largada")
 				elseif IsControlJustPressed(1,38) then
 					vSERVER.GlobalState(Selected)
 				end
@@ -92,6 +92,9 @@ end)
 -- FINISHRACE
 -----------------------------------------------------------------------------------------------------------------------------------------
 function FinishRace(Vehicle)
+	-- Diagnóstico (remover depois de achar o bug)
+	print("[races] Chegada: rota "..tostring(Selected).." checkpoint "..tostring(Checkpoint).."/"..tostring(Routes[Selected] and #Routes[Selected].Coords))
+
 	DisplayRanking = true
 	PlaySoundFrontend(-1,"RACE_PLACED","HUD_AWARDS",true)
 
@@ -199,23 +202,29 @@ function InitCircuit()
 
 	CircuitThread = true
 	CreateThread(function()
+		local Reason = nil
+
 		while CircuitThread do
 			if not IsRaceValid() then
+				Reason = "corrida inválida (Races="..tostring(LocalPlayer.state.Races)..", Selected="..tostring(Selected)..")"
 				break
 			end
 
 			local Ped = PlayerPedId()
 			local Vehicle = GetVehiclePedIsUsing(Ped)
 			if not Vehicle or not DoesEntityExist(Vehicle) then
+				Reason = "sem veículo"
 				break
 			end
 
 			if GetPedInVehicleSeat(Vehicle,-1) ~= Ped then
+				Reason = "não está no banco do motorista"
 				break
 			end
 
 			local CheckpointData = CoordsList[Checkpoint]
 			if not CheckpointData then
+				Reason = "checkpoint "..tostring(Checkpoint).." inexistente"
 				break
 			end
 
@@ -230,8 +239,11 @@ function InitCircuit()
 			Wait(250)
 		end
 
-		CircuitThread = false
-		StopCircuit()
+		-- Só encerra aqui se a corrida ainda estiver ativa (FinishRace/StopCircuit já cuidam do resto)
+		if CircuitThread and Reason then
+			CircuitThread = false
+			StopCircuit(false,Reason)
+		end
 	end)
 end
 -----------------------------------------------------------------------------------------------------------------------------------------
@@ -307,7 +319,14 @@ end
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- STOPCIRCUIT
 -----------------------------------------------------------------------------------------------------------------------------------------
-function StopCircuit(Finish)
+function StopCircuit(Finish,Reason)
+	-- Diagnóstico: mostra por que a corrida foi encerrada (remover depois de achar o bug)
+	if not Finish and Selected then
+		local Message = "Corrida encerrada: "..(Reason or "motivo desconhecido").." | checkpoint "..tostring(Checkpoint)
+		print("[races] "..Message)
+		TriggerEvent("Notify","Corrida",Message,"vermelho",15000)
+	end
+
 	local Ped = PlayerPedId()
 	local Vehicle = GetVehiclePedIsUsing(Ped)
 	if Vehicle and DoesEntityExist(Vehicle) then
@@ -383,7 +402,7 @@ AddEventHandler("races:Start",function(Selectedz)
 
 	local Ped = PlayerPedId()
 	if not IsPedInAnyVehicle(Ped) then
-		StopCircuit()
+		StopCircuit(false,"fora do veículo na largada")
 		return false
 	end
 
@@ -395,7 +414,7 @@ AddEventHandler("races:Start",function(Selectedz)
 	local Vehicle = GetVehiclePedIsUsing(Ped)
 	local StartPosition = RouteData.Positions[Position]
 	if not StartPosition then
-		StopCircuit()
+		StopCircuit(false,"sem posição de largada (Position="..tostring(Position)..")")
 		return false
 	end
 
@@ -459,6 +478,9 @@ RegisterNUICallback("Run",function(Data,Callback)
 	local RouteData = Routes[Selected]
 	if RouteData and RouteData.Init then
 		SetNewWaypoint(RouteData.Init.x,RouteData.Init.y)
+		TriggerEvent("Notify","Corrida","Largada de <b>"..(RouteData.Name or "corrida").."</b> marcada no GPS. Vá até lá <b>dirigindo um veículo</b>, entre na marcação verde e aperte <b>E</b>. É preciso ter <b>1x Cartão Descartável</b>.","default",15000)
+	else
+		print("[races] Selecionar: rota inválida recebida da tela -> "..tostring(Data.Route).." ("..type(Data.Route)..")")
 	end
 
 	SetNuiFocus(false,false)
@@ -514,5 +536,5 @@ AddEventHandler("races:Item",function()
 		return false
 	end
 
-	StopCircuit()
+	StopCircuit(false,"tablet de corrida usado")
 end)

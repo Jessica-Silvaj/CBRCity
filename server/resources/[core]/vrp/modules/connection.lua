@@ -134,6 +134,11 @@ function vRP.CharacterChosen(source,Passport,Model)
 			Characters[source][Index] = v
 		end
 
+		-- Colunas BIGINT podem vir do banco como texto; os saldos são comparados com números (PaymentBank etc.)
+		for _,Index in ipairs({ "Bank","Gemstone" }) do
+			Characters[source][Index] = tonumber(Characters[source][Index]) or 0
+		end
+
 		if Model then
 			Characters[source].Datatable.Inventory = {}
 
@@ -153,8 +158,9 @@ function vRP.CharacterChosen(source,Passport,Model)
 			end
 		end
 
-		if Account.Gemstone > 0 then
-			TriggerClientEvent("hud:AddGemstone",source,Account.Gemstone)
+		local Gemstone = tonumber(Account.Gemstone) or 0
+		if Gemstone > 0 then
+			TriggerClientEvent("hud:AddGemstone",source,Gemstone)
 		end
 
 		exports["discord"]:Embed("Connect","**[SOURCE]:** "..source.."\n**[PASSAPORTE]:** "..Passport.."\n**[ADDRESS]:** "..GetPlayerEndpoint(source).."\n**[LICENSE]:** "..Account.License.."\n**[discord:** <@"..Account.Discord..">")

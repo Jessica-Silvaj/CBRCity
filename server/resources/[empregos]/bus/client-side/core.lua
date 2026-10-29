@@ -125,3 +125,12 @@ function MakeBlips()
 	AddTextComponentString("Motorista")
 	EndTextCommandSetBlipName(Blip)
 end
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- SAIR DO EMPREGO
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- Ao sair do emprego (F5) finaliza o expediente e limpa a rota do mapa
+AddStateBagChangeHandler("Job",("player:%s"):format(GetPlayerServerId(PlayerId())),function(_,_,Value)
+	if Active and Value ~= "Driver" then
+		TriggerEvent("bus:Init","Finalizar")
+	end
+end)

@@ -130,3 +130,12 @@ function MakeBlips()
 	AddTextComponentString("Entrega")
 	EndTextCommandSetBlipName(Blip)
 end
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- SAIR DO EMPREGO
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- Ao sair do emprego (F5) finaliza o expediente e limpa a rota do mapa
+AddStateBagChangeHandler("Job",("player:%s"):format(GetPlayerServerId(PlayerId())),function(_,_,Value)
+	if Active and Value ~= "Grime" then
+		TriggerEvent("grime:Init")
+	end
+end)

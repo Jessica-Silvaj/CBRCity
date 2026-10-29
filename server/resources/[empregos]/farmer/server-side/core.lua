@@ -59,7 +59,7 @@ AddEventHandler("farmer:Minerman",function(Number)
 		Player(source).state.Buttons = true
 		vRPC.CreateObjects(source,"melee@large_wpn@streamed_core","ground_attack_on_spot","prop_tool_pickaxe",1,18905,0.10,-0.1,0.0,-92.0,260.0,5.0)
 
-		if vRP.Task(source,Pickaxe and 10 or 5,10000) and GlobalState.Work >= GlobalState[FarmerKey] then
+		if vRP.Task(source,Pickaxe and 5 or 3,10000) and GlobalState.Work >= GlobalState[FarmerKey] then
 			GlobalState[FarmerKey] = GlobalState.Work + 60
 
 			local Result = {

@@ -17,356 +17,316 @@ return {
 	["mclaren765"] = {
 		Name = "McLaren 765LT",
 		Weight = 40,
-		Price = 1500000,
+		Price = 0,
 		Mode = "Cars",
-		Gemstone = 0,
+		Gemstone = 13000,
 		Class = "Importados"
 	},
 	["mbbs20"] = {
 		Name = "Mercedes-AMG GT Black Series",
 		Weight = 40,
-		Price = 1200000,
+		Price = 0,
 		Mode = "Cars",
-		Gemstone = 0,
+		Gemstone = 13000,
 		Class = "Importados"
 	},
 	["ariant"] = {
 		Name = "Karin Ariant",
 		Weight = 50,
-		Price = 400000,
+		Price = 0,
 		Mode = "Cars",
-		Gemstone = 0,
-		Class = "Esportivos"
+		Gemstone = 10000,
+		Class = "Importados"
 	},
 	["rs6avant16t"] = {
 		Name = "Audi RS6 Avant",
 		Weight = 60,
-		Price = 900000,
+		Price = 0,
 		Mode = "Cars",
-		Gemstone = 0,
+		Gemstone = 100000,
 		Class = "Importados"
 	},
 	["asteropers"] = {
 		Name = "Karin Asterope RS",
 		Weight = 50,
-		Price = 300000,
+		Price = 0,
 		Mode = "Cars",
-		Gemstone = 0,
-		Class = "Esportivos"
+		Gemstone = 10000,
+		Class = "Importados"
 	},
 	["bati901"] = {
 		Name = "Pegassi Bati 901",
 		Weight = 20,
-		Price = 250000,
+		Price = 0,
 		Mode = "Bikes",
-		Gemstone = 0,
-		Class = "Motocicletas"
+		Gemstone = 8000,
+		Class = "Importados"
 	},
 	["bmistralw16"] = {
 		Name = "Bugatti Mistral",
 		Weight = 40,
-		Price = 3000000,
+		Price = 0,
 		Mode = "Cars",
-		Gemstone = 0,
+		Gemstone = 13500,
 		Class = "Importados"
 	},
 	["23trx16t"] = {
 		Name = "Ram TRX 2023",
 		Weight = 80,
-		Price = 800000,
+		Price = 0,
 		Mode = "Cars",
-		Gemstone = 0,
+		Gemstone = 100000,
 		Class = "Importados"
 	},
 	["dubsta22"] = {
 		Name = "Benefactor Dubsta 2022",
 		Weight = 80,
-		Price = 500000,
+		Price = 0,
 		Mode = "Cars",
-		Gemstone = 0,
-		Class = "SUVs"
+		Gemstone = 10000,
+		Class = "Importados"
 	},
 	["elegyx"] = {
 		Name = "Annis Elegy X",
 		Weight = 50,
-		Price = 450000,
+		Price = 0,
 		Mode = "Cars",
-		Gemstone = 0,
-		Class = "Esportivos"
+		Gemstone = 10000,
+		Class = "Importados"
 	},
 	["gemera2021"] = {
 		Name = "Koenigsegg Gemera",
 		Weight = 40,
-		Price = 2500000,
+		Price = 0,
 		Mode = "Cars",
-		Gemstone = 0,
+		Gemstone = 13000,
 		Class = "Importados"
 	},
 	["laferrari"] = {
 		Name = "Ferrari LaFerrari",
 		Weight = 40,
-		Price = 2500000,
+		Price = 0,
 		Mode = "Cars",
-		Gemstone = 0,
+		Gemstone = 13000,
 		Class = "Importados"
 	},
 	["g6516t"] = {
 		Name = "Mercedes-AMG G65",
 		Weight = 80,
-		Price = 1200000,
+		Price = 0,
 		Mode = "Cars",
-		Gemstone = 0,
+		Gemstone = 100000,
 		Class = "Importados"
 	},
 	["nznismo24"] = {
 		Name = "Nissan GT-R Nismo 2024",
 		Weight = 40,
-		Price = 1000000,
+		Price = 0,
 		Mode = "Cars",
-		Gemstone = 0,
+		Gemstone = 14000,
 		Class = "Importados"
 	},
 	["pgt32216t"] = {
 		Name = "Porsche 911 GT3 2022",
 		Weight = 40,
-		Price = 1200000,
+		Price = 0,
 		Mode = "Cars",
-		Gemstone = 0,
+		Gemstone = 100000,
 		Class = "Importados"
 	},
 	["por718gt4"] = {
 		Name = "Porsche 718 Cayman GT4",
 		Weight = 40,
-		Price = 800000,
+		Price = 0,
 		Mode = "Cars",
-		Gemstone = 0,
+		Gemstone = 12000,
 		Class = "Importados"
 	},
 	["purosangue"] = {
 		Name = "Ferrari Purosangue",
 		Weight = 60,
-		Price = 2000000,
+		Price = 0,
 		Mode = "Cars",
-		Gemstone = 0,
+		Gemstone = 100000,
 		Class = "Importados"
 	},
 	["sf90xx"] = {
 		Name = "Ferrari SF90 XX",
 		Weight = 40,
-		Price = 2500000,
+		Price = 0,
 		Mode = "Cars",
-		Gemstone = 0,
+		Gemstone = 13000,
 		Class = "Importados"
 	},
 	["gsttac1"] = {
 		Name = "Chevrolet Tahoe",
 		Weight = 80,
-		Price = 400000,
+		Price = 0,
 		Mode = "Cars",
-		Gemstone = 0,
-		Class = "SUVs"
+		Gemstone = 14000,
+		Class = "Importados"
 	},
 
 	-- ANJOSVEHICLES ([addons]/[Veiculos]/AnjosVehicles) - precos provisorios
 	["180sx"] = {
 		Name = "Nissan 180SX",
 		Weight = 40,
-		Price = 250000,
+		Price = 0,
 		Mode = "Cars",
-		Gemstone = 0,
+		Gemstone = 15000,
 		Class = "Importados"
 	},
 	["argento"] = {
 		Name = "Obey Argento",
 		Weight = 40,
-		Price = 300000,
+		Price = 0,
 		Mode = "Cars",
-		Gemstone = 0,
-		Class = "Esportivos"
-	},
-	["buffalosxt"] = {
-		Name = "Bravado Buffalo STX",
-		Weight = 50,
-		Price = 250000,
-		Mode = "Cars",
-		Gemstone = 0,
-		Class = "Muscles"
+		Gemstone = 10000,
+		Class = "Importados"
 	},
 	["cara"] = {
 		Name = "Vapid Caracara",
 		Weight = 70,
-		Price = 300000,
+		Price = 0,
 		Mode = "Cars",
-		Gemstone = 0,
-		Class = "SUVs"
+		Gemstone = 1000,
+		Class = "Importados"
 	},
 	["coquette4c"] = {
 		Name = "Invetero Coquette C4",
 		Weight = 40,
-		Price = 400000,
+		Price = 0,
 		Mode = "Cars",
-		Gemstone = 0,
-		Class = "Esportivos"
+		Gemstone = 15000,
+		Class = "Importados"
 	},
 	["cullinan"] = {
 		Name = "Rolls-Royce Cullinan",
 		Weight = 60,
-		Price = 2000000,
+		Price = 0,
 		Mode = "Cars",
-		Gemstone = 0,
+		Gemstone = 30000,
 		Class = "Importados"
 	},
 	["darkfate"] = {
 		Name = "V-Rod Dark Fate",
 		Weight = 20,
-		Price = 200000,
+		Price = 0,
 		Mode = "Bikes",
-		Gemstone = 0,
-		Class = "Motocicletas"
+		Gemstone = 7500,
+		Class = "Importados"
 	},
 	["eclipse"] = {
 		Name = "Mitsubishi Eclipse",
 		Weight = 40,
-		Price = 250000,
+		Price = 0,
 		Mode = "Cars",
-		Gemstone = 0,
+		Gemstone = 14000,
 		Class = "Importados"
-	},
-	["elegyrh72"] = {
-		Name = "Annis Elegy RH7 2",
-		Weight = 40,
-		Price = 300000,
-		Mode = "Cars",
-		Gemstone = 0,
-		Class = "Esportivos"
 	},
 	["elegyrh7"] = {
 		Name = "Annis Elegy RH7",
 		Weight = 40,
-		Price = 300000,
+		Price = 0,
 		Mode = "Cars",
-		Gemstone = 0,
-		Class = "Esportivos"
-	},
-	["fascalamo2"] = {
-		Name = "Declasse Alamo",
-		Weight = 60,
-		Price = 250000,
-		Mode = "Cars",
-		Gemstone = 0,
-		Class = "SUVs"
+		Gemstone = 15000,
+		Class = "Importados"
 	},
 	["gtr17"] = {
 		Name = "Nissan GT-R 2017",
 		Weight = 40,
-		Price = 900000,
+		Price = 0,
 		Mode = "Cars",
-		Gemstone = 0,
+		Gemstone = 100000,
 		Class = "Importados"
 	},
 	["harley1"] = {
 		Name = "Harley-Davidson",
 		Weight = 20,
-		Price = 250000,
+		Price = 0,
 		Mode = "Bikes",
-		Gemstone = 0,
-		Class = "Motocicletas"
+		Gemstone = 8000,
+		Class = "Importados"
 	},
 	["harleydavidsonfx"] = {
 		Name = "Harley-Davidson FX",
 		Weight = 20,
-		Price = 300000,
+		Price = 0,
 		Mode = "Bikes",
-		Gemstone = 0,
-		Class = "Motocicletas"
+		Gemstone = 7500,
+		Class = "Importados"
 	},
 	["harleydavidsonrg"] = {
 		Name = "Harley-Davidson Road Glide",
 		Weight = 20,
-		Price = 350000,
+		Price = 0,
 		Mode = "Bikes",
-		Gemstone = 0,
-		Class = "Motocicletas"
-	},
-	["hycrh72"] = {
-		Name = "Annis RH7 2",
-		Weight = 40,
-		Price = 300000,
-		Mode = "Cars",
-		Gemstone = 0,
-		Class = "Esportivos"
+		Gemstone = 7500,
+		Class = "Importados"
 	},
 	["hycrh7"] = {
 		Name = "Annis RH7",
 		Weight = 40,
-		Price = 300000,
+		Price = 0,
 		Mode = "Cars",
-		Gemstone = 0,
-		Class = "Esportivos"
+		Gemstone = 14000,
+		Class = "Importados"
 	},
 	["hycsun"] = {
 		Name = "Maibatsu Sun",
 		Weight = 40,
-		Price = 250000,
+		Price = 0,
 		Mode = "Cars",
-		Gemstone = 0,
-		Class = "Esportivos"
+		Gemstone = 14000,
+		Class = "Importados"
 	},
 	["i7m"] = {
 		Name = "BMW i7 M",
 		Weight = 50,
-		Price = 1500000,
+		Price = 0,
 		Mode = "Cars",
-		Gemstone = 0,
-		Class = "Importados"
-	},
-	["i7x"] = {
-		Name = "BMW i7",
-		Weight = 50,
-		Price = 1400000,
-		Mode = "Cars",
-		Gemstone = 0,
+		Gemstone = 13000,
 		Class = "Importados"
 	},
 	["is300"] = {
 		Name = "Lexus IS300",
 		Weight = 40,
-		Price = 250000,
+		Price = 0,
 		Mode = "Cars",
-		Gemstone = 0,
+		Gemstone = 12000,
 		Class = "Importados"
 	},
 	["lfz"] = {
 		Name = "Lexus LFA",
 		Weight = 40,
-		Price = 1500000,
+		Price = 0,
 		Mode = "Cars",
-		Gemstone = 0,
+		Gemstone = 100000,
 		Class = "Importados"
 	},
 	["mini20"] = {
 		Name = "Mini Cooper",
 		Weight = 30,
-		Price = 150000,
+		Price = 0,
 		Mode = "Cars",
-		Gemstone = 0,
-		Class = "Compactos"
+		Gemstone = 13000,
+		Class = "Importados"
 	},
 	["na6"] = {
 		Name = "Mazda MX-5 NA",
 		Weight = 30,
-		Price = 150000,
+		Price = 0,
 		Mode = "Cars",
-		Gemstone = 0,
+		Gemstone = 12000,
 		Class = "Importados"
 	},
 	["r1250"] = {
 		Name = "BMW R1250",
 		Weight = 20,
-		Price = 400000,
+		Price = 0,
 		Mode = "Bikes",
-		Gemstone = 0,
-		Class = "Motocicletas"
+		Gemstone = 8000,
+		Class = "Importados"
 	},
 	["r342"] = {
 		Name = "Nissan Skyline R34",
@@ -376,148 +336,108 @@ return {
 		Gemstone = 0,
 		Class = "Importados"
 	},
-	["rev"] = {
-		Name = "Lamborghini Revuelto",
-		Weight = 40,
-		Price = 3000000,
-		Mode = "Cars",
-		Gemstone = 0,
-		Class = "Importados"
-	},
 	["rimac"] = {
 		Name = "Rimac Nevera",
 		Weight = 40,
-		Price = 3000000,
+		Price = 0,
 		Mode = "Cars",
-		Gemstone = 0,
+		Gemstone = 100000,
 		Class = "Importados"
 	},
 	["rx7bandido"] = {
 		Name = "Mazda RX-7 Bandido",
 		Weight = 40,
-		Price = 500000,
+		Price = 0,
 		Mode = "Cars",
-		Gemstone = 0,
-		Class = "Importados"
-	},
-	["silvia2"] = {
-		Name = "Nissan Silvia 2",
-		Weight = 40,
-		Price = 300000,
-		Mode = "Cars",
-		Gemstone = 0,
-		Class = "Importados"
-	},
-	["silvia"] = {
-		Name = "Nissan Silvia",
-		Weight = 40,
-		Price = 300000,
-		Mode = "Cars",
-		Gemstone = 0,
-		Class = "Importados"
-	},
-	["skyline"] = {
-		Name = "Nissan Skyline",
-		Weight = 40,
-		Price = 700000,
-		Mode = "Cars",
-		Gemstone = 0,
+		Gemstone = 100000,
 		Class = "Importados"
 	},
 	["swordbreaker"] = {
 		Name = "V-Rod Swordbreaker",
 		Weight = 20,
-		Price = 250000,
+		Price = 0,
 		Mode = "Bikes",
-		Gemstone = 0,
-		Class = "Motocicletas"
+		Gemstone = 7500,
+		Class = "Importados"
 	},
 	["titanh"] = {
 		Name = "Nissan Titan",
 		Weight = 70,
-		Price = 400000,
+		Price = 0,
 		Mode = "Cars",
-		Gemstone = 0,
+		Gemstone = 12000,
 		Class = "Importados"
 	},
 	["toysupmk4"] = {
 		Name = "Toyota Supra MK4",
 		Weight = 40,
-		Price = 700000,
+		Price = 0,
 		Mode = "Cars",
-		Gemstone = 0,
+		Gemstone = 15000,
 		Class = "Importados"
 	},
 	["urus19nov"] = {
 		Name = "Lamborghini Urus Novitec",
 		Weight = 60,
-		Price = 2000000,
+		Price = 0,
 		Mode = "Cars",
-		Gemstone = 0,
-		Class = "Importados"
-	},
-	["venatusc"] = {
-		Name = "Lamborghini Urus Venatus",
-		Weight = 60,
-		Price = 2000000,
-		Mode = "Cars",
-		Gemstone = 0,
+		Gemstone = 100000,
 		Class = "Importados"
 	},
 	["x6mf96"] = {
 		Name = "BMW X6 M",
 		Weight = 60,
-		Price = 1200000,
+		Price = 0,
 		Mode = "Cars",
-		Gemstone = 0,
+		Gemstone = 30000,
 		Class = "Importados"
 	},
 	["x7m60i"] = {
 		Name = "BMW X7 M60i",
 		Weight = 70,
-		Price = 1300000,
+		Price = 0,
 		Mode = "Cars",
-		Gemstone = 0,
+		Gemstone = 30000,
 		Class = "Importados"
 	},
 	["yang"] = {
 		Name = "Yang",
 		Weight = 40,
-		Price = 300000,
+		Price = 0,
 		Mode = "Cars",
-		Gemstone = 0,
-		Class = "Esportivos"
+		Gemstone = 100000,
+		Class = "Importados"
 	},
 	["zeekr001"] = {
 		Name = "Zeekr 001",
 		Weight = 50,
-		Price = 900000,
+		Price = 0,
 		Mode = "Cars",
-		Gemstone = 0,
+		Gemstone = 100000,
 		Class = "Importados"
 	},
 	["zlay_e36"] = {
 		Name = "BMW M3 E36",
 		Weight = 40,
-		Price = 300000,
+		Price = 0,
 		Mode = "Cars",
-		Gemstone = 0,
+		Gemstone = 100000,
 		Class = "Importados"
 	},
 	["zlay_rx8zs"] = {
 		Name = "Mazda RX-8",
 		Weight = 40,
-		Price = 300000,
+		Price = 0,
 		Mode = "Cars",
-		Gemstone = 0,
+		Gemstone = 100000,
 		Class = "Importados"
 	},
 	["zupra"] = {
 		Name = "Toyota Supra A90",
 		Weight = 40,
-		Price = 900000,
+		Price = 0,
 		Mode = "Cars",
-		Gemstone = 0,
+		Gemstone = 100000,
 		Class = "Importados"
 	},
 	["22m5sal"] = {
@@ -759,5 +679,86 @@ return {
 		Mode = nil,
 		Gemstone = 0,
 		Class = "Emergência"
+	},
+	-- Veiculos que ja existiam no servidor (mantidos)
+	["buffalosxt"] = {
+		Name = "Bravado Buffalo STX",
+		Weight = 50,
+		Price = 250000,
+		Mode = "Cars",
+		Gemstone = 0,
+		Class = "Muscles"
+	},
+	["elegyrh72"] = {
+		Name = "Annis Elegy RH7 2",
+		Weight = 40,
+		Price = 300000,
+		Mode = "Cars",
+		Gemstone = 0,
+		Class = "Esportivos"
+	},
+	["fascalamo2"] = {
+		Name = "Declasse Alamo",
+		Weight = 60,
+		Price = 250000,
+		Mode = "Cars",
+		Gemstone = 0,
+		Class = "SUVs"
+	},
+	["hycrh72"] = {
+		Name = "Annis RH7 2",
+		Weight = 40,
+		Price = 300000,
+		Mode = "Cars",
+		Gemstone = 0,
+		Class = "Esportivos"
+	},
+	["i7x"] = {
+		Name = "BMW i7",
+		Weight = 50,
+		Price = 1400000,
+		Mode = "Cars",
+		Gemstone = 0,
+		Class = "Importados"
+	},
+	["rev"] = {
+		Name = "Lamborghini Revuelto",
+		Weight = 40,
+		Price = 3000000,
+		Mode = "Cars",
+		Gemstone = 0,
+		Class = "Importados"
+	},
+	["silvia2"] = {
+		Name = "Nissan Silvia 2",
+		Weight = 40,
+		Price = 300000,
+		Mode = "Cars",
+		Gemstone = 0,
+		Class = "Importados"
+	},
+	["silvia"] = {
+		Name = "Nissan Silvia",
+		Weight = 40,
+		Price = 300000,
+		Mode = "Cars",
+		Gemstone = 0,
+		Class = "Importados"
+	},
+	["skyline"] = {
+		Name = "Nissan Skyline",
+		Weight = 40,
+		Price = 700000,
+		Mode = "Cars",
+		Gemstone = 0,
+		Class = "Importados"
+	},
+	["venatusc"] = {
+		Name = "Lamborghini Urus Venatus",
+		Weight = 60,
+		Price = 2000000,
+		Mode = "Cars",
+		Gemstone = 0,
+		Class = "Importados"
 	},
 }

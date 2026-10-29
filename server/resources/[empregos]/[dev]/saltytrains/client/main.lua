@@ -559,6 +559,97 @@ function rotatePoint(center, point, angle)
     )
 end
 
+-- Passageiros NPC: alguns descem do trem e outros embarcam enquanto as portas estão abertas
+local PassengerModels = {
+    "a_m_y_business_01", "a_f_y_business_02", "a_m_m_bevhills_01", "a_f_m_bevhills_01",
+    "a_m_y_hipster_01", "a_f_y_hipster_02", "a_m_m_eastsa_01", "a_f_y_tourist_01"
+}
+
+local function SpawnPassenger(coords)
+    local model = GetHashKey(PassengerModels[math.random(#PassengerModels)])
+    RequestModel(model)
+    local timeout = GetGameTimer() + 3000
+    while not HasModelLoaded(model) and GetGameTimer() < timeout do Wait(10) end
+    if not HasModelLoaded(model) then return nil end
+
+    local ped = CreatePed(4, model, coords.x, coords.y, coords.z, math.random(0, 359) + 0.0, false, false)
+    SetModelAsNoLongerNeeded(model)
+    SetBlockingOfNonTemporaryEvents(ped, true)
+    SetPedKeepTask(ped, true)
+    return ped
+end
+
+-- Procura um ponto de chão (plataforma) ao lado do trem
+local function PlatformPoint(train, side, along)
+    local point = GetOffsetFromEntityInWorldCoords(train, side * 4.0, along, 0.0)
+    local found, safe = GetSafeCoordForPed(point.x, point.y, point.z, true, 16)
+    if found then return safe end
+    return nil
+end
+
+function PassengerFlow(train, stationPos, waitSeconds)
+    Citizen.CreateThread(function()
+        local peds = {}
+
+        -- Descobre o lado da plataforma (o lado mais perto do ponto da estação)
+        local left = GetOffsetFromEntityInWorldCoords(train, -4.0, 0.0, 0.0)
+        local right = GetOffsetFromEntityInWorldCoords(train, 4.0, 0.0, 0.0)
+        local side = #(left - stationPos) < #(right - stationPos) and -1 or 1
+
+        -- Desembarque: saem da porta e vão embora pela plataforma
+        for _ = 1, math.random(2, 4) do
+            local along = math.random(-20, 20) + 0.0
+            local door = GetOffsetFromEntityInWorldCoords(train, side * 1.8, along, 0.0)
+            local ped = SpawnPassenger(door)
+            if ped then
+                peds[#peds + 1] = ped
+                local away = PlatformPoint(train, side * 3, along + math.random(-10, 10)) or GetOffsetFromEntityInWorldCoords(train, side * 10.0, along, 0.0)
+                TaskGoStraightToCoord(ped, away.x, away.y, away.z, 1.0, -1, 0.0, 0.0)
+            end
+        end
+
+        -- Embarque: esperam na plataforma e andam até a porta, "entrando" no trem
+        local boarding = {}
+        for _ = 1, math.random(2, 5) do
+            local along = math.random(-20, 20) + 0.0
+            local spot = PlatformPoint(train, side * 2, along)
+            if spot then
+                local ped = SpawnPassenger(spot)
+                if ped then
+                    peds[#peds + 1] = ped
+                    boarding[#boarding + 1] = { ped = ped, along = along }
+                end
+            end
+        end
+
+        Wait(1500)
+        for _, b in ipairs(boarding) do
+            local door = GetOffsetFromEntityInWorldCoords(train, side * 1.5, b.along, 0.0)
+            TaskGoStraightToCoord(b.ped, door.x, door.y, door.z, 1.0, -1, 0.0, 0.0)
+        end
+
+        -- Quem chegou na porta some (entrou no trem); no fim da parada limpa todos
+        local finish = GetGameTimer() + (waitSeconds * 1000)
+        while GetGameTimer() < finish do
+            for _, b in ipairs(boarding) do
+                if DoesEntityExist(b.ped) then
+                    local door = GetOffsetFromEntityInWorldCoords(train, side * 1.5, b.along, 0.0)
+                    if #(GetEntityCoords(b.ped) - door) < 1.2 then
+                        DeleteEntity(b.ped)
+                    end
+                end
+            end
+            Wait(250)
+        end
+
+        for _, ped in ipairs(peds) do
+            if DoesEntityExist(ped) then
+                DeleteEntity(ped)
+            end
+        end
+    end)
+end
+
 AddEventHandler("nc_trains:doorsOpened", function()
     if not jobSession then return end
 
@@ -572,6 +663,7 @@ AddEventHandler("nc_trains:doorsOpened", function()
     if distToStation <= 30.0 then
         if GetEntitySpeed(jobSession.train) < 0.1 then
             jobSession.isStopping = true
+            PassengerFlow(jobSession.train, currentStation.pos, Config.WaitTime[jobSession.mode])
             startProgress(Config.WaitTime[jobSession.mode] + 4, Config.Language.waiting_at_station)
             Wait(Config.WaitTime[jobSession.mode] * 1000)
 

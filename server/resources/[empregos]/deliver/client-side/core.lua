@@ -98,14 +98,8 @@ AddEventHandler("deliver:Init",function(Service)
 								local Lasted = List[Worked].Locate
 
 								repeat
-									if Lasted == List[Worked].Locate then
-										List[Worked].Locate = math.random(#Locations)
-									end
-
-									Wait(1)
-								until Lasted ~= List[Worked].Locate
-
-								List[Worked].Locate = math.random(#Locations[Worked])
+									List[Worked].Locate = math.random(#Locations[Worked])
+								until Lasted ~= List[Worked].Locate or #Locations[Worked] <= 1
 							end
 
 							BlipMarkerService()
@@ -141,3 +135,12 @@ function BlipMarkerService()
 		EndTextCommandSetBlipName(Blip)
 	end
 end
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- SAIR DO EMPREGO
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- Ao sair do emprego (F5) finaliza o expediente e limpa a rota do mapa
+AddStateBagChangeHandler("Job",("player:%s"):format(GetPlayerServerId(PlayerId())),function(_,_,Value)
+	if Progress and Worked and Value ~= Worked then
+		TriggerEvent("deliver:Init",Worked)
+	end
+end)

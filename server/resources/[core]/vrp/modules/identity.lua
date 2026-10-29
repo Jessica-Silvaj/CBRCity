@@ -110,7 +110,7 @@ end
 -- USERGEMSTONE
 -----------------------------------------------------------------------------------------------------------------------------------------
 function vRP.UserGemstone(License)
-	return vRP.Account(License).Gemstone or 0
+	return tonumber(vRP.Account(License).Gemstone) or 0
 end
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- UPGRADEGEMSTONE

@@ -96,10 +96,85 @@ local function updateAppState(key, value)
     AppState[key] = value
 end
 
+-- ============================================================================
+-- IMERSÃO: ATENDENTE NO RESTAURANTE, SACOLA E ANIMAÇÃO DE ENTREGA
+-- ============================================================================
+
+local Attendant = nil
+local FoodBag = nil
+
+local function loadAnimDict(dict)
+    RequestAnimDict(dict)
+    local timeout = GetGameTimer() + 3000
+    while not HasAnimDictLoaded(dict) and GetGameTimer() < timeout do Wait(10) end
+    return HasAnimDictLoaded(dict)
+end
+
+local function loadModelHash(model)
+    local hash = type(model) == "string" and GetHashKey(model) or model
+    RequestModel(hash)
+    local timeout = GetGameTimer() + 3000
+    while not HasModelLoaded(hash) and GetGameTimer() < timeout do Wait(10) end
+    return HasModelLoaded(hash) and hash or nil
+end
+
+local function removeAttendant()
+    if Attendant and DoesEntityExist(Attendant) then
+        DeleteEntity(Attendant)
+    end
+    Attendant = nil
+end
+
+local function removeFoodBag()
+    if FoodBag and DoesEntityExist(FoodBag) then
+        DeleteEntity(FoodBag)
+    end
+    FoodBag = nil
+end
+
+-- Atendente parado no ponto de coleta do restaurante, de frente para o entregador
+local function spawnAttendant(coords)
+    removeAttendant()
+
+    local hash = loadModelHash("s_m_y_chef_01")
+    if not hash then return end
+
+    local found, groundZ = GetGroundZFor_3dCoord(coords.x, coords.y, coords.z + 1.0, false)
+    Attendant = CreatePed(4, hash, coords.x, coords.y, (found and groundZ or coords.z - 1.0), 0.0, false, false)
+    SetModelAsNoLongerNeeded(hash)
+    SetEntityInvincible(Attendant, true)
+    FreezeEntityPosition(Attendant, true)
+    SetBlockingOfNonTemporaryEvents(Attendant, true)
+    TaskStartScenarioInPlace(Attendant, "WORLD_HUMAN_STAND_IMPATIENT", 0, true)
+end
+
+-- Sacola de comida na mão do entregador
+local function giveFoodBag()
+    removeFoodBag()
+
+    local hash = loadModelHash("prop_food_bag1")
+    if not hash then return end
+
+    local ped = PlayerPedId()
+    local coords = GetEntityCoords(ped)
+    FoodBag = CreateObject(hash, coords.x, coords.y, coords.z, true, true, false)
+    SetModelAsNoLongerNeeded(hash)
+    AttachEntityToEntity(FoodBag, ped, GetPedBoneIndex(ped, 57005), 0.38, 0.0, -0.03, 0.0, 270.0, 60.0, true, true, false, true, 1, true)
+end
+
+-- Animação de entregar algo para alguém (usada na coleta e na entrega)
+local function playHandoverAnim(ped)
+    if loadAnimDict("mp_common") then
+        TaskPlayAnim(ped, "mp_common", "givetake1_a", 8.0, -8.0, 2000, 49, 0, false, false, false)
+    end
+end
+
 local function clearDeliveryData()
     updateAppState("isDelivering", false)
     updateAppState("currentDelivery", nil)
     ClearDeliveryRoute()
+    removeAttendant()
+    removeFoodBag()
 end
 
 function DrawText3D(x, y, z, text)
@@ -125,11 +200,24 @@ local function startDistanceMonitoring(orderId, originalCoords)
     end
     
     AppState.monitoringThread = CreateThread(function()
-        
-        while AppState.activeOrder and AppState.activeOrder.id == orderId do
+        local warned = false
+
+        sendNotification("Aguarde no local", "Fique por perto até o entregador chegar. Se sair do local o pedido é cancelado e você é multado.")
+
+        while AppState.activeOrder and AppState.activeOrder.id == orderId and AppState.monitoringThread do
             local playerCoords = GetEntityCoords(PlayerPedId())
             local distance = #(playerCoords - vector3(originalCoords.x, originalCoords.y, originalCoords.z))
-            
+
+            -- Aviso antes da multa
+            if distance > INTERACTION_DISTANCE.ABANDON_ORDER * 0.6 and distance <= INTERACTION_DISTANCE.ABANDON_ORDER then
+                if not warned then
+                    warned = true
+                    sendNotification("Atenção", "Você está se afastando do local do pedido. Volte ou o pedido será cancelado com multa.")
+                end
+            else
+                warned = false
+            end
+
             if distance > INTERACTION_DISTANCE.ABANDON_ORDER then
                 
                 vSERVER.anulateOrder(orderId)
@@ -214,9 +302,27 @@ function CreateDeliveryRoute(coords, orderId, label)
     
     -- Configurar interação baseada no tipo
     if label == "Restaurante" then
-        createInteractionMarker(coords, label, function()
-            sendNotification("Coleta concluída!", "Você coletou no " .. label:lower())
+        spawnAttendant(coords)
+
+        createInteractionMarker(coords, "pegar o pedido com o atendente", function()
+            local ped = PlayerPedId()
+
+            -- Atendente entrega a sacola ao entregador
+            if Attendant and DoesEntityExist(Attendant) then
+                ClearPedTasksImmediately(Attendant)
+                TaskTurnPedToFaceEntity(Attendant, ped, 1000)
+                TaskTurnPedToFaceEntity(ped, Attendant, 1000)
+                Wait(1000)
+                playHandoverAnim(Attendant)
+            end
+            playHandoverAnim(ped)
+            Wait(1500)
+
+            giveFoodBag()
+            sendNotification("Coleta concluída!", "Você pegou o pedido no restaurante. Leve até o cliente.")
             ClearDeliveryRoute()
+
+            SetTimeout(5000, removeAttendant)
             confirmPickup(orderId)
         end)
     elseif label == "Cliente" then
@@ -327,6 +433,12 @@ RegisterNUICallback("deliverOrder", function(data, cb)
     local result = vSERVER.deliverOrder(orderId, code)
     
     if result.success then
+        -- Animação de entregar a sacola ao cliente
+        if not IsPedInAnyVehicle(PlayerPedId(), false) then
+            playHandoverAnim(PlayerPedId())
+            Wait(1500)
+        end
+
         clearDeliveryData()
         sendNotification("Entrega Concluída!", "Você ganhou " .. Config.FormatPrice(result.earnings))
     else
@@ -483,9 +595,10 @@ AddEventHandler("foodrush:orderUpdated", function(order)
                 data = {}
             })
             sendNotification("Pedido #" .. order.id, statusMessages[order.status])
-            -- Parar monitoramento quando entregue
-            if order.status == "delivered" then
+            -- Parar monitoramento quando entregue ou cancelado (antes o loop seguia e multava à toa)
+            if order.status == "delivered" or order.status == "cancelled" then
                 stopDistanceMonitoring()
+                updateAppState("activeOrder", nil)
             end
         end
     end

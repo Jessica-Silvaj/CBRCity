@@ -861,3 +861,42 @@ tr:hover td {
 /* CBR City: decorative theme accents */
 svg[viewBox="0 0 256 194.3"] { color:rgb(var(--main)); }
 [class*="radial-gradient(circle,#ffffff"] { background-image:radial-gradient(circle,rgb(var(--main)),rgb(var(--main) / 0) 75%)!important; }
+
+/* Campo compacto dentro de tabelas (ex.: estoque) - mesmo visual dos campos de formulário */
+.table-input {
+    width: 120px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 7px 12px;
+    border-radius: 8px;
+    color: var(--text-main);
+    font-family: inherit;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+.table-input::placeholder {
+    color: var(--text-muted);
+}
+
+.table-input:hover {
+    border-color: rgba(255, 255, 255, 0.18);
+}
+
+.table-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px var(--primary-hover);
+}
+
+.table-input:invalid {
+    border-color: var(--danger);
+}
+
+.table-input::-webkit-outer-spin-button,
+.table-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}

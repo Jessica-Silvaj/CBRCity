@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CMapParentTxds>
+ <txdRelationships>
+  <Item>
+   <parent>nteam_digitaln_textures1</parent>
+   <child>nteam_digitaln_textures</child>
+  </Item>
+ </txdRelationships>
+</CMapParentTxds>

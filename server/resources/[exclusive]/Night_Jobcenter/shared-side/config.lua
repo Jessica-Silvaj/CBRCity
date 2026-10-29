@@ -139,7 +139,7 @@ Config.Jobs = {
 		image = "Fisherman.png",
 		rank = "Fisherman",
 		description = "Saiba mais sobre o emprego logo a baixo.",
-		instructions = "Após aceitar o emprego, vá até a marcação do mesmo no GPS e pegue o trator, dentro da área do serviço use a vara de pescar para pescar peixes.",
+		instructions = "Após aceitar o emprego, vá até a praia de Vespucci marcada no GPS. Tenha uma Vara de Pescar e Iscas no inventário, entre na área de pesca e use a vara. Complete o minigame para fisgar o peixe (cada pesca gasta 1 isca).",
 		paidActions = { "Natureza", "Exploração", "Sustentabilidade", "Sobrevivência", "Exploração" },
 		tags = { "Salário Alto", "Com Veículo", "Rota Curta" }
 	},

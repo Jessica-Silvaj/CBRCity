@@ -15,3 +15,7 @@ node_modules/
 # Arquivos compactados soltos
 *.rar
 *.zip
+
+# Dumps do banco (dados reais de jogadores) - nunca versionar
+/database/dump-*.sql
+/database/backup_*.sql

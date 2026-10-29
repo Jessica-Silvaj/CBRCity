@@ -223,3 +223,11 @@ AddEventHandler("onResourceStop", function(resourceName)
     if GetCurrentResourceName() ~= resourceName then return end
     OutfitManager:Destroy()
 end)
+-- Ao sair do emprego (F5 / Central de Empregos) devolve a roupa civil
+AddStateBagChangeHandler("Job", ("player:%s"):format(GetPlayerServerId(PlayerId())), function(_, _, value)
+    if Config.jobName and value ~= Config.jobName and IsPlayerWearingJobOutfit() then
+        Citizen.CreateThread(function()
+            OutfitManager:RestoreRegularOutfit()
+        end)
+    end
+end)

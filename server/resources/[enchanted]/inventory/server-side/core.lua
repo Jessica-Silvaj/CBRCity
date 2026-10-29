@@ -503,6 +503,8 @@ function Creative.Deliver(Work,OtherCoords)
 				Active[Passport] = nil
 
 				return true
+			else
+				TriggerClientEvent("Notify",source,"Atenção","Você precisa de <b>3x Tora de Madeira</b> para fazer a entrega.","amarelo",5000)
 			end
 		elseif Work == "Milkman" then
 			if not vRPC.LastVehicle(source,"youga2") then
@@ -540,6 +542,8 @@ function Creative.Deliver(Work,OtherCoords)
 				Active[Passport] = nil
 
 				return true
+			else
+				TriggerClientEvent("Notify",source,"Atenção","Você precisa de <b>3x Garrafa de Leite</b> para fazer a entrega.","amarelo",5000)
 			end
 		elseif Work == "Transporter" then
 			if not vRPC.LastVehicle(source,"stockade") then

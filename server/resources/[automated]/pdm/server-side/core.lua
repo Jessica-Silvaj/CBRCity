@@ -48,6 +48,25 @@ function Creative.Buy(Model)
 					else
 						TriggerClientEvent("Notify",source,"Aviso","Diamante insuficiente.","amarelo",5000)
 					end
+				elseif (exports.vrp:VehicleGemstone(Model) or 0) > 0 then
+					-- Carro vendido por diamantes: fica 30 dias com o jogador (a tela já mostra o preço em diamantes)
+					local Discount = 1.0
+					local VehicleGemstone = exports.vrp:VehicleGemstone(Model)
+					for Permission,Multiplier in pairs({ Ouro = 0.70, Prata = 0.80, Bronze = 0.90 }) do
+						if vRP.HasService(Passport,Permission) then
+							Discount = math.min(Discount,Multiplier)
+						end
+					end
+
+					local PaymentValue = VehicleGemstone * Discount
+					if PaymentValue > 0 and vRP.PaymentGems(Passport,PaymentValue) then
+						vRP.Query("vehicles/rentalVehicles",{ Passport = Passport, Vehicle = Model, Plate = vRP.GeneratePlate(), Days = 30, Weight = exports.vrp:VehicleWeight(Model), Work = 0 })
+						exports.discord:Embed("Pdm","**[PASSAPORTE]:** "..Passport.."\n**[COMPROU]:** "..Model.." (30 dias)\n**[VALOR]:** "..Dotted(PaymentValue).." Diamantes")
+						TriggerClientEvent("Notify",source,"Sucesso","Veículo <b>"..exports.vrp:VehicleName(Model).."</b> adquirido por <b>30 dias</b>.","verde",5000)
+						Return = true
+					else
+						TriggerClientEvent("Notify",source,"Aviso","Diamante insuficiente.","amarelo",5000)
+					end
 				elseif exports.vrp:VehicleClass(Model) ~= "Races" and not exports.bank:CheckTaxes(Passport) and not exports.bank:CheckFines(Passport) then
 					local VehiclePrice = exports.vrp:VehiclePrice(Model)
 					if VehiclePrice and vRP.PaymentFull(Passport,VehiclePrice) then
