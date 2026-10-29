@@ -805,8 +805,8 @@ $(document).ready(function () {
             "create-house": "Adicionar Casa",
             "manage-houses": "Gerenciar Casas",
             "manage-stocks": "Estoque de Veículos",
-            "create-blip": "Criar Marcação",
-            "manage-blips": "Gerenciar Marcações"
+            "create-blip": "Criar Blip",
+            "manage-blips": "Gerenciar Blips"
         };
         if (titleMap[page]) {
             $("#page-title").text(titleMap[page]);
@@ -4682,14 +4682,14 @@ $(function () {
         $('#blip-form')[0].reset();
         $('#blip-id').val('');
         $('#blip-color').val(0);
-        $('#save-blip').html('<i class="fa-solid fa-floppy-disk"></i> Salvar Marcação');
+        $('#save-blip').html('<i class="fa-solid fa-floppy-disk"></i> Salvar Blip');
     }
     function editBlip(b) {
         $('.nav-item').removeClass('active');
         $('[data-page="create-blip"]').addClass('active');
         $('.page-content').hide();
         $('#create-blip').fadeIn(200);
-        $('#page-title').text(`Editar Marcação: ${b.Name}`);
+        $('#page-title').text(`Editar Blip: ${b.Name}`);
         $('#blip-id').val(b.id);
         $('#blip-name').val(b.Name);
         $('#blip-sprite').val(b.Sprite);
@@ -4698,7 +4698,7 @@ $(function () {
         $('#blip-scale').val(b.Scale);
         $('#blip-shortrange').val(b.ShortRange ? '1' : '0');
         for (const key of ['X', 'Y', 'Z']) $(`#blip-${key}`).val(b[key]);
-        $('#save-blip').html('<i class="fa-solid fa-floppy-disk"></i> Atualizar Marcação');
+        $('#save-blip').html('<i class="fa-solid fa-floppy-disk"></i> Atualizar Blip');
     }
     function renderBlips() {
         const body = $('#blips-body').empty();
