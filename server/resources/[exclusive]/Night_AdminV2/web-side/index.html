@@ -892,23 +892,24 @@
 				<div class="aviso-request">
 					<img src="./images/profilepicture.png" alt="">
 					<div class="text"><i class="far fa-engine-warning" style="color: red; margin-right: 10px;"></i>AVISO</div>
-					<div class="text1">Escolha se deseja <b>spawnar</b> o veículo ou <b>adicionar</b> na garagem de outro jogador.</div>
+					<div class="text1">Escolha se deseja <b>spawnar</b> o veículo, <b>adicionar</b> ou <b>remover</b> da garagem de outro jogador.</div>
 				</div>
 
 				<div class="escolha-box" style="margin-left: 5%; margin-top: 3.5%;">
-					<div class="escolha" onclick="SelecionarModoVeiculo('Spawnar')">Spawnar</div>
-					<div class="escolha" onclick="SelecionarModoVeiculo('Adicionar')">Adicionar</div>
+					<div class="escolha" style="width: 27%;" onclick="SelecionarModoVeiculo('Spawnar')">Spawnar</div>
+					<div class="escolha" style="width: 27%;" onclick="SelecionarModoVeiculo('Adicionar')">Adicionar</div>
+					<div class="escolha" style="width: 27%;" onclick="SelecionarModoVeiculo('Remover')">Remover</div>
 				</div>
 			</div>
 
 			<div class="veiculo-adicionar" style="display: none;">
-				<div class="title-resquest">Adicionar <ss class="detalhes">Veículo</ss></div>
+				<div class="title-resquest"><span id="veiculoModoTitulo">Adicionar</span> <ss class="detalhes">Veículo</ss></div>
 				<div class="close-teleport" onclick="closePegarCarro()"><i class="fas fa-times"></i></div>
 
 				<div class="aviso-request">
 					<img src="./images/profilepicture.png" alt="">
 					<div class="text"><i class="far fa-engine-warning" style="color: red; margin-right: 10px;"></i>AVISO</div>
-					<div class="text1">Insira o passaporte do jogador para adicionar o veículo <b id="veiculoNomeAdicionar"></b> na garagem dele.</div>
+					<div class="text1">Insira o passaporte do jogador para <span id="veiculoModoAcao">adicionar o veículo</span> <b id="veiculoNomeAdicionar"></b> <span id="veiculoModoDestino">na garagem dele</span>.</div>
 				</div>
 
 				<div class="inputFake">

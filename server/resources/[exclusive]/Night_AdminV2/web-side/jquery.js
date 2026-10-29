@@ -481,7 +481,11 @@ function SelecionarModoVeiculo(pagina) {
         return;
     }
 
-    if (pagina == "Adicionar") {
+    if (pagina == "Adicionar" || pagina == "Remover") {
+        let remover = pagina == "Remover";
+        $("#veiculoModoTitulo").text(remover ? "Remover" : "Adicionar");
+        $("#veiculoModoAcao").text(remover ? "remover o veículo" : "adicionar o veículo");
+        $("#veiculoModoDestino").text(remover ? "da garagem dele" : "na garagem dele");
         $(".veiculo-adicionar").fadeIn(300);
     }
 }
@@ -510,7 +514,7 @@ function PegarGaragemConfirmar() {
     }), (data) => { 
         if (data.retorno == 'done') {
             closePegarCarro();
-            if (modoVeiculoSelecionado == "Adicionar") {
+            if (modoVeiculoSelecionado == "Adicionar" || modoVeiculoSelecionado == "Remover") {
                 LimparInputs();
                 Reload();
             }

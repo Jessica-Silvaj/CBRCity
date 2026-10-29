@@ -756,6 +756,10 @@ function Creative.GiveVehicle(NameVehicle, SelectedPassport)
     end
 
     local Identity2 = vRP.Identity(SelectedPassport)
+    if not Identity2 then
+        TriggerClientEvent("Notify", Source, "Erro", "Passaporte não encontrado.", "vermelho", 10000)
+        return
+    end
 
     if not vRP.HasPermission(Passport, Config["Perms"]["CatchVehicles"][1], Config["Perms"]["CatchVehicles"][2]) then
         TriggerClientEvent("Notify", Source, "Erro", "Você não tem permissão!", "vermelho", 10000)
@@ -805,9 +809,16 @@ function Creative.GiveVehicle(NameVehicle, SelectedPassport)
 end
 
 function Creative.ServerVehicle2(Model, x, y, z, Heading, Plate, Nitrox, Doors, Body, Fuel)
-    local Coords = vec4(x, y, z, Heading)
+    -- Mesmo padrão da garagem: modelo em hash e coordenadas separadas
+    if type(Model) == "string" then
+        Model = GetHashKey(Model)
+    end
+
     local CurrentTimer = os.time() + 10
-    local Vehicle = CreateVehicle(Model, Coords, true, false)
+    local Vehicle = CreateVehicle(Model, x + 0.0, y + 0.0, z + 0.0, (Heading or 0.0) + 0.0, true, true)
+    if not Vehicle or Vehicle == 0 then
+        return false
+    end
 
     while not DoesEntityExist(Vehicle) or NetworkGetNetworkIdFromEntity(Vehicle) == 0 do
         if os.time() >= CurrentTimer then
@@ -857,7 +868,12 @@ function Creative.SpawnVehicle(VehicleName)
 
     local Exist, Network, Vehicle = Creative.ServerVehicle2(VehicleName, Coords.x, Coords.y, Coords.z, Heading, Plate, 2000, nil, 1000, 100)
 
-    if not Exist then return end
+    if not Exist then
+        TriggerClientEvent("Notify", Source, "Erro", "Não foi possível criar o veículo <b>"..tostring(VehicleName).."</b>.", "vermelho", 5000)
+        return
+    end
+
+    SetEntityRoutingBucket(Vehicle, GetPlayerRoutingBucket(Source))
 
     for _, OtherSource in pairs(vRPC.Players(Source)) do
         async(function()
@@ -867,6 +883,8 @@ function Creative.SpawnVehicle(VehicleName)
 
     Entity(Vehicle).state:set("Lockpick", Passport, true)
     TaskWarpPedIntoVehicle(Ped, Vehicle, -1)
+
+    return true
 end
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- AÇÕES RÁPIDAS
@@ -2436,9 +2454,17 @@ function Creative.DeleteVehicleSelected(SelectedPassport,NameVehicle)
 
     if Passport then
         if vRP.HasPermission(Passport, Config["Perms"]["ManageVehicles"][1],Config["Perms"]["ManageVehicles"][2]) then
-            vRP.Query("vehicles/removeVehicles", { Passport = SelectedPassport, vehicle = NameVehicle }) 
+            if not vRP.SelectVehicle(SelectedPassport, NameVehicle) then
+                TriggerClientEvent("Notify", Source, "Atenção", "O passaporte ["..SelectedPassport.."] não possui o veículo <b>"..VehicleName(NameVehicle).."</b>.", "amarelo", 7000)
+                return false
+            end
+
+            vRP.Query("vehicles/removeVehicles", { Passport = SelectedPassport, Vehicle = NameVehicle })
 
             local Identity2 = vRP.Identity(SelectedPassport)
+            if not Identity2 then
+                return true
+            end
             TriggerClientEvent("Notify", Source, "Sucesso", "Você retirou o carro "..NameVehicle.." do "..Identity2["Name"].." "..Identity2["Lastname"].." ["..SelectedPassport.."]", "verde", 7000)
 
             local IdentityLog = vRP.Identity(Passport)
@@ -2451,7 +2477,12 @@ function Creative.DeleteVehicleSelected(SelectedPassport,NameVehicle)
                 })
             end
 
-            local x, y, z = vCLIENT.GetPosition(vRP.Source(SelectedPassport))
+            -- Jogador offline não tem posição; sem isso o callback quebrava e o painel travava
+            local OtherSource = vRP.Source(SelectedPassport)
+            local x, y, z = 0, 0, 0
+            if OtherSource then
+                x, y, z = vCLIENT.GetPosition(OtherSource)
+            end
             PerformHttpRequest(Config["Webhooks"]["RemoveVehicle"], function(err, text, headers) end, "POST", json.encode({
                 embeds = {
                     {     
@@ -2613,7 +2644,12 @@ function Creative.ChangeWalletValues(SelectedPassport,SelectedValue,SelectedType
                     })
 
                     local Identity2 = vRP.Identity(SelectedPassport)
-                    local x, y, z = vCLIENT.GetPosition(vRP.Source(SelectedPassport))
+                    -- Jogador offline não tem posição; sem isso o callback quebrava e o painel travava
+            local OtherSource = vRP.Source(SelectedPassport)
+            local x, y, z = 0, 0, 0
+            if OtherSource then
+                x, y, z = vCLIENT.GetPosition(OtherSource)
+            end
                     PerformHttpRequest(Config["Webhooks"]["ChangeWalletMore"], function(err, text, headers) end, "POST", json.encode({
                         embeds = {
                             {     
@@ -2669,7 +2705,12 @@ function Creative.ChangeWalletValues(SelectedPassport,SelectedValue,SelectedType
                     })
 
                     local Identity2 = vRP.Identity(SelectedPassport)
-                    local x, y, z = vCLIENT.GetPosition(vRP.Source(SelectedPassport))
+                    -- Jogador offline não tem posição; sem isso o callback quebrava e o painel travava
+            local OtherSource = vRP.Source(SelectedPassport)
+            local x, y, z = 0, 0, 0
+            if OtherSource then
+                x, y, z = vCLIENT.GetPosition(OtherSource)
+            end
                     PerformHttpRequest(Config["Webhooks"]["ChangeWalletLess"], function(err, text, headers) end, "POST", json.encode({
                         embeds = {
                             {     
@@ -2742,7 +2783,12 @@ function Creative.ChangeBankValues(SelectedPassport,SelectedValue,SelectedType)
                     })
 
                     local Identity2 = vRP.Identity(SelectedPassport)
-                    local x, y, z = vCLIENT.GetPosition(vRP.Source(SelectedPassport))
+                    -- Jogador offline não tem posição; sem isso o callback quebrava e o painel travava
+            local OtherSource = vRP.Source(SelectedPassport)
+            local x, y, z = 0, 0, 0
+            if OtherSource then
+                x, y, z = vCLIENT.GetPosition(OtherSource)
+            end
                     PerformHttpRequest(Config["Webhooks"]["ChangeBankMore"], function(err, text, headers) end, "POST", json.encode({
                         embeds = {
                             {     
@@ -2798,7 +2844,12 @@ function Creative.ChangeBankValues(SelectedPassport,SelectedValue,SelectedType)
                     })
 
                     local Identity2 = vRP.Identity(SelectedPassport)
-                    local x, y, z = vCLIENT.GetPosition(vRP.Source(SelectedPassport))
+                    -- Jogador offline não tem posição; sem isso o callback quebrava e o painel travava
+            local OtherSource = vRP.Source(SelectedPassport)
+            local x, y, z = 0, 0, 0
+            if OtherSource then
+                x, y, z = vCLIENT.GetPosition(OtherSource)
+            end
                     PerformHttpRequest(Config["Webhooks"]["ChangeBankLess"], function(err, text, headers) end, "POST", json.encode({
                         embeds = {
                             {     
@@ -2935,7 +2986,12 @@ function Creative.ChangeNumberPhoneSelected(SelectedPassport,NewPhoneNumber)
                         motivo = "Trocou o número de celular do passaporte ["..SelectedPassport.."]: de **"..OldPhoneNumber.."** para **"..NewPhoneNumber.."**."
                     })
 
-                    local x, y, z = vCLIENT.GetPosition(vRP.Source(SelectedPassport))
+                    -- Jogador offline não tem posição; sem isso o callback quebrava e o painel travava
+            local OtherSource = vRP.Source(SelectedPassport)
+            local x, y, z = 0, 0, 0
+            if OtherSource then
+                x, y, z = vCLIENT.GetPosition(OtherSource)
+            end
                     PerformHttpRequest(Config["Webhooks"]["ChangeNumber"], function(err, text, headers) end, "POST", json.encode({
                         embeds = {
                             {     
@@ -3014,7 +3070,11 @@ function Creative.ChangeSelectedName(SelectedPassport,FirstName,SecondName)
                     motivo = "Trocou o nome do passaporte ["..SelectedPassport.."]: de **"..OldName.."** para **"..Identity2["Name"].." "..Identity2["Lastname"].."**."
                 })
 
-                local x,y,z = vCLIENT.GetPosition(vRP.Source(SelectedPassport))
+                local OtherSource = vRP.Source(SelectedPassport)
+                local x,y,z = 0,0,0
+                if OtherSource then
+                    x,y,z = vCLIENT.GetPosition(OtherSource)
+                end
                 PerformHttpRequest(Config["Webhooks"]["ChangeName"], function(err, text, headers) end, "POST", json.encode({
                     embeds = {
                         {     

@@ -199,6 +199,12 @@ RegisterNUICallback("pegarCarroConfirmar", function(Data, CallBack)
         else
             CallBack({retorno = "error"})
         end
+    elseif modo == "Remover" then
+        if SelectedPassport and vSERVER.DeleteVehicleSelected(SelectedPassport, VehicleCatchName) then
+            CallBack({retorno = "done"})
+        else
+            CallBack({retorno = "error"})
+        end
     end
 end)
 -----------------------------------------------------------------------------------------------------------------------------------------
@@ -306,6 +312,8 @@ end)
 RegisterNUICallback("removerCarro",function(Data,CallBack)
 	if vSERVER.DeleteVehicleSelected(SelectedPassportActions, Data["item"]) then
 		CallBack({retorno = "done"})
+	else
+		CallBack({retorno = "error"})
 	end
 end)
 
