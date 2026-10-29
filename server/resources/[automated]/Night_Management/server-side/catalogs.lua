@@ -16,14 +16,12 @@ local function Integer(Value,Min,Max)
 end
 
 local function Read(File)
-    local Raw = LoadResourceFile(Resource,File)
-    local Ok,Data = pcall(json.decode,Raw or "{}")
-    return Ok and type(Data) == "table" and Data or {}
+    return Storage.Read(File)
 end
 
 local function Save(Source,File,Data)
-    if not SaveResourceFile(Resource,File,json.encode(Data,{ indent = true }),-1) then
-        Notify(Source,"Não foi possível salvar o arquivo.")
+    if not Storage.Write(File,Data) then
+        Notify(Source,"Não foi possível salvar no banco de dados.")
         return false
     end
     return true
@@ -58,6 +56,74 @@ RegisterNetEvent("Night_Management:saveRobbery",function(Data)
         Robberies(Source)
         Notify(Source,"Configuração de roubo salva.")
     end
+end)
+
+RegisterNetEvent("Night_Management:deleteRobbery",function(Data)
+    local Source = source
+    if not Admin(Source) or type(Data) ~= "table" or type(Data.id) ~= "string" or GetResourceState("inventory") ~= "started" then return end
+    local Found = false
+    for _,Entry in ipairs(exports.inventory:ManagementRobberies()) do if Entry.id == Data.id then Found = true break end end
+    if not Found then return end
+    local Entries = Read("data/robberies.json")
+    Entries[Data.id] = { Deleted = true }
+    if Save(Source,"data/robberies.json",Entries) then
+        TriggerEvent("Night_Management:robberiesChanged",Entries)
+        Robberies(Source)
+        Notify(Source,"Tipo de roubo removido.")
+    end
+end)
+
+-- Pontos de roubo (data/robbery_points.json); na primeira edição copia a lista atual do inventory
+local function RobberyPoints(Source)
+    if GetResourceState("inventory") ~= "started" then Notify(Source,"O inventory precisa estar iniciado.") return end
+    TriggerClientEvent("Night_Management:catalog",Source,"RobberyPoints",exports.inventory:ManagementRobberyPoints())
+end
+
+local function SaveRobberyPoints(Source,Points)
+    local Entries = {}
+    for _,Point in pairs(Points) do Entries[tostring(Point.id)] = Point end
+    if Save(Source,"data/robbery_points.json",Entries) then
+        TriggerEvent("Night_Management:robberyPointsChanged",Entries)
+        RobberyPoints(Source)
+        return true
+    end
+end
+
+RegisterNetEvent("Night_Management:requestRobberyPoints",function()
+    if Admin(source) then RobberyPoints(source) end
+end)
+
+RegisterNetEvent("Night_Management:saveRobberyPoint",function(Data)
+    local Source = source
+    if not Admin(Source) or type(Data) ~= "table" or GetResourceState("inventory") ~= "started" then return end
+    local Modes = {}
+    for _,Entry in ipairs(exports.inventory:ManagementRobberies()) do Modes[Entry.id] = true end
+    if type(Data.Mode) ~= "string" or not Modes[Data.Mode] then Notify(Source,"Escolha um tipo de roubo válido.") return end
+    local X,Y,Z = tonumber(Data.X),tonumber(Data.Y),tonumber(Data.Z)
+    if not X or not Y or not Z or X ~= X or Y ~= Y or Z ~= Z or math.abs(X) > 20000 or math.abs(Y) > 20000 or math.abs(Z) > 5000 then
+        Notify(Source,"Informe uma posição válida.") return
+    end
+    local Points,Highest = {},0
+    for _,Point in ipairs(exports.inventory:ManagementRobberyPoints()) do
+        Points[Point.id] = Point
+        Highest = math.max(Highest,Point.id)
+    end
+    local Id = tonumber(Data.id)
+    if not Id or not Points[Id] then Id = Highest + 1 end
+    Points[Id] = { id = Id,Mode = Data.Mode,X = X,Y = Y,Z = Z }
+    if SaveRobberyPoints(Source,Points) then Notify(Source,"Ponto de roubo salvo.") end
+end)
+
+RegisterNetEvent("Night_Management:deleteRobberyPoint",function(Data)
+    local Source = source
+    if not Admin(Source) or type(Data) ~= "table" or GetResourceState("inventory") ~= "started" then return end
+    local Points,Found = {},false
+    for _,Point in ipairs(exports.inventory:ManagementRobberyPoints()) do
+        if Point.id == tonumber(Data.id) then Found = true else Points[Point.id] = Point end
+    end
+    if not Found then return end
+    if not next(Points) then Notify(Source,"Não é possível remover o último ponto de roubo.") return end
+    if SaveRobberyPoints(Source,Points) then Notify(Source,"Ponto de roubo removido.") end
 end)
 
 local function Houses(Source,Selected)

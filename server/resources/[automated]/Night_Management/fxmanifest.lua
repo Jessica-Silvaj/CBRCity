@@ -24,6 +24,7 @@ client_scripts {
 server_scripts {
     "@vrp/lib/Utils.lua",
     "shared-side/*.lua",
+    "server-side/storage.lua",
     "server-side/server.lua",
     "server-side/props.lua",
     "server-side/atms.lua",

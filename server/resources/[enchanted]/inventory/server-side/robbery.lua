@@ -233,9 +233,13 @@ local Config = {
 
 -- Persistent management settings. Runtime cooldowns remain in Config.
 local function ApplyManagementRobberies(Entries)
+    local Removed = {}
     for Mode,Entry in pairs(Entries or {}) do
         local Setting = Config[Mode]
-        if Setting then
+        if Entry.Deleted == true then
+            Config[Mode] = nil
+            Removed[Mode] = true
+        elseif Setting then
             Setting.Enabled = Entry.Enabled ~= false
             for _,Key in ipairs({ "Police","Delay","Timer","Wanted" }) do
                 if type(Entry[Key]) == "number" then Setting[Key] = Entry[Key] end
@@ -244,6 +248,8 @@ local function ApplyManagementRobberies(Entries)
             if Payment then Payment.Min,Payment.Max = Entry.Min or Payment.Min,Entry.Max or Payment.Max end
         end
     end
+    -- Tipos excluídos pelo painel: os clientes removem os pontos "Roubar"
+    GlobalState.RobberyRemoved = Removed
 end
 local RawManagementRobberies = LoadResourceFile("Night_Management","data/robberies.json")
 if RawManagementRobberies then
@@ -251,6 +257,34 @@ if RawManagementRobberies then
     if Ok and type(Entries) == "table" then ApplyManagementRobberies(Entries) end
 end
 AddEventHandler("Night_Management:robberiesChanged",ApplyManagementRobberies)
+
+-- Pontos de roubo: data/robbery_points.json do painel gestor substitui a lista do shared
+local function DefaultRobberyPoints()
+    local List = {}
+    for Number,v in pairs(Robbery) do
+        List[#List + 1] = { id = Number,Mode = v.Mode,X = v.Coords.x,Y = v.Coords.y,Z = v.Coords.z }
+    end
+    return List
+end
+local function ApplyRobberyPoints(Points)
+    local Result = {}
+    for _,Point in pairs(type(Points) == "table" and next(Points) and Points or DefaultRobberyPoints()) do
+        Result[tostring(Point.id)] = { Mode = Point.Mode,X = Point.X,Y = Point.Y,Z = Point.Z }
+    end
+    GlobalState.RobberyPoints = Result
+end
+local RawRobberyPoints = LoadResourceFile("Night_Management","data/robbery_points.json")
+local OkPoints,RobberyPoints = pcall(json.decode,RawRobberyPoints or "{}")
+ApplyRobberyPoints(OkPoints and RobberyPoints or nil)
+AddEventHandler("Night_Management:robberyPointsChanged",ApplyRobberyPoints)
+exports("ManagementRobberyPoints",function()
+    local List = {}
+    for Id,Point in pairs(GlobalState.RobberyPoints or {}) do
+        List[#List + 1] = { id = tonumber(Id),Mode = Point.Mode,X = Point.X,Y = Point.Y,Z = Point.Z }
+    end
+    table.sort(List,function(a,b) return a.id < b.id end)
+    return List
+end)
 exports("ManagementRobberies",function()
     local List = {}
     for Mode,Entry in pairs(Config) do

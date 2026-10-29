@@ -1,4 +1,4 @@
-for _,Name in ipairs({ "requestRobberies","saveRobbery","requestHouses","saveHouse","requestStocks","saveStock","requestBlips","saveBlip","deleteBlip" }) do
+for _,Name in ipairs({ "requestRobberies","saveRobbery","deleteRobbery","requestRobberyPoints","saveRobberyPoint","deleteRobberyPoint","requestHouses","saveHouse","requestStocks","saveStock","requestBlips","saveBlip","deleteBlip" }) do
     local Event = Name
     RegisterNUICallback(Event,function(Data,Callback)
         TriggerServerEvent("Night_Management:"..Event,Data)

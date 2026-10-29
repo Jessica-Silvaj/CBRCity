@@ -70,13 +70,16 @@ vRP.clearInventory = function(user_id)
 end
 
 vRP.setUData = function(user_id, key, value)
-    if vRP.UpdateDatatable then
-        vRP.UpdateDatatable(user_id, key, value)
-    end
+    local information = type(value) == "table" and json.encode(value) or tostring(value)
+    vRP.Query("playerdata/SetData",{ Passport = parseInt(user_id), Name = key, Information = information })
 end
 
 vRP.getUData = function(user_id, key)
-    return vRP.UserData(user_id, key) or ""
+    local data = vRP.UserData(user_id, key)
+    if type(data) == "table" then
+        return json.encode(data)
+    end
+    return data or ""
 end
 
 vRP.setSData = function(key, value)

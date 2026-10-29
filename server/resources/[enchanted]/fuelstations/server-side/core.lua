@@ -125,11 +125,9 @@ AddEventHandler("fuelstations:Gallon", function(Departmenty)
 	end
 
 	local Consult = exports.oxmysql:single_async("SELECT * FROM fuelstations_creative WHERE Permission = ?",{ Departmenty })
-	if not Consult then
-		return
-	end
+	local HasOwner = Consult ~= nil
 
-	if Consult.Stock < Config.StockGallon then
+	if HasOwner and Consult.Stock < Config.StockGallon then
 		TriggerClientEvent("Notify", source, "Central", "Estoque insuficiente para vender galão.", "amarelo")
 		return
 	end
@@ -152,13 +150,15 @@ AddEventHandler("fuelstations:Gallon", function(Departmenty)
 	vRP.GenerateItem(Passport,Config.ItemGallon,1,true)
 	vRP.GenerateItem(Passport,Config.ItemGallonFuel,Config.GallonFuelAmount,true)
 
-	exports.oxmysql:update_async("UPDATE fuelstations_creative SET Stock = GREATEST(Stock - ?,0) WHERE Permission = ?",{ Config.StockGallon, Departmenty })
+	if HasOwner then
+		exports.oxmysql:update_async("UPDATE fuelstations_creative SET Stock = GREATEST(Stock - ?,0) WHERE Permission = ?",{ Config.StockGallon, Departmenty })
 
-    vRP.PermissionsUpdate(Departmenty,"Bank","+",Config.PriceGallon)
+		vRP.PermissionsUpdate(Departmenty,"Bank","+",Config.PriceGallon)
 
-    local Datatable = vRP.GetSrvData("FuelStations:"..Departmenty,true)
-    table.insert(Datatable.Historical, { Type = "Fuel", Player = { Passport = Passport, Name = vRP.FullName(Passport) }, Value = Config.PriceGallon, Amount = Config.StockGallon })
-	vRP.SetSrvData("FuelStations:"..Departmenty,Datatable,true)
+		local Datatable = vRP.GetSrvData("FuelStations:"..Departmenty,true)
+		table.insert(Datatable.Historical, { Type = "Fuel", Player = { Passport = Passport, Name = vRP.FullName(Passport) }, Value = Config.PriceGallon, Amount = Config.StockGallon })
+		vRP.SetSrvData("FuelStations:"..Departmenty,Datatable,true)
+	end
 
 	TriggerClientEvent("Notify",source,"Central","Galão adquirido com sucesso.","verde")
 end)

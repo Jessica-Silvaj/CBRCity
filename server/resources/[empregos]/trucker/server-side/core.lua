@@ -19,11 +19,11 @@ local Attention = {}
 -- DROPS
 -----------------------------------------------------------------------------------------------------------------------------------------
 local Drops = {
-	{ Item = "plastic", Chance = 75, Min = 225, Max = 275, Addition = 0.050 },
-	{ Item = "glass", Chance = 75, Min = 225, Max = 275, Addition = 0.050 },
-	{ Item = "rubber", Chance = 75, Min = 225, Max = 275, Addition = 0.050 },
-	{ Item = "aluminum", Chance = 25, Min = 175, Max = 200, Addition = 0.025 },
-	{ Item = "copper", Chance = 25, Min = 175, Max = 200, Addition = 0.025 }
+	{ Item = "plastic", Chance = 75, Min = 25, Max = 45, Addition = 0.050 },
+	{ Item = "glass", Chance = 75, Min = 25, Max = 45, Addition = 0.050 },
+	{ Item = "rubber", Chance = 75, Min = 25, Max = 45, Addition = 0.050 },
+	{ Item = "aluminum", Chance = 25, Min = 15, Max = 25, Addition = 0.025 },
+	{ Item = "copper", Chance = 25, Min = 15, Max = 25, Addition = 0.025 }
 }
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- PAYMENT

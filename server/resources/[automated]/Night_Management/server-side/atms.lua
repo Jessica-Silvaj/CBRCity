@@ -11,12 +11,11 @@ local Models = { prop_atm_01 = true, prop_atm_02 = true, prop_atm_03 = true, pro
 -- LOAD / SAVE
 -----------------------------------------------------------------------------------------------------------------------------------------
 local function Load()
-	local Raw = LoadResourceFile(Resource,File)
-	Atms = Raw and json.decode(Raw) or {}
+	Atms = Storage.Read(File)
 end
 
 local function Save()
-	SaveResourceFile(Resource,File,json.encode(Atms,{ indent = true }),-1)
+	Storage.Write(File,Atms)
 end
 
 local function List()

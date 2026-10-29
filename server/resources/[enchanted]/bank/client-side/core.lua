@@ -25,18 +25,6 @@ AddEventHandler("Night_Management:atmsSync",function(List)
 
 	for _,Atm in ipairs(List or {}) do
 		local Options = {}
-        if Atm.Kind == "agency" and Atm.Open then
-            local Blip = AddBlipForCoord(Atm.X,Atm.Y,Atm.Z)
-            SetBlipSprite(Blip,108)
-            SetBlipColour(Blip,2)
-            SetBlipScale(Blip,0.65)
-            SetBlipAsShortRange(Blip,true)
-            BeginTextCommandSetBlipName("STRING")
-            AddTextComponentString(Atm.Name or "Banco")
-            EndTextCommandSetBlipName(Blip)
-            AgencyBlips[#AgencyBlips + 1] = Blip
-        end
-
 		if Atm.Open then
 			Options[#Options + 1] = { event = "Bank", label = "Abrir", tunnel = "client" }
 		end

@@ -10,12 +10,11 @@ local Props = {}
 -- LOAD / SAVE
 -----------------------------------------------------------------------------------------------------------------------------------------
 local function Load()
-	local Raw = LoadResourceFile(Resource,File)
-	Props = Raw and json.decode(Raw) or {}
+	Props = Storage.Read(File)
 end
 
 local function Save()
-	SaveResourceFile(Resource,File,json.encode(Props,{ indent = true }),-1)
+	Storage.Write(File,Props)
 end
 
 local function List()

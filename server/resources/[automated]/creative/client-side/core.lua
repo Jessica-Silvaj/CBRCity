@@ -8,8 +8,10 @@ local CONTROLS = { 37,204,211,349,192,157,158,159,160,161,162,163,164,165 }
 local SpawnedBlips = {}
 -- Reduz pela metade a densidade ambiente configurada no painel gestor.
 local AmbientDensityMultiplier = 0.5
--- +20% para NPCs andando e carros circulando (estacionados mantidos).
+-- +20% para NPCs andando (estacionados mantidos).
 local TrafficPedMultiplier = AmbientDensityMultiplier * 1.2
+-- +50% para carros circulando.
+local TrafficVehicleMultiplier = AmbientDensityMultiplier * 1.5
 local CurrentDensity = {
     VehicleDensity = 0.0,
     RandomVehicleDensity = 0.0,
@@ -524,8 +526,8 @@ CreateThread(function()
 		SetRandomTrains(false)
 		SetRandomBoats(false)
 
-		SetVehicleDensityMultiplierThisFrame(CurrentDensity.VehicleDensity * TrafficPedMultiplier)
-		SetRandomVehicleDensityMultiplierThisFrame(CurrentDensity.RandomVehicleDensity * TrafficPedMultiplier)
+		SetVehicleDensityMultiplierThisFrame(CurrentDensity.VehicleDensity * TrafficVehicleMultiplier)
+		SetRandomVehicleDensityMultiplierThisFrame(CurrentDensity.RandomVehicleDensity * TrafficVehicleMultiplier)
 		SetParkedVehicleDensityMultiplierThisFrame(CurrentDensity.ParkedVehicleDensity * AmbientDensityMultiplier)
 		SetScenarioPedDensityMultiplierThisFrame(CurrentDensity.ScenarioPedDensity * TrafficPedMultiplier, CurrentDensity.ScenarioPedDensity * TrafficPedMultiplier)
 		SetPedDensityMultiplierThisFrame(CurrentDensity.PedDensity * TrafficPedMultiplier)

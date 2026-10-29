@@ -58,7 +58,7 @@ local BlipCards = {
 		Image = "loja_de_departamento",
 		Text = "A conveniência da esquina que nunca fecha. Lanche, bebida gelada, energético e tudo que faltou na sua mochila."
 	},
-	["Loja de Eletronicos"] = {
+	["Loja de Eletrônicos"] = {
 		Image = "loja_de_eletronicos",
 		Text = "Tecnologia que cabe no bolso. Celulares, rádios e aparelhos para você nunca ficar fora da linha."
 	},

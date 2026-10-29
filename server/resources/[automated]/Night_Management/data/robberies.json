@@ -1,1 +1,20 @@
-{}
+{
+    "Eletronic": {
+        "Enabled": false,
+        "Police": 2,
+        "Timer": 30,
+        "Min": 325,
+        "Wanted": 600,
+        "Max": 375,
+        "Delay": 300
+    },
+    "Register": {
+        "Delay": 300,
+        "Timer": 15,
+        "Police": 2,
+        "Min": 325,
+        "Wanted": 120,
+        "Max": 375,
+        "Enabled": true
+    }
+}

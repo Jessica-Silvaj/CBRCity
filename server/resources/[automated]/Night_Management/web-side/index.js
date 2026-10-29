@@ -338,40 +338,6 @@ $(document).ready(function () {
             if (data.x) $("#crafting-x").val(data.x.toFixed(2));
             if (data.y) $("#crafting-y").val(data.y.toFixed(2));
             if (data.z) $("#crafting-z").val(data.z.toFixed(2));
-        } else if (data.action === "updateBlips") {
-            let tbody = $("#blips-table tbody");
-            tbody.empty();
-            if (data.blips && data.blips.length > 0) {
-                data.blips.forEach(b => {
-                    tbody.append(`
-                        <tr>
-                            <td>#${b.id}</td>
-                            <td>${b.Name}</td>
-                            <td>${(b.X || 0).toFixed(1)}, ${(b.Y || 0).toFixed(1)}, ${(b.Z || 0).toFixed(1)}</td>
-                            <td class="action-btns">
-                                <button class="btn-icon tp-blip" data-x="${b.X}" data-y="${b.Y}" data-z="${b.Z}" title="Teleportar">
-                                    <i class="fa-solid fa-location-dot"></i>
-                                </button>
-                                <button class="btn-icon edit-blip" data-blip='${JSON.stringify(b).replace(/'/g, "&#39;")}' title="Editar">
-                                    <i class="fa-solid fa-pen"></i>
-                                </button>
-                                <button class="btn-icon delete delete-blip" data-id="${b.id}" title="Deletar">
-                                    <i class="fa-solid fa-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    `);
-                });
-            } else {
-                tbody.append('<tr><td colspan="4" style="text-align: center; color: var(--text-muted);">Nenhum blip encontrado.</td></tr>');
-            }
-        } else if (data.action === "blipSaved") {
-            resetBlipForm();
-            $('[data-page="manage-blips"]').click();
-        } else if (data.action === "pushCoordsBlip") {
-            if (data.x) $("#blip-x").val(data.x.toFixed(2));
-            if (data.y) $("#blip-y").val(data.y.toFixed(2));
-            if (data.z) $("#blip-z").val(data.z.toFixed(2));
         } else if (data.action === "updateNpcs") {
             let tbody = $("#npcs-table tbody");
             tbody.empty();
@@ -744,10 +710,6 @@ $(document).ready(function () {
             resetCraftingConfigForm();
         } else if (page === "manage-crafting-configs") {
             $.post(baseUrl + "requestCraftingConfigs", JSON.stringify({}));
-        } else if (page === "create-blip") {
-            resetBlipForm();
-        } else if (page === "manage-blips") {
-            $.post(baseUrl + "requestBlips", JSON.stringify({}));
         } else if (page === "create-npc") {
             resetNpcForm();
         } else if (page === "manage-npcs") {
@@ -839,6 +801,7 @@ $(document).ready(function () {
             "create-service": "Criar Bate Ponto",
             "manage-services": "Gerenciar Bate Pontos",
             "manage-robberies": "Gerenciar Roubos",
+            "manage-robbery-points": "Pontos de Roubo",
             "create-house": "Adicionar Casa",
             "manage-houses": "Gerenciar Casas",
             "manage-stocks": "Estoque de Veículos",
@@ -1869,81 +1832,6 @@ $(document).ready(function () {
         let mode = $(this).data("mode");
         $.post(baseUrl + "deleteCraftingConfig", JSON.stringify({ mode: mode }));
         setTimeout(() => { $.post(baseUrl + "requestCraftingConfigs", JSON.stringify({})); }, 300);
-    });
-
-    // ==========================================
-    // BLIPS LOGIC
-    // ==========================================
-
-    function resetBlipForm() {
-        $("#edit-blip-id").val("");
-        $("#blip-name").val("");
-        $("#blip-x").val("");
-        $("#blip-y").val("");
-        $("#blip-z").val("");
-        $("#blip-sprite").val("1");
-        $("#blip-color").val("0");
-        $("#blip-scale").val("0.5");
-    }
-
-    $("#get-coords-blip").click(function () {
-        $.post(baseUrl + "getCoordsBlip", JSON.stringify({}));
-    });
-
-    $("#save-blip").click(function () {
-        let id = $("#edit-blip-id").val();
-        let name = $("#blip-name").val();
-        let x = parseFloat($("#blip-x").val());
-        let y = parseFloat($("#blip-y").val());
-        let z = parseFloat($("#blip-z").val());
-        let sprite = parseInt($("#blip-sprite").val()) || 1;
-        let color = parseInt($("#blip-color").val()) || 0;
-        let scale = parseFloat($("#blip-scale").val()) || 0.5;
-
-        if (!name || isNaN(x) || isNaN(y) || isNaN(z)) return;
-
-        $.post(baseUrl + "saveBlip", JSON.stringify({
-            id: id ? parseInt(id) : null,
-            name: name,
-            x: x,
-            y: y,
-            z: z,
-            sprite: sprite,
-            color: color,
-            scale: scale
-        }));
-    });
-
-    $(document).on("click", ".edit-blip", function () {
-        let blip = $(this).data("blip");
-        if (typeof blip === "string") blip = JSON.parse(blip);
-
-        $(".nav-item").removeClass("active");
-        $("[data-page='create-blip']").addClass("active");
-        $(".page-content").hide();
-        $("#create-blip").show();
-
-        $("#edit-blip-id").val(blip.id);
-        $("#blip-name").val(blip.Name);
-        $("#blip-x").val(blip.X);
-        $("#blip-y").val(blip.Y);
-        $("#blip-z").val(blip.Z);
-        $("#blip-sprite").val(blip.Sprite);
-        $("#blip-color").val(blip.Color);
-        $("#blip-scale").val(blip.Scale);
-    });
-
-    $(document).on("click", ".delete-blip", function () {
-        let id = $(this).data("id");
-        $.post(baseUrl + "deleteBlip", JSON.stringify({ id: id }));
-        setTimeout(() => { $.post(baseUrl + "requestBlips", JSON.stringify({})); }, 300);
-    });
-
-    $(document).on("click", ".tp-blip", function () {
-        let x = parseFloat($(this).data("x"));
-        let y = parseFloat($(this).data("y"));
-        let z = parseFloat($(this).data("z"));
-        if (!isNaN(x)) $.post(baseUrl + "teleport", JSON.stringify({ x: x, y: y, z: z }));
     });
 
     // ==========================================
@@ -4603,6 +4491,7 @@ $(function () {
 
     $('.nav-item').on('click', function () {
         if ($(this).data('page') === 'manage-robberies') post('requestRobberies');
+        if ($(this).data('page') === 'manage-robbery-points') { newRobberyPoint(); post('requestRobberies'); post('requestRobberyPoints'); }
         if ($(this).data('page') === 'manage-houses') post('requestHouses');
         if ($(this).data('page') === 'manage-stocks') post('requestStocks');
         if ($(this).data('page') === 'manage-blips') post('requestBlips');
@@ -4610,16 +4499,70 @@ $(function () {
         if ($(this).data('page') === 'create-house') { newHouse(); post('requestHouses'); }
     });
 
+    let robberyNames = {};
+    function newRobberyPoint() {
+        $('#robbery-point-form')[0].reset();
+        $('#robbery-point-id').val('');
+        $('#save-robbery-point').html('<i class="fa-solid fa-plus"></i> Adicionar Ponto');
+        $('#robbery-point-cancel').hide();
+    }
+    function editRobberyPoint(p) {
+        $('#robbery-point-id').val(p.id);
+        $('#robbery-point-mode').val(p.Mode);
+        for (const key of ['X', 'Y', 'Z']) $(`#robbery-point-${key}`).val(Number(p[key]).toFixed(2));
+        $('#save-robbery-point').html(`<i class="fa-solid fa-floppy-disk"></i> Salvar Ponto #${p.id}`);
+        $('#robbery-point-cancel').show();
+        $('#manage-robbery-points').scrollTop(0);
+    }
+    function renderRobberyPoints(points) {
+        const body = $('#robbery-points-body').empty();
+        points.forEach(p => {
+            const row = $('<tr>');
+            $('<td>').text(p.id).appendTo(row);
+            $('<td>').text(robberyNames[p.Mode] ? `${robberyNames[p.Mode]} (${p.Mode})` : p.Mode).appendTo(row);
+            $('<td>').text([p.X, p.Y, p.Z].map(v => Number(v).toFixed(2)).join(', ')).appendTo(row);
+            const actions = $('<td class="action-btns">').appendTo(row);
+            $('<button type="button" class="btn-icon" title="Teleportar">').html('<i class="fa-solid fa-location-dot"></i>').on('click', () => post('teleport', { x: p.X, y: p.Y, z: p.Z })).appendTo(actions);
+            $('<button type="button" class="btn-icon" title="Editar">').html('<i class="fa-solid fa-pen"></i>').on('click', () => editRobberyPoint(p)).appendTo(actions);
+            // Dois cliques para excluir (confirm() não funciona no NUI)
+            const remove = $('<button type="button" class="btn-icon" title="Excluir">').html('<i class="fa-solid fa-trash"></i>').on('click', () => {
+                if (remove.data('armed')) return post('deleteRobberyPoint', { id: p.id });
+                remove.data('armed', true).attr('title', 'Clique de novo para excluir').css('color', '#e74c3c');
+                setTimeout(() => remove.data('armed', false).attr('title', 'Excluir').css('color', ''), 3000);
+            }).appendTo(actions);
+            body.append(row);
+        });
+        if (!points.length) body.append($('<tr>').append($('<td colspan="4">').css('color', 'var(--text-muted)').text('Nenhum ponto de roubo.')));
+    }
+    $('#robbery-point-here').on('click', () => post('houseHere').done(result => {
+        if (typeof result === 'string') result = JSON.parse(result);
+        for (const key of ['X', 'Y', 'Z']) $(`#robbery-point-${key}`).val(result[key].toFixed(2));
+    }));
+    $('#robbery-point-cancel').on('click', newRobberyPoint);
+    $('#robbery-point-form').on('submit', function (event) {
+        event.preventDefault();
+        const data = { id: Number($('#robbery-point-id').val()) || null, Mode: $('#robbery-point-mode').val() };
+        for (const key of ['X', 'Y', 'Z']) data[key] = Number($(`#robbery-point-${key}`).val());
+        post('saveRobberyPoint', data);
+        newRobberyPoint();
+    });
+
     function renderRobberies(entries) {
+        robberyNames = {};
+        const select = $('#robbery-point-mode').empty();
+        entries.forEach(entry => {
+            robberyNames[entry.id] = entry.Name;
+            select.append($('<option>').val(entry.id).text(`${entry.Name} (${entry.id})`));
+        });
         const body = $('#robberies-body').empty();
         entries.forEach(entry => {
             const row = $('<tr>');
             $('<td>').text(`${entry.Name} (${entry.id})`).append($('<small>').text(` — ${entry.Item || 'sem item'}`)).appendTo(row);
             const enabled = $('<input type="checkbox">').prop('checked', entry.Enabled);
-            $('<td>').append(enabled).appendTo(row);
+            $('<td>').append($('<label class="toggle-switch" style="margin: 0;">').append(enabled, '<span class="slider"></span>')).appendTo(row);
             const inputs = {};
             fields.forEach(([key, min, max]) => {
-                inputs[key] = $('<input type="number" step="1" required>').attr({ min, max, 'aria-label': key }).val(entry[key]).css('width', '95px');
+                inputs[key] = $('<input type="number" step="1" required class="table-input">').attr({ min, max, 'aria-label': key }).val(entry[key]).css('width', '90px');
                 $('<td>').append(inputs[key]).appendTo(row);
             });
             const save = $('<button class="btn-icon" type="button" title="Salvar">').html('<i class="fa-solid fa-floppy-disk"></i>').on('click', function () {
@@ -4631,7 +4574,13 @@ $(function () {
                 if (data.Min > data.Max) { inputs.Min[0].setCustomValidity('O mínimo não pode superar o máximo.'); inputs.Min[0].reportValidity(); inputs.Min[0].setCustomValidity(''); return; }
                 post('saveRobbery', data);
             });
-            $('<td class="action-btns">').append(save).appendTo(row);
+            // Dois cliques para excluir (confirm() não funciona no NUI)
+            const remove = $('<button type="button" class="btn-icon" title="Excluir">').html('<i class="fa-solid fa-trash"></i>').on('click', () => {
+                if (remove.data('armed')) return post('deleteRobbery', { id: entry.id });
+                remove.data('armed', true).attr('title', 'Clique de novo para excluir').css('color', '#e74c3c');
+                setTimeout(() => remove.data('armed', false).attr('title', 'Excluir').css('color', ''), 3000);
+            });
+            $('<td class="action-btns">').append(save, remove).appendTo(row);
             body.append(row);
         });
     }
@@ -4795,6 +4744,7 @@ $(function () {
     window.addEventListener('message', event => {
         const message = event.data;
         if (message.action === 'updateRobberies') renderRobberies(message.data);
+        if (message.action === 'updateRobberyPoints') renderRobberyPoints(Array.isArray(message.data) ? message.data : Object.values(message.data || {}));
         if (message.action === 'updateStocks') { stocks = message.data; renderStocks(); }
         if (message.action === 'updateBlips') { blips = Array.isArray(message.data) ? message.data : Object.values(message.data || {}); renderBlips(); }
         if (message.action === 'updateHouses') {

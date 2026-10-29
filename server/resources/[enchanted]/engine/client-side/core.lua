@@ -51,18 +51,19 @@ end)
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- CONSUME
 -----------------------------------------------------------------------------------------------------------------------------------------
+-- Chave = RPM x 10 (inteiro); chaves decimais não batiam por imprecisão de float e caíam sempre no consumo máximo
 local Consume = {
-	[1.0] = 0.475,
-	[0.9] = 0.425,
-	[0.8] = 0.375,
-	[0.7] = 0.325,
-	[0.6] = 0.275,
-	[0.5] = 0.225,
-	[0.4] = 0.175,
-	[0.3] = 0.125,
-	[0.2] = 0.075,
-	[0.1] = 0.025,
-	[0.0] = 0.000
+	[10] = 0.475,
+	[9] = 0.425,
+	[8] = 0.375,
+	[7] = 0.325,
+	[6] = 0.275,
+	[5] = 0.225,
+	[4] = 0.175,
+	[3] = 0.125,
+	[2] = 0.075,
+	[1] = 0.025,
+	[0] = 0.000
 }
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- FLOOR
@@ -84,8 +85,8 @@ CreateThread(function()
 				local CurrentFuel = Entity(Vehicle).state.Fuel
 				if CurrentFuel >= 1 then
 					if (GetEntitySpeed(Vehicle) * 3.6) >= 1 then
-						local RPM = floor(GetVehicleCurrentRpm(Vehicle))
-						local Consumption = (Consume[RPM] or 1.0) * 0.4
+						local RPM = math.floor(GetVehicleCurrentRpm(Vehicle) * 10 + 0.5)
+						local Consumption = (Consume[RPM] or 0.475) * 0.4
 						local NewFuel = CurrentFuel - Consumption
 
 						SetVehicleFuelLevel(Vehicle,NewFuel + 0.0)
