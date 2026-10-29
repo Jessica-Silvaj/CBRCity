@@ -729,6 +729,11 @@ Use = {
 	end,
 
 	["vape"] = function(source,Passport,Amount,Slot,Full,Item,Split)
+		if GetResourceState("Night_Vape") == "started" then
+			exports.Night_Vape:Toggle(source,Passport)
+			return true
+		end
+
 		Active[Passport] = os.time() + 20
 		Player(source).state.Buttons = true
 		TriggerClientEvent("inventory:Close",source)
@@ -6590,6 +6595,23 @@ CreateThread(function()
 			vRP.SetSrvData("Probjects:"..Property,Probjects,true)
 			TriggerEvent("propertys:Adicionar",Property,Selected,Data)
 			Player(source).state.Buttons = false
+		end
+	end
+end)
+
+-- Integração com o Night_Vape: os líquidos são consumíveis registrados pelo
+-- próprio recurso e encaminhados ao tanque persistente do personagem.
+CreateThread(function()
+	while GetResourceState("Night_Vape") ~= "started" do
+		if GetResourceState("Night_Vape") == "missing" then
+			return
+		end
+		Wait(1000)
+	end
+
+	for _,Item in ipairs(exports.Night_Vape:Liquids() or {}) do
+		Use[Item] = function(source,Passport,Amount,Slot,Full)
+			return exports.Night_Vape:Refill(source,Passport,Item,Full,Slot)
 		end
 	end
 end)
