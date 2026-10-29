@@ -6804,6 +6804,41 @@ local List = {
 		LostWater = true,
 		Economy = 4750
 	},
+	["liquido_neutro"] = {
+		Index = "liquido_neutro",
+		Name = "Líquido Neutro",
+		Type = "Consumível",
+		Weight = 0.10,
+		Economy = 150
+	},
+	["liquido_morango"] = {
+		Index = "liquido_morango",
+		Name = "Líquido de Morango",
+		Type = "Consumível",
+		Weight = 0.10,
+		Economy = 175
+	},
+	["liquido_menta"] = {
+		Index = "liquido_menta",
+		Name = "Líquido de Menta",
+		Type = "Consumível",
+		Weight = 0.10,
+		Economy = 175
+	},
+	["liquido_mirtilo"] = {
+		Index = "liquido_mirtilo",
+		Name = "Líquido de Mirtilo",
+		Type = "Consumível",
+		Weight = 0.10,
+		Economy = 175
+	},
+	["liquido_uva"] = {
+		Index = "liquido_uva",
+		Name = "Líquido de Uva",
+		Type = "Consumível",
+		Weight = 0.10,
+		Economy = 175
+	},
 	["dollar"] = {
 		AdminLevel = 1,
 		Index = "dollar",
