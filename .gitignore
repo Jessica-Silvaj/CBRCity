@@ -19,3 +19,6 @@ node_modules/
 # Dumps do banco (dados reais de jogadores) - nunca versionar
 /database/dump-*.sql
 /database/backup_*.sql
+
+# Credenciais do servidor (licença, MySQL, Steam, RCON)
+/server/secrets.cfg
