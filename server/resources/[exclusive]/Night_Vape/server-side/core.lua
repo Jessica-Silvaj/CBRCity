@@ -258,6 +258,10 @@ RegisterNetEvent("Night_Vape:Puff",function(Intensity)
 	SaveTank(Passport,Vape)
 	local Effect = Config.Flavors[Data.Flavor].Effect
 	vRP.DowngradeStress(Passport,Effect == "stress" and Config.Stress * 3 or Config.Stress)
+	-- sabor "Refrescante" mata um pouco da sede a cada puxada
+	if Effect == "fresh" then
+		vRP.UpgradeThirst(Passport,3)
+	end
 	if Config.Effects[Effect] then
 		TriggerClientEvent("Night_Vape:Effect",source,Effect)
 	end

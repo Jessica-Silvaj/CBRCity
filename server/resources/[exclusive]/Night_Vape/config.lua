@@ -53,6 +53,18 @@ Config = {
 			Label = "Energia", Description = "Corre 10% mais rápido", Duration = 20,
 			Timecycle = "drug_drive_blend01", Strength = 0.4, Shake = "HAND_SHAKE", ShakeAmp = 0.4
 		},
+		["heal"] = {
+			Label = "Doce", Description = "Recupera vida aos poucos", Duration = 20,
+			Postfx = "SuccessFranklin"
+		},
+		["fresh"] = {
+			Label = "Refrescante", Description = "Mata a sede a cada puxada", Duration = 15,
+			Timecycle = "MP_Arena_theme_atlantis", Strength = 0.3
+		},
+		["breath"] = {
+			Label = "Gelado", Description = "Pulmão se recupera 3x mais rápido", Duration = 30,
+			Timecycle = "glasses_blue", Strength = 0.25
+		},
 		["trip"] = {
 			Label = "Viagem", Description = "Tontura, visão alterada e andar mole", Duration = 25,
 			Timecycle = "drug_flying_base", Strength = 0.8, Shake = "DRUNK_SHAKE", ShakeAmp = 1.2, Walk = "move_m@drunk@slightlydrunk"
@@ -91,11 +103,11 @@ Config = {
 	-- Sabores: item do inventário => nome e cor do vapor (RGB 0-255), uma cor bem distinta por sabor
 	Flavors = {
 		["liquido_neutro"] = { Name = "Neutro", Effect = "stress", Color = { 235, 235, 235 } },
-		["liquido_morango"] = { Name = "Morango", Effect = "stress", Color = { 255, 60, 90 } },
-		["liquido_menta"] = { Name = "Menta", Effect = "stamina", Color = { 40, 230, 160 } },
+		["liquido_morango"] = { Name = "Morango", Effect = "heal", Color = { 255, 60, 90 } },
+		["liquido_menta"] = { Name = "Menta", Effect = "breath", Color = { 40, 230, 160 } },
 		["liquido_mirtilo"] = { Name = "Mirtilo", Effect = "focus", Color = { 50, 110, 255 } },
 		["liquido_uva"] = { Name = "Uva", Effect = "speed", Color = { 160, 50, 230 } },
-		["liquido_manga"] = { Name = "Manga", Effect = "stress", Color = { 255, 150, 30 } },
+		["liquido_manga"] = { Name = "Manga", Effect = "fresh", Color = { 255, 150, 30 } },
 		["liquido_limao"] = { Name = "Limão", Effect = "stamina", Color = { 230, 240, 40 } },
 		["liquido_chiclete"] = { Name = "Chiclete", Effect = "trip", Color = { 255, 110, 220 } }
 	}

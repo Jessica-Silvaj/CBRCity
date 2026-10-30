@@ -314,9 +314,17 @@ RegisterNetEvent("Night_Vape:Effect",function(Effect)
 		end
 
 		-- termina quando o tempo acaba ou outro sabor substitui o efeito
+		local NextHeal = GetGameTimer() + 2000
 		while Active and Active.Effect == Effect and GetGameTimer() < Active.Until do
 			if Effect == "stamina" then
 				RestorePlayerStamina(PlayerId(),1.0)
+			elseif Effect == "heal" and GetGameTimer() >= NextHeal then
+				-- +2 de vida a cada 2 segundos (não levanta quem está caído)
+				NextHeal = GetGameTimer() + 2000
+				local Health = GetEntityHealth(PlayerPedId())
+				if Health > 101 and Health < GetEntityMaxHealth(PlayerPedId()) then
+					SetEntityHealth(PlayerPedId(),math.min(GetEntityMaxHealth(PlayerPedId()),Health + 2))
+				end
 			end
 
 			Wait(250)
@@ -362,7 +370,9 @@ CreateThread(function()
 
 		local Now = GetGameTimer()
 		if Lung > 0 then
-			Lung = math.max(0.0,Lung - Config.Lung.Recover * (Now - Last) / 1000)
+			-- sabor "Gelado" recupera o pulmão 3x mais rápido
+			local Recover = Config.Lung.Recover * ((EffectActive() and Active.Effect == "breath") and 3 or 1)
+			Lung = math.max(0.0,Lung - Recover * (Now - Last) / 1000)
 		end
 		Last = Now
 
