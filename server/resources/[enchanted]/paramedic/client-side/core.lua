@@ -13,6 +13,8 @@ Tunnel.bindInterface("paramedic",Creative)
 local Damaged = {}
 local Bleedings = 0
 local Punches = 0
+local PunchDamage = 3
+local HealthNow,HealthBefore = 200,200
 local Injuried = GetGameTimer()
 local BloodTimers = GetGameTimer()
 -----------------------------------------------------------------------------------------------------------------------------------------
@@ -36,6 +38,14 @@ AddEventHandler("gameEventTriggered",function(Event,Message)
 
 	-- Soco (desarmado) só causa sangramento a partir do 5º soco (contagem zera no tratamento do paramédico)
 	if GetWeapontypeGroup(Damage) == `GROUP_UNARMED` then
+		-- cada soco tira no máximo PunchDamage de vida (a barra vai de 100 a 200)
+		local Before = math.max(HealthNow,HealthBefore)
+		local Now = GetEntityHealth(Ped)
+		if Now > 100 and Before - Now > PunchDamage then
+			SetEntityHealth(Ped,Before - PunchDamage)
+		end
+		HealthNow,HealthBefore = GetEntityHealth(Ped),GetEntityHealth(Ped)
+
 		Punches = Punches + 1
 
 		if Punches < 5 then
@@ -53,6 +63,19 @@ AddEventHandler("gameEventTriggered",function(Event,Message)
 			ClearPedBloodDamage(Ped)
 			Damaged[Mark] = true
 		end
+	end
+end)
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- THREADPUNCH: o vrp reduz o soco só uma vez ao carregar; aqui vale a cada frame e guarda a vida de antes do golpe
+-----------------------------------------------------------------------------------------------------------------------------------------
+CreateThread(function()
+	while true do
+		SetWeaponDamageModifier(`WEAPON_UNARMED`,0.25)
+
+		HealthBefore = HealthNow
+		HealthNow = GetEntityHealth(PlayerPedId())
+
+		Wait(0)
 	end
 end)
 -----------------------------------------------------------------------------------------------------------------------------------------
