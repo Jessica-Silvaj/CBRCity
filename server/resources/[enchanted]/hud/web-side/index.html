@@ -74,10 +74,10 @@
         #lung .lung-ring { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
         /* mesmo padrão dos círculos de vida/colete/fome/sede: anel colorido, disco colorido por dentro e ícone branco */
         #lung { --lung: #f472b6; }
-        #lung .lung-track { fill: rgba(13, 13, 13, 0.55); stroke: rgba(255, 255, 255, 0.15); stroke-width: 2.6; }
-        #lung .lung-fill { fill: none; stroke: var(--lung); stroke-width: 2.6; stroke-linecap: round; stroke-dasharray: 97.4; stroke-dashoffset: 97.4; transition: stroke-dashoffset 0.3s; }
-        #lung .lung-disc { position: absolute; left: 50%; top: 50%; width: 56%; height: 56%; transform: translate(-50%, -50%); border-radius: 50%; background: var(--lung); }
-        #lung .lung-icon { position: absolute; left: 50%; top: 50%; width: 32%; height: 32%; transform: translate(-50%, -50%); fill: #fff; }
+        #lung .lung-track { fill: rgba(13, 13, 13, 0.55); stroke: rgba(255, 255, 255, 0.15); stroke-width: 2; }
+        #lung .lung-fill { fill: none; stroke: var(--lung); stroke-width: 2; stroke-linecap: round; stroke-dasharray: 97.4; stroke-dashoffset: 97.4; transition: stroke-dashoffset 0.3s; }
+        #lung .lung-disc { position: absolute; left: 50%; top: 50%; width: 46%; height: 46%; transform: translate(-50%, -50%); border-radius: 50%; background: var(--lung); }
+        #lung .lung-icon { position: absolute; left: 50%; top: 50%; width: 24%; height: 24%; transform: translate(-50%, -50%); fill: #fff; }
         #lung .lung-text { position: absolute; left: 50%; top: calc(100% + 0.35rem); transform: translateX(-50%); font-weight: 700; font-size: 0.8rem; white-space: nowrap; }
         #lung.danger { --lung: #ef4444; }
         #lung.danger .lung-icon { animation: lung-pulse 0.8s ease-in-out infinite; }
