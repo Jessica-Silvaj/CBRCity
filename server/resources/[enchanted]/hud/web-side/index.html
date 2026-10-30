@@ -85,12 +85,13 @@
             var text = document.getElementById("lung-text");
             var visible = true, level = 0;
 
-            // acha a fileira de círculos de status (vida, colete, fome, sede...) e devolve o último e o passo entre eles
+            // acha a fileira de círculos de status (vida, colete, fome, sede), no canto inferior direito, e devolve o primeiro e o passo entre eles
             function anchor() {
-                var rings = Array.prototype.map.call(document.querySelectorAll("#app .stroke-hud-progress-circle"), function (el) {
-                    var svg = el.closest("svg") || el;
+                var rings = Array.prototype.map.call(document.querySelectorAll("#app svg"), function (svg) {
                     return svg.getBoundingClientRect();
-                }).filter(function (r) { return r.width > 0 && r.height > 0; });
+                }).filter(function (r) {
+                    return r.width >= 20 && Math.abs(r.width - r.height) <= 4 && r.left > window.innerWidth / 2 && r.top > window.innerHeight / 2;
+                });
 
                 var rows = {};
                 rings.forEach(function (r) {
@@ -105,8 +106,7 @@
                 if (!best || best.length < 2) return null;
 
                 best.sort(function (a, b) { return a.left - b.left; });
-                var last = best[best.length - 1];
-                return { last: last, step: last.left - best[best.length - 2].left };
+                return { first: best[0], step: best[1].left - best[0].left };
             }
 
             function render() {
@@ -114,18 +114,18 @@
                 box.classList.toggle("show", show);
                 if (!show) return;
 
-                // ao lado dos círculos de status; se não achar, fica fixo no canto inferior esquerdo
+                // à esquerda da vida, na mesma fileira; se não achar, fica fixo no canto inferior direito
                 var pos = anchor();
                 if (pos) {
-                    box.style.left = (pos.last.left + pos.step) + "px";
-                    box.style.top = pos.last.top + "px";
-                    box.style.width = pos.last.width + "px";
-                    box.style.height = pos.last.height + "px";
+                    box.style.left = (pos.first.left - pos.step) + "px";
+                    box.style.top = pos.first.top + "px";
+                    box.style.width = pos.first.width + "px";
+                    box.style.height = pos.first.height + "px";
                 } else {
-                    box.style.left = "1.5rem";
-                    box.style.top = "calc(100vh - 7rem)";
-                    box.style.width = "3rem";
-                    box.style.height = "3rem";
+                    box.style.left = "calc(100vw - 17rem)";
+                    box.style.top = "calc(100vh - 5.5rem)";
+                    box.style.width = "2.8rem";
+                    box.style.height = "2.8rem";
                 }
 
                 // verde -> amarelo -> vermelho conforme enche

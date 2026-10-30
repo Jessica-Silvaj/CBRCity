@@ -162,10 +162,11 @@ RegisterNetEvent("Night_Vape:Use",function(Item)
 	local Intensity = math.min(1.0,math.max(Config.Intensity,Held / Config.MaxHold))
 	TriggerServerEvent("Night_Vape:Puff",Intensity)
 
-	-- puxou com o pulmão já cheio: crise de tosse
-	local Overload = Config.Lung.Enabled and Lung >= 100
+	-- a puxada passou do limite do pulmão: crise de tosse
+	local Gain = Config.Lung.PerPuff * (0.5 + Intensity)
+	local Overload = Config.Lung.Enabled and Lung + Gain > 100
 	if Config.Lung.Enabled then
-		Lung = math.min(100.0,Lung + Config.Lung.PerPuff * (0.5 + Intensity))
+		Lung = math.min(100.0,Lung + Gain)
 	end
 
 	Wait(1000)
