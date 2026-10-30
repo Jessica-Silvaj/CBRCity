@@ -1380,6 +1380,203 @@ local List = {
 		Rarity = "legendary",
 		Delete = true
 	},
+	["datingbox"] = {
+		Index = "alliance3",
+		Name = "Caixa de Anéis de Compromisso",
+		Description = "Use no <b>alt + Relacionamento</b> para pedir alguém em <b>namoro</b>. Gera dois anéis com o nome do casal.",
+		Type = "Comum",
+		Weight = 0.1,
+		Economy = 5000
+	},
+	["engagementbox"] = {
+		Index = "alliance3",
+		Name = "Caixa de Anel de Noivado",
+		Description = "Use no <b>alt + Relacionamento</b> com quem você namora para pedir em <b>noivado</b>.",
+		Type = "Comum",
+		Weight = 0.1,
+		Economy = 15000
+	},
+	["weddingbox"] = {
+		Index = "alliance3",
+		Name = "Caixa de Alianças",
+		Description = "Use no <b>alt + Relacionamento</b> com quem você é noivo(a) para pedir em <b>casamento</b>.",
+		Type = "Comum",
+		Weight = 0.1,
+		Economy = 20000
+	},
+	["datingring"] = {
+		AdminLevel = 1,
+		Index = "anelnamoro",
+		Name = "Anel de Compromisso",
+		Description = "<epic>Este item não pode ser roubado.</epic> Anel de prata que simboliza um namoro.",
+		Type = "Comum",
+		Weight = 0.0,
+		Named = true,
+		Rarity = "rare",
+		Delete = true
+	},
+	["engagementring"] = {
+		AdminLevel = 1,
+		Index = "anelnoivado",
+		Name = "Anel de Noivado",
+		Description = "<epic>Este item não pode ser roubado.</epic> Anel de ouro com pedra que simboliza um noivado.",
+		Type = "Comum",
+		Weight = 0.0,
+		Named = true,
+		Rarity = "epic",
+		Delete = true
+	},
+	["weddingring"] = {
+		AdminLevel = 1,
+		Index = "anelcasamento",
+		Name = "Aliança de Casamento",
+		Description = "<epic>Este item não pode ser roubado.</epic> Aliança de ouro que simboliza um casamento.",
+		Type = "Comum",
+		Weight = 0.0,
+		Named = true,
+		Rarity = "epic",
+		Delete = true
+	},
+	-- PRESENTES (Floricultura): usar segura o presente na mão, enviar pelo inventário entrega
+	["rose"] = {
+		Index = "rose",
+		Name = "Rosa Vermelha",
+		Description = "Uma rosa vermelha para quem você ama. Use para segurar e envie pelo inventário para presentear. <common>Murcha em 7 dias.</common>",
+		Type = "Consumível",
+		Durability = 168,
+		Weight = 0.1,
+		Economy = 150
+	},
+	["flowerbouquet"] = {
+		Index = "flornoturna",
+		Name = "Buquê de Flores",
+		Description = "Um buquê colorido para alegrar o dia de alguém. Use para segurar e envie pelo inventário para presentear. <common>Murcha em 7 dias.</common>",
+		Type = "Consumível",
+		Durability = 168,
+		Weight = 0.5,
+		Economy = 500
+	},
+	["strawberrybouquet"] = {
+		Index = "morangos",
+		Name = "Buquê de Morangos",
+		Description = "Morangos arrumados em buquê. Use para segurar e envie pelo inventário para presentear. <common>Estraga em 7 dias.</common>",
+		Type = "Consumível",
+		Durability = 168,
+		Weight = 0.5,
+		Economy = 800
+	},
+	["teddybear"] = {
+		Index = "teddy",
+		Name = "Urso de Pelúcia",
+		Description = "Um ursinho macio para abraçar. Use para segurar e envie pelo inventário para presentear.",
+		Type = "Consumível",
+		Weight = 1.0,
+		Economy = 600
+	},
+	["heartballoon"] = {
+		Index = "coracaoeterno",
+		Name = "Balão de Coração",
+		Description = "Balão vermelho em formato de coração. Use para segurar e envie pelo inventário para presentear.",
+		Type = "Consumível",
+		Weight = 0.2,
+		Economy = 300
+	},
+	["rainbowballoon"] = {
+		Index = "coracaoeterno",
+		Name = "Balão de Coração Arco-íris",
+		Description = "Balão colorido em formato de coração. Use para segurar e envie pelo inventário para presentear.",
+		Type = "Consumível",
+		Weight = 0.2,
+		Economy = 300
+	},
+	["giftbox"] = {
+		Index = "caixauwu2",
+		Name = "Caixa de Presente",
+		Description = "Caixa de presente laranja com laço. Use para segurar e envie pelo inventário para presentear.",
+		Type = "Consumível",
+		Weight = 0.5,
+		Economy = 250
+	},
+	["giftbox2"] = {
+		Index = "caixauwu2",
+		Name = "Caixa de Presente Roxa",
+		Description = "Caixa de presente roxa com laço. Use para segurar e envie pelo inventário para presentear.",
+		Type = "Consumível",
+		Weight = 0.5,
+		Economy = 250
+	},
+	["lovecake"] = {
+		Index = "bolodecereja",
+		Name = "Bolo de Coração",
+		Description = "Bolo em formato de coração para uma data especial. Use para segurar e envie pelo inventário para presentear.",
+		Type = "Consumível",
+		Weight = 1.5,
+		Economy = 700
+	},
+	["heartgift"] = {
+		Index = "coracaoeterno",
+		Name = "Coração Gigante",
+		Description = "Um coração enorme para declarar seu amor. Use para segurar e envie pelo inventário para presentear.",
+		Type = "Consumível",
+		Weight = 1.0,
+		Economy = 400
+	},
+	["hellokitty"] = {
+		Index = "HelloKitty",
+		Name = "Pelúcia Hello Kitty",
+		Description = "Pelúcia para presentear. Envie pelo inventário.",
+		Type = "Comum",
+		Weight = 0.5,
+		Economy = 400
+	},
+	["kuromi"] = {
+		Index = "KittyKuromi",
+		Name = "Pelúcia Kuromi",
+		Description = "Pelúcia para presentear. Envie pelo inventário.",
+		Type = "Comum",
+		Weight = 0.5,
+		Economy = 400
+	},
+	["mymelody"] = {
+		Index = "MyMelody",
+		Name = "Pelúcia My Melody",
+		Description = "Pelúcia para presentear. Envie pelo inventário.",
+		Type = "Comum",
+		Weight = 0.5,
+		Economy = 400
+	},
+	["cinnamoroll"] = {
+		Index = "Cinnamoroll",
+		Name = "Pelúcia Cinnamoroll",
+		Description = "Pelúcia para presentear. Envie pelo inventário.",
+		Type = "Comum",
+		Weight = 0.5,
+		Economy = 400
+	},
+	["pompompurin"] = {
+		Index = "pompompurin",
+		Name = "Pelúcia Pompompurin",
+		Description = "Pelúcia para presentear. Envie pelo inventário.",
+		Type = "Comum",
+		Weight = 0.5,
+		Economy = 400
+	},
+	["pochacco"] = {
+		Index = "pochacco",
+		Name = "Pelúcia Pochacco",
+		Description = "Pelúcia para presentear. Envie pelo inventário.",
+		Type = "Comum",
+		Weight = 0.5,
+		Economy = 400
+	},
+	["badtzmaru"] = {
+		Index = "Kitty_badtzmaru",
+		Name = "Pelúcia Badtz-Maru",
+		Description = "Pelúcia para presentear. Envie pelo inventário.",
+		Type = "Comum",
+		Weight = 0.5,
+		Economy = 400
+	},
 	["identity"] = {
 		AdminLevel = 1,
 		Index = "identity",

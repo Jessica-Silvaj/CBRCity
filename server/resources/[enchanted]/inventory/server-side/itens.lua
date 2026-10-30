@@ -6623,3 +6623,32 @@ CreateThread(function()
 		end
 	end
 end)
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- GIFTS
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- Presentes da Floricultura: usar segura o presente na mão (posições do WC_EMOTES_V8).
+-- { Dict, Anim, Prop, Flag, Bone, X, Y, Z, RotX, RotY, RotZ }
+local Gifts = {
+	["rose"] = { "anim@heists@humane_labs@finale@keycards","ped_a_enter_loop","prop_single_rose",49,18905,0.13,0.15,0.0,-100.0,0.0,-20.0 },
+	["flowerbouquet"] = { "hold_flowers@dad","hold_flowers_clip","prop_snow_flower_02",49,60309,0.11,-0.13,0.12,-18.7186,121.0529,-11.7724 },
+	["strawberrybouquet"] = { "hold_flowers@dad","hold_flowers_clip","pata_freevalentinesday3",49,28422,-0.01,0.03,-0.17,-6.0697,60.1852,3.4934 },
+	["teddybear"] = { "impexp_int-0","mp_m_waremech_01_dual-0","v_ilev_mr_rasberryclean",49,24817,-0.20,0.46,-0.016,-180.0,-90.0,0.0 },
+	["heartballoon"] = { "anim@heists@humane_labs@finale@keycards","ped_a_enter_loop","heart_balloon",49,60309,0.25,-0.84,0.53,-157.2041,-101.1702,28.0243 },
+	["rainbowballoon"] = { "anim@heists@humane_labs@finale@keycards","ped_a_enter_loop","pride_heart_balloon",49,60309,1.06,0.49,0.014,73.5103,-30.9638,19.3946 },
+	["giftbox"] = { "hold_flowers@dad","hold_flowers_clip","bzzz_prop_gift_orange",49,60309,0.018,0.039,0.116,-82.4097,-157.5768,-27.6738 },
+	["giftbox2"] = { "hold_flowers@dad","hold_flowers_clip","bzzz_prop_gift_purple",49,60309,0.018,0.039,0.116,-82.4097,-157.5768,-27.6738 },
+	["lovecake"] = { "anim@heists@box_carry@","idle","bzzz_prop_cake_love_001",49,18905,0.28,0.06,0.2,-54.0,-72.0,-6.0 },
+	["heartgift"] = { "anim@heists@box_carry@","idle","brum_heart",49,28422,-0.56,0.024,-0.369,-10.0,0.0,0.0 }
+}
+
+for Name,Hold in pairs(Gifts) do
+	Use[Name] = function(source,Passport,Amount,Slot,Full,Item,Split)
+		local Ped = GetPlayerPed(source)
+		if GetSelectedPedWeapon(Ped) ~= GetHashKey("WEAPON_UNARMED") then
+			return
+		end
+
+		TriggerClientEvent("inventory:Close",source)
+		vRPC.CreateObjects(source,table.unpack(Hold))
+	end
+end
