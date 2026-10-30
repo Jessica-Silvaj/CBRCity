@@ -377,7 +377,8 @@ CreateThread(function()
 			TimeDistance = 200
 		end
 
-		if Busy or EffectActive() then
+		-- card do vape (sabor/tanque/efeito) desligado: o pulmão já aparece na HUD
+		if Config.Card and (Busy or EffectActive()) then
 			TimeDistance = 100
 			Hud()
 

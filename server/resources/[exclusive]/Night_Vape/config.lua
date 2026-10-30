@@ -18,6 +18,8 @@ Config = {
 	MaxHold = 6,
 	-- Segundos mínimos entre puxadas
 	PuffCooldown = 2,
+	-- Mostra o card do vape (sabor, tanque e efeito) no canto da tela
+	Card = false,
 
 	-- Pulmão (0-100): cada puxada enche, recupera sozinho com o tempo. Puxar com ele cheio faz tossir e tira vida
 	Lung = {

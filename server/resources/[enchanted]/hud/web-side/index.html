@@ -61,6 +61,7 @@
             <circle cx="18" cy="18" r="15.5" class="lung-track"/>
             <circle cx="18" cy="18" r="15.5" class="lung-fill" id="lung-fill"/>
         </svg>
+        <span class="lung-disc"></span>
         <svg class="lung-icon" viewBox="0 0 24 24"><path d="M11 3h2v7.2l2.3 1.5c.4-1.8 1.4-4.4 3.2-5.6 1.7-1.1 3.5.3 3.5 2.4V17c0 2.2-1.8 4-4 4-1.9 0-3.6-1.3-3.9-3.2l-.5-3.6L12 12.8l-1.6 1.4-.5 3.6C9.6 19.7 7.9 21 6 21c-2.2 0-4-1.8-4-4V8.5c0-2.1 1.8-3.5 3.5-2.4 1.8 1.2 2.8 3.8 3.2 5.6L11 10.2V3z"/></svg>
         <span class="lung-text" id="lung-text">0%</span>
     </div>
@@ -71,10 +72,14 @@
         }
         #lung.show { display: block; }
         #lung .lung-ring { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
-        #lung .lung-track { fill: rgba(13, 13, 13, 0.55); stroke: rgba(255, 255, 255, 0.12); stroke-width: 3.2; }
-        #lung .lung-fill { fill: none; stroke: var(--lung, #4ade80); stroke-width: 3.2; stroke-linecap: round; stroke-dasharray: 97.4; stroke-dashoffset: 97.4; transition: stroke-dashoffset 0.3s, stroke 0.3s; }
-        #lung .lung-icon { position: absolute; left: 50%; top: 50%; width: 42%; height: 42%; transform: translate(-50%, -50%); fill: var(--lung, #4ade80); }
-        #lung .lung-text { position: absolute; left: 50%; top: calc(100% + 0.35rem); transform: translateX(-50%); font-weight: 700; font-size: 1rem; white-space: nowrap; }
+        /* mesmo padrão dos círculos de vida/colete/fome/sede: anel colorido, disco colorido por dentro e ícone branco */
+        #lung { --lung: #f472b6; }
+        #lung .lung-track { fill: rgba(13, 13, 13, 0.55); stroke: rgba(255, 255, 255, 0.15); stroke-width: 2.6; }
+        #lung .lung-fill { fill: none; stroke: var(--lung); stroke-width: 2.6; stroke-linecap: round; stroke-dasharray: 97.4; stroke-dashoffset: 97.4; transition: stroke-dashoffset 0.3s; }
+        #lung .lung-disc { position: absolute; left: 50%; top: 50%; width: 56%; height: 56%; transform: translate(-50%, -50%); border-radius: 50%; background: var(--lung); }
+        #lung .lung-icon { position: absolute; left: 50%; top: 50%; width: 32%; height: 32%; transform: translate(-50%, -50%); fill: #fff; }
+        #lung .lung-text { position: absolute; left: 50%; top: calc(100% + 0.35rem); transform: translateX(-50%); font-weight: 700; font-size: 0.8rem; white-space: nowrap; }
+        #lung.danger { --lung: #ef4444; }
         #lung.danger .lung-icon { animation: lung-pulse 0.8s ease-in-out infinite; }
         @keyframes lung-pulse { 0%, 100% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(1.2); } }
     </style>
@@ -109,6 +114,17 @@
                 return { first: best[0], step: best[1].left - best[0].left };
             }
 
+            // texto "NN%" logo abaixo do círculo informado
+            function percentLabel(ring) {
+                var found = null;
+                Array.prototype.forEach.call(document.querySelectorAll("#app *"), function (el) {
+                    if (found || el.children.length || !/^\d+%$/.test((el.textContent || "").trim())) return;
+                    var r = el.getBoundingClientRect();
+                    if (r.top >= ring.bottom - 2 && r.top <= ring.bottom + 40 && Math.abs((r.left + r.width / 2) - (ring.left + ring.width / 2)) < ring.width) found = el;
+                });
+                return found;
+            }
+
             function render() {
                 var show = visible && level > 0;
                 box.classList.toggle("show", show);
@@ -128,9 +144,19 @@
                     box.style.height = "2.8rem";
                 }
 
-                // verde -> amarelo -> vermelho conforme enche
-                var hue = Math.round(120 - (level / 100) * 120);
-                box.style.setProperty("--lung", "hsl(" + hue + ", 75%, 55%)");
+                // texto da porcentagem igual ao dos outros círculos (copia fonte, tamanho e distância do "100%" da vida)
+                var label = pos && percentLabel(pos.first);
+                if (label) {
+                    var css = getComputedStyle(label);
+                    var rect = label.getBoundingClientRect();
+                    text.style.fontFamily = css.fontFamily;
+                    text.style.fontSize = css.fontSize;
+                    text.style.fontWeight = css.fontWeight;
+                    text.style.color = css.color;
+                    text.style.top = (rect.top - pos.first.top) + "px";
+                }
+
+                // vermelho quando o pulmão está cheio (próxima puxada dá tosse)
                 box.classList.toggle("danger", level >= 100);
                 fill.style.strokeDashoffset = 97.4 * (1 - level / 100);
                 text.textContent = Math.round(level) + "%";
