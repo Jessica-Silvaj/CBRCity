@@ -122,6 +122,8 @@ end)
 RegisterCommand("e3",function(source,Message)
 	local Passport = vRP.Passport(source)
 	if Passport and vRP.HasGroup(Passport,"Admin",2) then
+		TriggerClientEvent("emotes",source,Message[1])
+
 		local Players = vRPC.ClosestPeds(source,50)
 		for _,v in pairs(Players) do
 			async(function()

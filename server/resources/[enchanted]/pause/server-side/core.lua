@@ -402,7 +402,7 @@ function Creative.PropertyBuy(Index)
 
 		local Amount = vRP.AmountGroups(Propertys[Index].Permission)
 		local Level = vRP.HasPermission(Passport,Propertys[Index].Permission)
-		if Amount > 0 and Level and Level > 1 then
+		if Amount > 0 and not Level then
 			TriggerClientEvent("pause:Notify",source,"Atenção","Propriedade indisponível.","amarelo")
 
 			return false

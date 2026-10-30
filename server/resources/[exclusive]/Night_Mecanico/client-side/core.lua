@@ -169,6 +169,12 @@ RegisterNetEvent("Night_Mecanico:ApplyRepair",function(NetId,Engine)
 		SetVehicleEngineHealth(Vehicle,Engine)
 	end
 
+	for _,Tyre in ipairs({ 0,1,2,3,4,5,45,47 }) do
+		if IsVehicleTyreBurst(Vehicle,Tyre,false) then
+			SetVehicleTyreFixed(Vehicle,Tyre)
+		end
+	end
+
 	SetVehicleUndriveable(Vehicle,false)
 	SetVehicleDoorShut(Vehicle,4,false)
 end)

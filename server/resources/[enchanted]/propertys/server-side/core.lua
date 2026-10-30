@@ -495,16 +495,16 @@ end)
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- CLOTHES
 -----------------------------------------------------------------------------------------------------------------------------------------
-function Creative.Clothes()
+function Creative.Clothes(Property,Serial)
 	local source = source
 	local Passport = vRP.Passport(source)
 
-	if not Passport then
+	if not Passport or not Property or not Serial then
 		return {}
 	end
 
 	local Clothes = {}
-	local Consult = vRP.GetSrvData("Wardrobe:"..Passport,true)
+	local Consult = vRP.GetSrvData("Wardrobe:"..Property..":"..Serial,true)
 	for Table in pairs(Consult) do
 		table.insert(Clothes,Table)
 	end
@@ -588,7 +588,7 @@ AddEventHandler("propertys:Clothes:Delete",function(Mode)
 
 	if Consult[Name] then
 		Consult[Name] = nil
-		vRP.SetSrvData("Wardrobe:"..Property..":"..Serial,true)
+		vRP.SetSrvData("Wardrobe:"..Property..":"..Serial,Consult,true)
 	end
 end)
 -----------------------------------------------------------------------------------------------------------------------------------------

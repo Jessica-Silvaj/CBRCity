@@ -576,7 +576,7 @@ Propertys = {
 		Name = "Mansão 01",
 		Image = "mansao01",
 		Permission = "Mansao01",
-		Coords = vec3(-2290.77,4305.9,34.31),
+		Coords = vec3(-1662.18,475.73,137.7),
 		Price = 100000,
 		Discount = 1.0,
 		Duration = 2592000,
@@ -584,7 +584,7 @@ Propertys = {
 		Rewards = {
 			"Baú com 2000 KG",
 			"1 Garagem",
-			"Salário de R$5000 a cada 30 minutos"
+			"Loja de roupas"
 		}
 	},{
 		Name = "Mansão 02",

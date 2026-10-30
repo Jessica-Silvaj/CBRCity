@@ -174,6 +174,7 @@ Use = {
 				if vRP.TakeItem(Passport,Full,1,true,Slot) then
 					vRP.UpgradeStress(Passport,10)
 					vRPC.UpgradeHealth(source,10)
+					vPARAMEDIC.ResetPunches(source)
 				end
 			end
 		end)

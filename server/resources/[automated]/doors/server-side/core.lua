@@ -21,6 +21,7 @@ vRP.Prepare("doors/GetAll","SELECT * FROM doors")
 vRP.Prepare("doors/Insert","INSERT INTO doors (name, hash, coords, distance, permission, other, lockState) VALUES (@name, @hash, @coords, @distance, @permission, @other, @lockState)")
 vRP.Prepare("doors/UpdateOther","UPDATE doors SET other = @other WHERE id = @id")
 vRP.Prepare("doors/UpdateLock","UPDATE doors SET lockState = @lockState WHERE id = @id")
+vRP.Prepare("doors/LockAll","UPDATE doors SET lockState = 1")
 vRP.Prepare("doors/UpdateConfig","UPDATE doors SET name = @name, distance = @distance, permission = @permission WHERE id = @id")
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- DOORS
@@ -35,6 +36,9 @@ AddEventHandler("Night_Management:requestDoors", function()
         exports.oxmysql:executeSync("ALTER TABLE doors ADD COLUMN name VARCHAR(255) DEFAULT 'Porta'")
     end)
     
+	-- Todas as portas iniciam trancadas após o restart
+	vRP.Query("doors/LockAll")
+
 	local consult = vRP.Query("doors/GetAll")
 	if consult then
 		for _,v in pairs(consult) do
@@ -48,7 +52,7 @@ AddEventHandler("Night_Management:requestDoors", function()
 					Hash = tonumber(v.hash),
                     Name = v.name or "Porta",
 					Disabled = false,
-					Lock = v.lockState == 1,
+					Lock = true,
 					Distance = tonumber(v.distance),
 					Permission = v.permission,
 					Other = v.other and tostring(v.other) or nil

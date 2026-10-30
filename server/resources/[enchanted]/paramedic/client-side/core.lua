@@ -12,6 +12,7 @@ Tunnel.bindInterface("paramedic",Creative)
 -----------------------------------------------------------------------------------------------------------------------------------------
 local Damaged = {}
 local Bleedings = 0
+local Punches = 0
 local Injuried = GetGameTimer()
 local BloodTimers = GetGameTimer()
 -----------------------------------------------------------------------------------------------------------------------------------------
@@ -31,6 +32,15 @@ AddEventHandler("gameEventTriggered",function(Event,Message)
 		SetPedToRagdoll(Ped,2500,2500,0,0,0,0)
 
 		return false
+	end
+
+	-- Soco (desarmado) só causa sangramento a partir do 5º soco (contagem zera no tratamento do paramédico)
+	if GetWeapontypeGroup(Damage) == `GROUP_UNARMED` then
+		Punches = Punches + 1
+
+		if Punches < 5 then
+			return false
+		end
 	end
 
 	if GetGameTimer() >= Injuried and not IsPedInAnyVehicle(Ped) and Health then
@@ -68,6 +78,7 @@ RegisterNetEvent("paramedic:Reset")
 AddEventHandler("paramedic:Reset",function()
 	Damaged = {}
 	Bleedings = 0
+	Punches = 0
 	TriggerEvent("hud:Bleeding",Bleedings)
 	Injuried = GetGameTimer()
 	BloodTimers = GetGameTimer()
@@ -83,6 +94,8 @@ end
 -- BANDAGE
 -----------------------------------------------------------------------------------------------------------------------------------------
 function Creative.Bandage()
+	Punches = 0
+
 	for Number in pairs(Damaged) do
 		local Humane = Bone(Number)
 
@@ -99,6 +112,12 @@ function Creative.Bandage()
 	end
 
 	return ""
+end
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- RESETPUNCHES
+-----------------------------------------------------------------------------------------------------------------------------------------
+function Creative.ResetPunches()
+	Punches = 0
 end
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- OXYCONTIN

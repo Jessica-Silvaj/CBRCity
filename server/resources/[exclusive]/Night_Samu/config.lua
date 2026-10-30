@@ -14,7 +14,7 @@ Config = {
 	HealthPercent = 15,
 
 	-- Valor cobrado do banco ao chamar (0 = gratuito). Sem saldo, o atendimento é feito mesmo assim.
-	Price = 0,
+	Price = 2000,
 	-- Bloqueia o /samu se houver paramédicos em serviço (0 = nunca bloqueia)
 	BlockIfParamedics = 0,
 	ParamedicGroup = "Paramedico",

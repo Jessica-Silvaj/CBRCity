@@ -59,8 +59,8 @@ AddEventHandler("doors:Sync",function(Number,Status,Other)
 		local doorHash = GetHashKey("door_" .. tostring(Number))
 
 		if Status then
-			DoorSystemSetDoorState(doorHash, 0, false, false)
-			DoorSystemSetOpenRatio(doorHash, 0.0, false, false)
+			-- 6 = força fechar (portas automáticas fecham mesmo com alguém perto)
+			DoorSystemSetDoorState(doorHash, 6, false, true)
 		else
 			DoorSystemSetDoorState(doorHash, 0, false, false)
 		end
@@ -150,10 +150,7 @@ CreateThread(function()
 									DoorSystemSetDoorState(doorHash, 1, false, false)
 								end
 							else
-								if DoorSystemGetDoorState(doorHash) ~= 0 then
-									DoorSystemSetDoorState(doorHash, 0, false, false)
-								end
-								DoorSystemSetOpenRatio(doorHash, 0.0, false, false)
+								DoorSystemSetDoorState(doorHash, 6, false, true)
 							end
 						else
 							if DoorSystemGetDoorState(doorHash) ~= 0 then

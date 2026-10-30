@@ -6,8 +6,8 @@
 Config = {
 	Command = "mec",
 
-	-- Segundos entre o /mec e o guincho aparecer (10 minutos)
-	Delay = 600,
+	-- Segundos entre o /mec e o guincho aparecer (5 minutos)
+	Delay = 300,
 	-- Segundos que o jogador precisa esperar para usar o /mec de novo (30 minutos)
 	Cooldown = 1800,
 	-- Vida do motor após o reparo, em porcentagem (1000 = motor perfeito no GTA)
@@ -20,7 +20,7 @@ Config = {
 	-- Distância (metros) em que o guincho aparece, sempre numa rua
 	SpawnDistance = 100,
 	-- Valor cobrado do banco ao chamar (0 = gratuito)
-	Price = 0,
+	Price = 2000,
 
 	-- Tempo máximo (segundos) do guincho dirigindo; depois disso ele é posicionado ao lado do veículo
 	DriveTimeout = 90,
