@@ -83,7 +83,7 @@
             var box = document.getElementById("lung");
             var fill = document.getElementById("lung-fill");
             var text = document.getElementById("lung-text");
-            var visible = false, level = 0;
+            var visible = true, level = 0;
 
             // acha a fileira de círculos de status (vida, colete, fome, sede...) e devolve o último e o passo entre eles
             function anchor() {
@@ -111,14 +111,22 @@
 
             function render() {
                 var show = visible && level > 0;
-                var pos = show ? anchor() : null;
-                box.classList.toggle("show", !!pos);
-                if (!pos) return;
+                box.classList.toggle("show", show);
+                if (!show) return;
 
-                box.style.left = (pos.last.left + pos.step) + "px";
-                box.style.top = pos.last.top + "px";
-                box.style.width = pos.last.width + "px";
-                box.style.height = pos.last.height + "px";
+                // ao lado dos círculos de status; se não achar, fica fixo no canto inferior esquerdo
+                var pos = anchor();
+                if (pos) {
+                    box.style.left = (pos.last.left + pos.step) + "px";
+                    box.style.top = pos.last.top + "px";
+                    box.style.width = pos.last.width + "px";
+                    box.style.height = pos.last.height + "px";
+                } else {
+                    box.style.left = "1.5rem";
+                    box.style.top = "calc(100vh - 7rem)";
+                    box.style.width = "3rem";
+                    box.style.height = "3rem";
+                }
 
                 // verde -> amarelo -> vermelho conforme enche
                 var hue = Math.round(120 - (level / 100) * 120);
