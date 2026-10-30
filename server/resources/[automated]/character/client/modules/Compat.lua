@@ -1,3 +1,11 @@
+-- Os armários (dynamic/F9 e propertys) pedem a roupa atual pela interface "skinshop"
+local Skinshops = {}
+module("vrp","lib/Tunnel").bindInterface("skinshop",Skinshops)
+
+function Skinshops.Customization()
+    return Skinshop and Skinshop.defaultClothes or nil
+end
+
 local function PedGender()
     return GetEntityModel(PlayerPedId()) == GetHashKey("mp_f_freemode_01") and "f" or "m"
 end
