@@ -147,7 +147,7 @@ function Creative.Drops(Item,Slot,Amount)
 
 	local ItemName = SplitOne(Item)
 	if PoliceItemsSystem and PoliceItems[ItemName] then
-		if not vRP.HasGroup(Passport, "Policias") then
+		if not vRP.HasGroup(Passport, "PoliciaCBR") then
 			TriggerClientEvent("inventory:Notify", source, "Atenção", "Apenas policiais podem manusear este item.", "vermelho", 5000)
 			return false
 		end
@@ -199,7 +199,7 @@ function Creative.Pickup(Number,Route,Target,Amount)
 
 	local ItemName = SplitOne(Info.key)
 	if PoliceItemsSystem and PoliceItems[ItemName] then
-		if not vRP.HasGroup(Passport, "Policias") then
+		if not vRP.HasGroup(Passport, "PoliciaCBR") then
 			TriggerClientEvent("inventory:Notify", source, "Atenção", "Apenas policiais podem manusear este item.", "vermelho", 5000)
 			return false
 		end

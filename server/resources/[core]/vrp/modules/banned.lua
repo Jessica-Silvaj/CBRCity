@@ -46,16 +46,32 @@ function vRP.Banned(source,Account)
 	return Return
 end
 -----------------------------------------------------------------------------------------------------------------------------------------
+-- ACCOUNTOPTIMIZE
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- Conta (tabela accounts) dona do passaporte, achada pela License do personagem
+function vRP.AccountOptimize(Passport)
+	local Identity = vRP.Identity(Passport)
+	if not Identity or not Identity.License then
+		return false
+	end
+
+	return vRP.SingleQuery("accounts/Account",{ License = Identity.License }) or false
+end
+-----------------------------------------------------------------------------------------------------------------------------------------
 -- SETBANNED
 -----------------------------------------------------------------------------------------------------------------------------------------
 function vRP.SetBanned(Passport,Amount,Mode,Reason)
 	local function SendToDiscord(Passport,Mode,Amount,Reason,Discord)
 		local Message = (Mode == "Permanente") and "Permanente" or Amount
 		local Motivo = Reason or "Banimento administrativo"
-		exports.discord:Embed("Ban","**[PASSAPORTE]:** "..Passport.."\n**[TEMPO]:** "..Message.."\n**[MOTIVO]:** "..Motivo.."\n**[DISCORD]:** <@"..Discord..">\n**[DATA & HORA]:** "..os.date("%d/%m/%Y").." Á s "..os.date("%H:%M"))
+		exports.discord:Embed("Ban","**[PASSAPORTE]:** "..Passport.."\n**[TEMPO]:** "..Message.."\n**[MOTIVO]:** "..Motivo.."\n**[DISCORD]:** "..(Discord and "<@"..Discord..">" or "Não vinculado").."\n**[DATA & HORA]:** "..os.date("%d/%m/%Y").." Á s "..os.date("%H:%M"))
 	end
 
 	local Account = vRP.AccountOptimize(Passport)
+	if not Account then
+		return false
+	end
+
 	local Permanent = (Amount == -1 or Mode == "Permanente")
 	local UseReason = Reason
 	if not UseReason then

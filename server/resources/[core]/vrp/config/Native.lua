@@ -140,5 +140,5 @@ end
 -- CHECKPOLICE
 -----------------------------------------------------------------------------------------------------------------------------------------
 function CheckPolice()
-	return LocalPlayer.state.Policia
+	return LocalPlayer.state.PoliciaCBR
 end

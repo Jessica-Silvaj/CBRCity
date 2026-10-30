@@ -310,7 +310,7 @@ end)
 -----------------------------------------------------------------------------------------------------------------------------------------
 AddEventHandler("eletronics:openSystem", function()
 	if IsPickingUp then
-		return
+		return TriggerEvent("Notify", "Atenção", "Termine de recolher o dinheiro primeiro.", "amarelo", 5000)
 	end
 
 	local targetId = getRobberyLocation(2)

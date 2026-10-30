@@ -8,8 +8,8 @@ local CONTROLS = { 37,204,211,349,192,157,158,159,160,161,162,163,164,165 }
 local SpawnedBlips = {}
 -- Reduz pela metade a densidade ambiente configurada no painel gestor.
 local AmbientDensityMultiplier = 0.5
--- +20% para NPCs andando (estacionados mantidos).
-local TrafficPedMultiplier = AmbientDensityMultiplier * 1.2
+-- NPCs andando: 1.2 reduzido em 20% (estacionados mantidos).
+local TrafficPedMultiplier = AmbientDensityMultiplier * 0.96
 -- +50% para carros circulando.
 local TrafficVehicleMultiplier = AmbientDensityMultiplier * 1.5
 local CurrentDensity = {

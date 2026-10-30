@@ -19,7 +19,7 @@ CreateThread(function()
 end)
 
 local PoliceStates = {
-    "Policia",
+    "PoliciaCBR",
     "Admin"
 }
 

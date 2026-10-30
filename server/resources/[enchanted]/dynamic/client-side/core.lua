@@ -178,6 +178,7 @@ RegisterCommand("PlayerFunctions",function()
 
 				local Events = {
 					Policia = "mdt:Open",
+					PoliciaCBR = "mdt:Open",
 					Paramedico = "ems:Open"
 				}
 

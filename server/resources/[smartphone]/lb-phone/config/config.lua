@@ -152,12 +152,12 @@ Config.Companies.DeleteConversations = true -- allow employees to delete convers
 Config.Companies.AllowNoService = false -- allow players to call & message companies even if they have no phone service (reception)?
 Config.Companies.Services = {
     {
-        job = "Policia",
+        job = "PoliciaCBR",
         name = "Polícia",
         icon = "https://cdn-icons-png.flaticon.com/512/7211/7211100.png",
         canCall = false, -- if true, players can call the company
         canMessage = true, -- if true, players can message the company
-        bossRanks = { "Chefe","Capitão","Tenente","Sargento","Oficial","Cadete" }, -- ranks that can manage the company
+        bossRanks = { "Coronel","Tenente Coronel","Major","Capitão" }, -- ranks that can manage the company
         location = {
             name = "Servir e proteger",
             coords = {

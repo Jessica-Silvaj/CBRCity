@@ -100,7 +100,7 @@ function Creative.PaymentDrugs()
 		vRP.CallPolice({
 			Source = source,
 			Passport = Passport,
-			Permission = "Policia",
+			Permission = "PoliciaCBR",
 			Name = "Venda de Drogas",
 			Percentage = Drugs[Passport][4],
 			Wanted = 60,

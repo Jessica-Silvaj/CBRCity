@@ -45,10 +45,10 @@ RegisterServerEvent("dynamic:Tencode")
 AddEventHandler("dynamic:Tencode",function(Number)
 	local source = source
 	local Passport = vRP.Passport(source)
-	if Passport and vRP.HasService(Passport,"Policia") and Codes[Number] then
+	if Passport and vRP.HasService(Passport,"PoliciaCBR") and Codes[Number] then
 		local FullName = vRP.FullName(Passport)
 		local Coords = vRP.GetEntityCoords(source)
-		local Service = vRP.NumPermission("Policia")
+		local Service = vRP.NumPermission("PoliciaCBR")
 
 		for Passports,Sources in pairs(Service) do
 			async(function()

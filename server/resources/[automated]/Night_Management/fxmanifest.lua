@@ -28,11 +28,13 @@ server_scripts {
     "server-side/server.lua",
     "server-side/props.lua",
     "server-side/atms.lua",
-    "server-side/catalogs.lua"
+    "server-side/catalogs.lua",
+    "server-side/phone.lua"
 }
 
 files {
     'web-side/index.html',
     'web-side/style.css',
-    'web-side/index.js'
+    'web-side/index.js',
+    'web-side/phone.js'
 }

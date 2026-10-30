@@ -70,13 +70,23 @@ local function licenseCategories(Passport)
 end
 
 local AuthorizedGroups = {
-	"Admin",
-	"Policia"
+	"Admin"
+}
+
+-- Policiais só acessam o app com o ponto batido
+local ServiceGroups = {
+	"PoliciaCBR"
 }
 
 local function accessGroup(Passport)
 	if not Passport then
 		return false
+	end
+
+	for _,Group in pairs(ServiceGroups) do
+		if vRP.HasService(Passport,Group) then
+			return Group
+		end
 	end
 
 	for _,Group in pairs(AuthorizedGroups) do
@@ -282,7 +292,7 @@ end
 
 function Server.getBodycamOfficers()
 	local Officers = {}
-	local Services = vRP.NumPermission("Policia")
+	local Services = vRP.NumPermission("PoliciaCBR")
 	local myPassport = vRP.Passport(source)
 
 	for Passport,TargetSource in pairs(Services or {}) do

@@ -794,7 +794,7 @@ function vRP.TakeChest(Passport,Data,Amount,Slot,Target,Save)
 	local Item = Consult[Slot].item
 	local ItemName = SplitOne(Item)
 	if PoliceItemsSystem and PoliceItems[ItemName] then
-		if not vRP.HasGroup(Passport, "Policias") then
+		if not vRP.HasGroup(Passport, "PoliciaCBR") then
 			TriggerClientEvent("inventory:Notify", source, "Atenção", "Apenas policiais podem manusear este item.", "vermelho", 5000)
 			return Returned
 		end
@@ -923,7 +923,7 @@ function vRP.StoreChest(Passport,Data,Amount,Weight,Slot,Target,Save,Max)
 			local source = vRP.Source(Passport)
 			local ItemName = SplitOne(Item)
 			if PoliceItemsSystem and PoliceItems[ItemName] then
-				if not vRP.HasGroup(Passport, "Policias") then
+				if not vRP.HasGroup(Passport, "PoliciaCBR") then
 					TriggerClientEvent("inventory:Notify", source, "Atenção", "Apenas policiais podem manusear este item.", "vermelho", 5000)
 					return Returned
 				end

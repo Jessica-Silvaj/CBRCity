@@ -209,6 +209,22 @@ local Config = {
 			Name = "lift_fibagent_loop"
 		}
 	},
+	-- Carro-forte: o roubo é no próprio veículo (stockade.lua); aqui ficam só os valores editáveis no painel.
+	-- Delay = espera para começar outro carro-forte, Timer = duração de cada compartimento, pagamento por compartimento.
+	Stockade = {
+		Police = 10,
+		Delay = 3600,
+		Timer = 20,
+		Wanted = 60,
+		Cooldown = 0,
+		Name = "Roubo a Carro Forte",
+		Need = { Amount = 1, Item = "WEAPON_CROWBAR", Consume = false },
+		Payment = {
+			List = {
+				{ Item = "dirtydollar", Min = 7225, Max = 7225, Chance = 100 }
+			}
+		}
+	},
 	Eletronic = {
 		Police = 2,
 		Delay = 300,
@@ -246,6 +262,11 @@ local function ApplyManagementRobberies(Entries)
             end
             local Payment = Setting.Payment and Setting.Payment.List and Setting.Payment.List[1]
             if Payment then Payment.Min,Payment.Max = Entry.Min or Payment.Min,Entry.Max or Payment.Max end
+            -- Item exigido escolhido no painel ("" = nenhum)
+            -- vários itens separados por vírgula: o jogador precisa de todos
+            if type(Entry.NeedItem) == "string" then
+                Setting.Need = Entry.NeedItem ~= "" and { Item = Entry.NeedItem,Amount = Entry.NeedAmount or 1,Consume = Entry.NeedConsume == true } or nil
+            end
         end
     end
     -- Tipos excluídos pelo painel: os clientes removem os pontos "Roubar"
@@ -292,7 +313,9 @@ exports("ManagementRobberies",function()
         List[#List + 1] = { id = Mode,Name = Entry.Name,Enabled = Entry.Enabled ~= false,
             Police = Entry.Police or 0,Delay = Entry.Delay or 3600,Timer = Entry.Timer or 30,
             Wanted = Entry.Wanted or 60,Min = Payment.Min or 0,Max = Payment.Max or 0,
-            Item = Payment.Item,Explosion = Entry.Explosion == true }
+            Item = Payment.Item,Explosion = Entry.Explosion == true ,
+            NeedItem = Entry.Need and Entry.Need.Item or "",NeedAmount = Entry.Need and Entry.Need.Amount or 1,
+            NeedConsume = Entry.Need and Entry.Need.Consume == true or false }
     end
     table.sort(List,function(a,b) return a.id < b.id end)
     return List
@@ -319,20 +342,30 @@ AddEventHandler("inventory:Robbery",function(Number,Mode)
 	local Configuration = Config[Mode]
 	local Passport = vRP.Passport(source)
 
-	if not Passport or Active[Passport] or not Configuration or Configuration.Enabled == false then
+	-- Eletronic e Stockade só guardam as configurações do painel; o roubo em si é do c4 / stockade.lua
+	if not Passport or not Configuration or Mode == "Eletronic" or Mode == "Stockade" then
 		return false
 	end
 
-	if Configuration.Police and vRP.AmountService("Policia") < Configuration.Police then
+	if Configuration.Enabled == false then
+		TriggerClientEvent("Notify",source,"Atenção","Este roubo está desativado.","amarelo",5000)
+		return false
+	end
+
+	if Active[Passport] then
+		TriggerClientEvent("Notify",source,"Atenção","Você já está roubando.","amarelo",5000)
+		return false
+	end
+
+	if Configuration.Police and vRP.AmountService("PoliciaCBR") < Configuration.Police then
 		TriggerClientEvent("Notify",source,"Atenção","Contingente indisponível.","amarelo",5000)
 		return false
 	end
 
 	local RequiredItem = true
 	if Configuration.Need then
-		RequiredItem = vRP.ConsultItem(Passport,Configuration.Need.Item,Configuration.Need.Amount)
+		RequiredItem = NeedConsult(source,Passport,Configuration.Need)
 		if not RequiredItem then
-			TriggerClientEvent("Notify",source,"Atenção","Precisa de <b>"..Configuration.Need.Amount.."x "..ItemName(Configuration.Need.Item).."</b>.","amarelo",5000)
 			return false
 		end
 	end
@@ -341,10 +374,9 @@ AddEventHandler("inventory:Robbery",function(Number,Mode)
 	local Type = type(Configuration.Cooldown)
 	local Cooldown = Type == "table" and (Configuration.Cooldown[Number] or 0) or (Configuration.Cooldown or 0)
 	if CurrentTimer < Cooldown then
+		-- avisa sempre: sem isso, outra registradora/ATM em espera parecia não funcionar
 		local Remaining = Cooldown - CurrentTimer
-		if not Configuration.Explosion and Remaining >= ((Configuration.Delay or 3600) - 300) and (Type == "table" or (Type == "number" and (Configuration.Last or 1) == Number)) then
-			TriggerClientEvent("Notify",source,"Atenção","Aguarde "..CompleteTimers(Remaining)..".","amarelo",5000)
-		end
+		TriggerClientEvent("Notify",source,"Atenção","Roubos deste tipo em espera. Aguarde "..CompleteTimers(Remaining)..".","amarelo",5000)
 
 		return false
 	else
@@ -376,7 +408,7 @@ AddEventHandler("inventory:Robbery",function(Number,Mode)
 	exports["vrp"]:CallPolice({
 		Source = source,
 		Passport = Passport,
-		Permission = "Policia",
+		Permission = "PoliciaCBR",
 		Name = Configuration.Name,
 		Percentage = Configuration.Percentage,
 		Wanted = Configuration.Wanted or 60,
@@ -398,8 +430,7 @@ AddEventHandler("inventory:Robbery",function(Number,Mode)
 
 			local Consumed = true
 			if Configuration.Need and Configuration.Need.Consume then
-				local consumeItem = RequiredItem and RequiredItem.Item or Configuration.Need.Item
-				Consumed = vRP.TakeItem(Passport,consumeItem,Configuration.Need.Amount,false,(RequiredItem and RequiredItem.Slot))
+				Consumed = NeedTake(Passport,Configuration.Need,RequiredItem)
 			end
 
 			if (not Configuration.Need) or (RequiredItem and Consumed) then
@@ -414,4 +445,52 @@ AddEventHandler("inventory:Robbery",function(Number,Mode)
 			end
 		end
 	end)
-end)
+end)-----------------------------------------------------------------------------------------------------------------------------------------
+-- NEEDITEMS
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- Need.Item aceita vários itens separados por vírgula; todos são exigidos
+function NeedItems(Need)
+	local Items = {}
+	for Item in tostring(Need and Need.Item or ""):gmatch("[^,%s]+") do
+		Items[#Items + 1] = Item
+	end
+	return Items
+end
+
+function NeedMissing(source,Need)
+	local Names = {}
+	for _,Item in ipairs(NeedItems(Need)) do
+		Names[#Names + 1] = (Need.Amount or 1).."x "..exports.vrp:ItemName(Item)
+	end
+	TriggerClientEvent("Notify",source,"Atenção","Precisa de <b>"..table.concat(Names," + ").."</b>.","amarelo",5000)
+end
+
+-- retorna a lista de itens encontrados (com slot) ou false avisando o que falta
+function NeedConsult(source,Passport,Need)
+	local Found = {}
+	for _,Item in ipairs(NeedItems(Need)) do
+		local Consult = vRP.ConsultItem(Passport,Item,Need.Amount or 1)
+		if not Consult then
+			NeedMissing(source,Need)
+			return false
+		end
+		Found[#Found + 1] = Consult
+	end
+	return Found
+end
+
+function NeedTake(Passport,Need,Found)
+	for _,Consult in ipairs(Found or {}) do
+		if not vRP.TakeItem(Passport,Consult.Item,Need.Amount or 1,false,Consult.Slot) then
+			return false
+		end
+	end
+	return true
+end
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- ROBBERYSETTINGS
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- Configuração atual (já com o painel gestor) de um tipo de roubo, usada pelo stockade.lua
+function RobberySettings(Mode)
+	return Config[Mode]
+end

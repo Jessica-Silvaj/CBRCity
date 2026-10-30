@@ -86,7 +86,7 @@ RegisterCommand("ChatEvent",function()
 		if Local[Permission] then
 			Tags[#Tags + 1] = Permission
 
-			if not Police and (Permission == "LSPD" or Permission == "BCSO") then
+			if not Police and (Permission == "LSPD" or Permission == "BCSO" or Permission == "PoliciaCBR") then
 				Tags[#Tags + 1] = "Policia"
 				Police = true
 			end

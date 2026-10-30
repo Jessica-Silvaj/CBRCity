@@ -48,11 +48,33 @@ local function IsPermittedTime(Atm)
 	return CurrentHour >= StartHour or CurrentHour < EndHour
 end
 -----------------------------------------------------------------------------------------------------------------------------------------
+-- PANEL
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- "Caixa Eletrônico" (Eletronic) do painel gestor > Roubos; sem o inventory valem os valores do config
+local function Panel()
+	if GetResourceState("inventory") == "started" then
+		for _, Entry in ipairs(exports.inventory:ManagementRobberies() or {}) do
+			if Entry.id == "Eletronic" then
+				return Entry
+			end
+		end
+	end
+
+	return {
+		Enabled = true,
+		Police = Config.Police.MinAmount,
+		Delay = Config.Robbery.Cooldown,
+		Wanted = Config.Police.CallPolice.C4.Wanted,
+		Min = Config.Robbery.Valuation.Min,
+		Max = Config.Robbery.Valuation.Max
+	}
+end
+-----------------------------------------------------------------------------------------------------------------------------------------
 -- DISPATCHPOLICE
 -----------------------------------------------------------------------------------------------------------------------------------------
 local function DispatchPolice(source, Passport, Atm, Method)
 	local Settings = Config.Police.CallPolice
-	local MethodSettings = Settings[Method] or {}
+	local MethodSettings = { Wanted = Panel().Wanted or (Settings[Method] or {}).Wanted }
 
 	exports["vrp"]:CallPolice({
 		Source = source,
@@ -70,7 +92,8 @@ end
 -- ROLLVALUATION
 -----------------------------------------------------------------------------------------------------------------------------------------
 local function RollValuation(Passport)
-	local Valuation = math.random(Config.Robbery.Valuation.Min, Config.Robbery.Valuation.Max)
+	local Settings = Panel()
+	local Valuation = math.random(math.min(Settings.Min, Settings.Max), math.max(Settings.Min, Settings.Max))
 
 	if exports.party:DoesExist(Passport, 2) then
 		Valuation = Valuation * Config.Robbery.Valuation.Multipliers.Party
@@ -107,12 +130,25 @@ function Creative.CheckSystems(targetId)
 		return false
 	end
 
+	-- roubo anterior que não terminou (cliente caiu/cancelou) não trava o caixa para sempre
+	if Active[targetId] and (GetGameTimer() - Active[targetId].StartedAt) > 600000 then
+		CleanupRobbery(targetId)
+	end
+
 	if Active[targetId] then
+		TriggerClientEvent("Notify", source, "Atenção", "Este caixa já está sendo roubado.", "amarelo", 5000)
 		return false
 	end
 
 	local Atm = Config.AtmList[targetId]
 	if not Atm or Atm.Safe then
+		TriggerClientEvent("Notify", source, "Atenção", "Este caixa não pode ser roubado.", "amarelo", 5000)
+		return false
+	end
+
+	local Settings = Panel()
+	if not Settings.Enabled then
+		TriggerClientEvent("Notify", source, "Atenção", "O roubo a caixa eletrônico está desativado.", "amarelo", 5000)
 		return false
 	end
 
@@ -134,28 +170,43 @@ function Creative.CheckSystems(targetId)
 
 	local Coords = vRP.GetEntityCoords(source)
 	if not Coords or #(Coords - Atm.Cds) > Config.Security.StartDistance then
+		TriggerClientEvent("Notify", source, "Atenção", "Chegue mais perto do caixa.", "amarelo", 5000)
 		return false
 	end
 
-	if vRP.AmountService(Config.Police.Permission) < Config.Police.MinAmount then
+	if vRP.AmountService(Config.Police.Permission) < (Settings.Police or 0) then
 		TriggerClientEvent("Notify", source, "Atenção", "Contingente policial insuficiente para este roubo.", "amarelo", 5000)
 		return false
 	end
 
-	local RequiredItem = Config.ItemC4
-	local HasItem = vRP.ConsultItem(Passport, RequiredItem, 1)
-	if not HasItem then
-		TriggerClientEvent("Notify", source, "Atenção", "Você precisa de 1x "..exports.vrp:ItemName(RequiredItem)..".", "amarelo", 5000)
-		return false
+	-- item escolhido no painel (Eletronic); "" no painel = sem item
+	-- vários itens separados por vírgula: precisa de todos
+	local RequiredItem = Settings.NeedItem or Config.ItemC4
+	local Amount = Settings.NeedAmount or 1
+	local Found, Names = {}, {}
+	for Item in RequiredItem:gmatch("[^,%s]+") do
+		Names[#Names + 1] = Amount.."x "..exports.vrp:ItemName(Item)
+		Found[#Found + 1] = vRP.ConsultItem(Passport, Item, Amount) or false
 	end
 
-	if not vRP.TakeItem(Passport, HasItem.Item, 1, true) then
-		return false
+	for _,HasItem in ipairs(Found) do
+		if not HasItem then
+			TriggerClientEvent("Notify", source, "Atenção", "Você precisa de "..table.concat(Names, " + ")..".", "amarelo", 5000)
+			return false
+		end
+	end
+
+	if Settings.NeedConsume ~= false then
+		for _,HasItem in ipairs(Found) do
+			if not vRP.TakeItem(Passport, HasItem.Item, Amount, true, HasItem.Slot) then
+				return false
+			end
+		end
 	end
 
 	local FuseTime = math.random(Config.Robbery.MinC4Time, Config.Robbery.C4Time)
 
-	Cooldowns[targetId] = os.time() + Config.Robbery.Cooldown
+	Cooldowns[targetId] = os.time() + (Settings.Delay or Config.Robbery.Cooldown)
 	AtmLock[targetId] = Passport
 	Active[targetId] = {
 		StartedBy = Passport,

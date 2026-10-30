@@ -379,7 +379,7 @@ function Creative.Send(Slot,Amount)
 	local Item = Data.item
 	local ItemName = SplitOne(Item)
 	if PoliceItemsSystem and PoliceItems[ItemName] then
-		if not vRP.HasGroup(Passport, "Policias") then
+		if not vRP.HasGroup(Passport, "PoliciaCBR") then
 			TriggerClientEvent("inventory:Notify", source, "Atenção", "Apenas policiais podem manusear este item.", "vermelho", 5000)
 			return false
 		end
@@ -607,7 +607,7 @@ function Creative.Use(Slot,Amount)
 		local Full,Item = Inv[Slot].item,Split[1]
 
 		if PoliceItemsSystem and PoliceItems[Item] then
-			if not vRP.HasGroup(Passport, "Policias") then
+			if not vRP.HasGroup(Passport, "PoliciaCBR") then
 				TriggerClientEvent("inventory:Notify", source, "Atenção", "Apenas policiais podem manusear este item.", "vermelho", 5000)
 				return
 			end
@@ -1114,7 +1114,7 @@ AddEventHandler("inventory:StealTrunk",function(Entity)
 	vRP.CallPolice({
 		Source = source,
 		Passport = Passport,
-		Permission = "Policia",
+		Permission = "PoliciaCBR",
 		Name = "Roubo de Veículo",
 		Vehicle = exports.vrp:VehicleName(Model).." - "..Plate,
 		Percentage = 925,
@@ -1229,7 +1229,7 @@ AddEventHandler("inventory:Products",function(Service)
 			vRP.CallPolice({
 				Source = source,
 				Passport = Passport,
-				Permission = "Policia",
+				Permission = "PoliciaCBR",
 				Name = "Roubo de Pertences",
 				Wanted = 60,
 				Code = 31,
@@ -1431,7 +1431,7 @@ function Creative.StealPeds()
 			vRP.CallPolice({
 				Source = source,
 				Passport = Passport,
-				Permission = "Policia",
+				Permission = "PoliciaCBR",
 				Name = "Assalto a mão armada",
 				Wanted = 60,
 				Code = 32,
@@ -1457,7 +1457,7 @@ function Creative.ShotsFired(Vehicle)
 			vRP.CallPolice({
 				Source = source,
 				Passport = Passport,
-				Permission = "Policia",
+				Permission = "PoliciaCBR",
 				Name = Vehicle,
 				Code = 10,
 				Color = 6

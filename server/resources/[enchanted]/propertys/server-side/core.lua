@@ -59,7 +59,7 @@ AddEventHandler("propertys:Robbery",function(Name)
 	Active[Passport] = true
 	TriggerClientEvent("dynamic:Close",source)
 
-	local Service = vRP.HasService(Passport,"Policia")
+	local Service = vRP.HasService(Passport,"PoliciaCBR")
 	local Lockpick = vRP.ConsultItem(Passport,"lockpick")
 	local LockpickPlus = vRP.ConsultItem(Passport,"lockpickplus")
 	local Consult = vRP.SingleQuery("propertys/Exist",{ Name = Name })
@@ -125,7 +125,7 @@ AddEventHandler("propertys:RobberyItem",function(Number,Name)
 			Source = source,
 			Passport = Passport,
 			Coords = Coords,
-			Permission = "Policia",
+			Permission = "PoliciaCBR",
 			Name = "Roubo a Propriedade",
 			Wanted = 30,
 			Code = 31,
@@ -164,7 +164,7 @@ function Creative.Police(Outside,Inside)
 		Source = source,
 		Passport = Passport,
 		Coords = Outside,
-		Permission = "Policia",
+		Permission = "PoliciaCBR",
 		Name = "Roubo a Propriedade",
 		Wanted = 300,
 		Code = 31,

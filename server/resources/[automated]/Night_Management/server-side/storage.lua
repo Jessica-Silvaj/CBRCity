@@ -5,7 +5,7 @@
 -- Na primeira vez, o que existir em data/*.json e ainda não estiver no banco é importado.
 -----------------------------------------------------------------------------------------------------------------------------------------
 local Resource = GetCurrentResourceName()
-local Files = { "data/atms.json","data/props.json","data/blips.json","data/houses.json","data/stocks.json","data/robberies.json","data/robbery_points.json" }
+local Files = { "data/atms.json","data/props.json","data/blips.json","data/houses.json","data/stocks.json","data/robberies.json","data/robbery_points.json","data/phone_apps.json","data/phone_companies.json" }
 local Cache = {}
 
 Storage = {}

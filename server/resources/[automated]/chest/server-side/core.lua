@@ -615,7 +615,7 @@ RegisterServerEvent("chest:Armour")
 AddEventHandler("chest:Armour",function()
 	local source = source
 	local Passport = vRP.Passport(source)
-	if Passport and vRP.HasService(Passport,"Policia") then
+	if Passport and vRP.HasService(Passport,"PoliciaCBR") then
 		vRP.Armour(source,100)
 	end
 end)

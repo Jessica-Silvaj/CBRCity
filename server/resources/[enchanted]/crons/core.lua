@@ -16,6 +16,11 @@ local function Execute(Job)
   if Job.Mode == "RemovePermission" and Job.Params.Permission then
     vRP.RemovePermission(Job.Passport,Job.Params.Permission)
   elseif Job.Mode == "WipePermission" and Job.Params.Permission then
+    -- tira um por um (dono e convidados) para quem estiver online perder o acesso na hora
+    for Member in pairs(vRP.GetSrvData("Permissions:" .. Job.Params.Permission,true) or {}) do
+      vRP.RemovePermission(Member,Job.Params.Permission)
+    end
+
     vRP.RemSrvData("Permissions:" .. Job.Params.Permission)
   elseif Job.Mode == "RemoveVehicle" and Job.Params.Model then
     vRP.RemSrvData("LsCustoms:" .. Job.Passport .. ":" .. Job.Params.Model)

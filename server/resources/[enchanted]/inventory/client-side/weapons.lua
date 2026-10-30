@@ -211,12 +211,13 @@ local Config = {
 		["Model"] = "w_ar_carbinerifle_reh"
 	},
 	["WEAPON_PARAFAL"] = {
+		-- em pé nas costas, cano para cima
 		["Bone"] = 24818,
-		["x"] = 0.08,
-		["y"] = -0.14,
-		["z"] = 0.08,
+		["x"] = -0.10,
+		["y"] = -0.15,
+		["z"] = 0.0,
 		["RotX"] = 0.0,
-		["RotY"] = 135.0,
+		["RotY"] = 180.0,
 		["RotZ"] = 2.5,
 		["Model"] = "w_ar_parafal"
 	},

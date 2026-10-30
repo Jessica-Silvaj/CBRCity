@@ -223,6 +223,9 @@ CreateThread(function()
 						end
 					end
 				end
+			elseif Death.Status then
+				-- outro script subiu a vida sem passar pelo Revive (relogin, heal): fecha a tela de nocaute e limpa o estado
+				exports.survival:Revive(GetEntityHealth(Ped))
 			end
 		end
 

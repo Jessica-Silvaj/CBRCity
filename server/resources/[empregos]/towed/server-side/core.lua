@@ -188,7 +188,7 @@ RegisterServerEvent("towed:Impound")
 AddEventHandler("towed:Impound",function(Data)
 	local source = source
 	local Passport = vRP.Passport(source)
-	if not Passport or not vRP.HasService(Passport,"Policia") then
+	if not Passport or not vRP.HasService(Passport,"PoliciaCBR") then
 		return false
 	end
 

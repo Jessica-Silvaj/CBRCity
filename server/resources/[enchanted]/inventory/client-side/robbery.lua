@@ -21,7 +21,8 @@ local function BuildZones(Points,Removed)
 
 	for Id,v in pairs(Points) do
 		local Number = tonumber(Id)
-		if Number and not Removed[v.Mode] then
+		-- caixa eletrônico é roubado pelo c4 nos ATMs do painel; aqui só valeria a lista antiga
+		if Number and not Removed[v.Mode] and v.Mode ~= "Eletronic" and v.Mode ~= "Stockade" then
 			local Name = "Robbery:"..Number
 			exports.target:AddCircleZone(Name,vec3(v.X,v.Y,v.Z),1.0,{
 				name = Name,

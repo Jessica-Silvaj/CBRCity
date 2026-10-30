@@ -33,7 +33,7 @@ Config.Perms = {
     ChangeNumber = {"Admin",3},                                     -- PERMISSÃO E HIERARQUIA PARA ALTERAR NÚMERO DOS JOGADORES
     ChangeName = {"Admin",3},                                       -- PERMISSÃO E HIERARQUIA PARA ALTERAR NOME DOS JOGADORES
 
-    Policia = "Policia",                                            -- PERMISSÃO DE POLÍCIA DA BASE
+    Policia = "PoliciaCBR",                                            -- PERMISSÃO DE POLÍCIA DA BASE
     Staff = "Admin",                                                -- PERMISSÃO DE ADMIN DA BASE
     Bandits = {                                                     -- PERMISSÃO DAS ORGANIZAÇÕES ILEGAIS DA BASE
         -- Favelas desativadas em 25/10/2026: "Et","Barragem","Paleto","Pesqueiro",

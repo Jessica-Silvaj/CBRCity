@@ -11,11 +11,16 @@ RegisterLegacyCallback("services:getOnline", function(_, cb)
     cb(Config.Companies.Services)
 end)
 
-local allowedCompanies = {}
-
-for i = 1, #Config.Companies.Services do
-    allowedCompanies[Config.Companies.Services[i].job] = true
-end
+-- Consulta a lista atual: o painel gestor pode trocar as empresas sem reiniciar (shared/management.lua)
+local allowedCompanies = setmetatable({}, {
+    __index = function(_, job)
+        for i = 1, #Config.Companies.Services do
+            if Config.Companies.Services[i].job == job then
+                return true
+            end
+        end
+    end
+})
 
 -- Messages
 local function GetChannel(company, phoneNumber)

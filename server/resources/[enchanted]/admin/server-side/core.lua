@@ -1208,13 +1208,23 @@ RegisterCommand("ban",function(source,Message)
 	end
 
 	local Reason = Keyboard[3]
-	local Duration = Keyboard[2]
-	local OtherPassport = Keyboard[1]
+	local Duration = parseInt(Keyboard[2])
+	local OtherPassport = parseInt(Keyboard[1])
 	if not vRP.Identity(OtherPassport) then
+		TriggerClientEvent("Notify",source,"Atenção","Passaporte não encontrado.","amarelo",5000)
 		return false
 	end
 
-	vRP.SetBanned(OtherPassport,Duration,Reason,Passport)
+	if Duration <= 0 then
+		TriggerClientEvent("Notify",source,"Atenção","Informe os minutos (maior que zero).","amarelo",5000)
+		return false
+	end
+
+	if vRP.SetBanned(OtherPassport,Duration,"Minutos",Reason) == false then
+		TriggerClientEvent("Notify",source,"Atenção","Conta do passaporte <b>"..OtherPassport.."</b> não encontrada.","vermelho",5000)
+		return false
+	end
+
 	TriggerClientEvent("Notify",source,"Sucesso","Banimento aplicado ao passaporte <b>"..OtherPassport.."</b>.","verde",5000)
 end)
 -----------------------------------------------------------------------------------------------------------------------------------------

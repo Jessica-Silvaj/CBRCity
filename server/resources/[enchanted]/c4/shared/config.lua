@@ -39,7 +39,7 @@ Config.PropOffset = {
 Config.Police = {
 	MinAmount = 0, -- Número mínimo de policiais em serviço necessários para permitir o roubo
 
-	Permission = "Policia", -- Permissão do grupo que receberá o chamado
+	Permission = "PoliciaCBR", -- Permissão do grupo que receberá o chamado
 	CallPolice = {
 		Name = "Roubo a Caixa Eletrônico", -- Título do chamado
 		Percentage = 500, -- Se for 1000 a polícia nunca é chamada. Deixe em 0 para 100% de chance de chamar.

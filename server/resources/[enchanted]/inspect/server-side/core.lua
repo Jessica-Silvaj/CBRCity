@@ -71,8 +71,8 @@ AddEventHandler("inspect:Player",function(OtherSource)
 		return false
 	end
 
-	local IsPolice = vRP.HasGroup(Passport,"Policia")
-	local IsOtherPolice = vRP.HasService(OtherPassport,"Policia")
+	local IsPolice = vRP.HasGroup(Passport,"PoliciaCBR")
+	local IsOtherPolice = vRP.HasService(OtherPassport,"PoliciaCBR")
 	local OtherHealth = vRP.GetHealth(OtherSource)
 
 	local CanInspect = false
@@ -271,7 +271,7 @@ function Creative.Store(Item,Slot,Amount,Target)
 	local SelectPlayer = Players[Passport]
 	local ItemName = SplitOne(Item)
 	if PoliceItemsSystem and PoliceItems[ItemName] then
-		if not vRP.HasGroup(Passport, "Policias") then
+		if not vRP.HasGroup(Passport, "PoliciaCBR") then
 			TriggerClientEvent("inventory:Notify", source, "Atenção", "Apenas policiais podem manusear este item.", "vermelho", 5000)
 			TriggerClientEvent("inventory:Update", source)
 			return false
@@ -325,7 +325,7 @@ function Creative.Take(Item,Slot,Target,Amount)
 	local SelectPlayer = Players[Passport]
 	local ItemName = SplitOne(Item)
 	if PoliceItemsSystem and PoliceItems[ItemName] then
-		if not vRP.HasGroup(Passport, "Policias") then
+		if not vRP.HasGroup(Passport, "PoliciaCBR") then
 			TriggerClientEvent("inventory:Notify", source, "Atenção", "Apenas policiais podem manusear este item.", "vermelho", 5000)
 			TriggerClientEvent("inventory:Update", source)
 			return false

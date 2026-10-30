@@ -57,11 +57,12 @@
     <!-- Círculo do pulmão (Night_Vape), fora do script.js protegido. Estado vem via hud:Lung.
          Mede os círculos de status da HUD e se posiciona à direita do último, no mesmo tamanho. -->
     <div id="lung" aria-hidden="true">
+        <!-- hexágono de ponta para cima, igual aos de vida/colete/fome/sede; o contorno colorido é o progresso -->
         <svg class="lung-ring" viewBox="0 0 36 36">
-            <circle cx="18" cy="18" r="15.5" class="lung-track"/>
-            <circle cx="18" cy="18" r="15.5" class="lung-fill" id="lung-fill"/>
+            <path class="lung-inner" d="M18 6.2 28.2 12.1V23.9L18 29.8 7.8 23.9V12.1Z"/>
+            <path class="lung-track" pathLength="100" d="M18 2.5 31.4 10.25V25.75L18 33.5 4.6 25.75V10.25Z"/>
+            <path class="lung-fill" id="lung-fill" pathLength="100" d="M18 2.5 31.4 10.25V25.75L18 33.5 4.6 25.75V10.25Z"/>
         </svg>
-        <span class="lung-disc"></span>
         <svg class="lung-icon" viewBox="0 0 24 24"><path d="M11 3h2v7.2l2.3 1.5c.4-1.8 1.4-4.4 3.2-5.6 1.7-1.1 3.5.3 3.5 2.4V17c0 2.2-1.8 4-4 4-1.9 0-3.6-1.3-3.9-3.2l-.5-3.6L12 12.8l-1.6 1.4-.5 3.6C9.6 19.7 7.9 21 6 21c-2.2 0-4-1.8-4-4V8.5c0-2.1 1.8-3.5 3.5-2.4 1.8 1.2 2.8 3.8 3.2 5.6L11 10.2V3z"/></svg>
         <span class="lung-text" id="lung-text">0%</span>
     </div>
@@ -71,13 +72,14 @@
             font-family: "Rajdhani", sans-serif; color: #fff;
         }
         #lung.show { display: block; }
-        #lung .lung-ring { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
-        /* mesmo padrão dos círculos de vida/colete/fome/sede: anel colorido, disco colorido por dentro e ícone branco */
+        #lung .lung-ring, #lung .lung-clone { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+        #lung.cloned .lung-ring { display: none; }
+        /* mesmo padrão dos hexágonos de vida/colete/fome/sede: contorno colorido, miolo escuro puxado para a cor e ícone claro */
         #lung { --lung: #f472b6; }
-        #lung .lung-track { fill: rgba(13, 13, 13, 0.55); stroke: rgba(255, 255, 255, 0.15); stroke-width: 2; }
-        #lung .lung-fill { fill: none; stroke: var(--lung); stroke-width: 2; stroke-linecap: round; stroke-dasharray: 97.4; stroke-dashoffset: 97.4; transition: stroke-dashoffset 0.3s; }
-        #lung .lung-disc { position: absolute; left: 50%; top: 50%; width: 46%; height: 46%; transform: translate(-50%, -50%); border-radius: 50%; background: var(--lung); }
-        #lung .lung-icon { position: absolute; left: 50%; top: 50%; width: 24%; height: 24%; transform: translate(-50%, -50%); fill: #fff; }
+        #lung .lung-inner { fill: color-mix(in srgb, var(--lung) 22%, rgba(13, 13, 13, 0.85)); stroke: color-mix(in srgb, var(--lung) 35%, transparent); stroke-width: 0.8; stroke-linejoin: round; }
+        #lung .lung-track { fill: none; stroke: rgba(255, 255, 255, 0.15); stroke-width: 1.6; stroke-linejoin: round; }
+        #lung .lung-fill { fill: none; stroke: var(--lung); stroke-width: 1.6; stroke-linejoin: round; stroke-linecap: round; stroke-dasharray: 100; stroke-dashoffset: 100; transition: stroke-dashoffset 0.3s; }
+        #lung .lung-icon { position: absolute; left: 50%; top: 50%; width: 34%; height: 34%; transform: translate(-50%, -50%); fill: #fff; }
         #lung .lung-text { position: absolute; left: 50%; top: calc(100% + 0.35rem); transform: translateX(-50%); font-weight: 700; font-size: 0.8rem; white-space: nowrap; }
         #lung.danger { --lung: #ef4444; }
         #lung.danger .lung-icon { animation: lung-pulse 0.8s ease-in-out infinite; }
@@ -90,10 +92,14 @@
             var text = document.getElementById("lung-text");
             var visible = true, level = 0;
 
+            var LungColor = [244, 114, 182], DangerColor = [239, 68, 68];
+            var clone = null, cloneKey = "";
+
             // acha a fileira de círculos de status (vida, colete, fome, sede), no canto inferior direito, e devolve o primeiro e o passo entre eles
             function anchor() {
                 var rings = Array.prototype.map.call(document.querySelectorAll("#app svg"), function (svg) {
-                    return svg.getBoundingClientRect();
+                    var r = svg.getBoundingClientRect();
+                    return { left: r.left, top: r.top, width: r.width, height: r.height, bottom: r.bottom, svg: svg };
                 }).filter(function (r) {
                     return r.width >= 20 && Math.abs(r.width - r.height) <= 4 && r.left > window.innerWidth / 2 && r.top > window.innerHeight / 2;
                 });
@@ -121,6 +127,64 @@
                     if (found || el.children.length || !/^\d+%$/.test((el.textContent || "").trim())) return;
                     var r = el.getBoundingClientRect();
                     if (r.top >= ring.bottom - 2 && r.top <= ring.bottom + 40 && Math.abs((r.left + r.width / 2) - (ring.left + ring.width / 2)) < ring.width) found = el;
+                });
+                return found;
+            }
+
+            // "rgb(a)" colorido (não cinza) vira a cor do pulmão, mantendo a transparência original
+            function recolor(value, rgb) {
+                var m = /rgba?\(([^)]+)\)/.exec(value || "");
+                if (!m) return null;
+                var p = m[1].split(",").map(Number);
+                if (Math.max(p[0], p[1], p[2]) - Math.min(p[0], p[1], p[2]) < 25) return null;
+                return "rgba(" + rgb.join(",") + "," + (p.length > 3 ? p[3] : 1) + ")";
+            }
+
+            // copia o ícone de vida da HUD (qualquer estilo escolhido) trocando só a cor; a peça com tracejado vira o progresso
+            function syncClone(source) {
+                var key = source.outerHTML.replace(/stroke-dashoffset[:=]\s*"?[\d.\-]+/g, "").length + ":" + (source.getAttribute("viewBox") || "");
+                if (key !== cloneKey) {
+                    if (clone) clone.remove();
+                    clone = source.cloneNode(true);
+                    clone.removeAttribute("id");
+                    clone.setAttribute("class", "lung-clone");
+                    var originals = [source].concat(Array.prototype.slice.call(source.querySelectorAll("*")));
+                    var copies = [clone].concat(Array.prototype.slice.call(clone.querySelectorAll("*")));
+                    originals.forEach(function (el, i) {
+                        var css = getComputedStyle(el), copy = copies[i];
+                        ["fill", "stroke", "stroke-width", "stroke-linecap", "stroke-linejoin", "opacity", "fill-opacity", "stroke-opacity", "stroke-dasharray"].forEach(function (prop) {
+                            copy.style.setProperty(prop, css.getPropertyValue(prop));
+                        });
+                        copy.dataset.fill = css.fill;
+                        copy.dataset.stroke = css.stroke;
+                        copy.dataset.progress = css.strokeDasharray && css.strokeDasharray !== "none" && copy.getTotalLength ? "1" : "";
+                    });
+                    box.insertBefore(clone, box.firstChild);
+                    cloneKey = key;
+
+                    // peças pequenas no meio são o ícone da vida (coração): somem para dar lugar ao do pulmão
+                    var size = clone.getBBox ? clone.getBBox() : null;
+                    if (size && size.width) {
+                        Array.prototype.forEach.call(clone.querySelectorAll("path, circle, rect, polygon, use, image, g"), function (el) {
+                            if (el.dataset.progress || !el.getBBox) return;
+                            var b = el.getBBox();
+                            if (b.width > 0 && b.width < size.width * 0.55 && b.height < size.height * 0.55) el.style.display = "none";
+                        });
+                    }
+                }
+
+                var rgb = level >= 100 ? DangerColor : LungColor;
+                var found = false;
+                Array.prototype.forEach.call([clone].concat(Array.prototype.slice.call(clone.querySelectorAll("*"))), function (el) {
+                    var fill = recolor(el.dataset.fill, rgb), stroke = recolor(el.dataset.stroke, rgb);
+                    if (fill) el.style.fill = fill;
+                    if (stroke) el.style.stroke = stroke;
+                    if (el.dataset.progress) {
+                        var length = el.getTotalLength();
+                        el.style.strokeDasharray = length;
+                        el.style.strokeDashoffset = length * (1 - level / 100);
+                        found = true;
+                    }
                 });
                 return found;
             }
@@ -158,7 +222,13 @@
 
                 // vermelho quando o pulmão está cheio (próxima puxada dá tosse)
                 box.classList.toggle("danger", level >= 100);
-                fill.style.strokeDashoffset = 97.4 * (1 - level / 100);
+                fill.style.strokeDashoffset = 100 - level;
+
+                // usa o mesmo desenho da HUD; se não der para copiar, fica o hexágono próprio
+                var cloned = false;
+                try { cloned = !!(pos && syncClone(pos.first.svg)); } catch (e) { cloned = false; }
+                if (!cloned && clone) { clone.remove(); clone = null; cloneKey = ""; }
+                box.classList.toggle("cloned", cloned);
                 text.textContent = Math.round(level) + "%";
             }
 

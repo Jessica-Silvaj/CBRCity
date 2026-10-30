@@ -1,4 +1,4 @@
-for _,Name in ipairs({ "requestRobberies","saveRobbery","deleteRobbery","requestRobberyPoints","saveRobberyPoint","deleteRobberyPoint","requestHouses","saveHouse","requestStocks","saveStock" }) do
+for _,Name in ipairs({ "requestRobberies","saveRobbery","deleteRobbery","requestRobberyPoints","saveRobberyPoint","deleteRobberyPoint","requestHouses","saveHouse","requestStocks","saveStock","requestPhone","savePhoneApp","savePhoneCompany","deletePhoneCompany" }) do
     local Event = Name
     RegisterNUICallback(Event,function(Data,Callback)
         TriggerServerEvent("Night_Management:"..Event,Data)
@@ -9,6 +9,16 @@ end
 RegisterNUICallback("houseHere",function(Data,Callback)
     local Coords = GetEntityCoords(PlayerPedId())
     Callback({ X = Coords.x,Y = Coords.y,Z = Coords.z })
+end)
+
+-- Apps registrados no celular deste jogador (padrão + customizados como o PoliceNet)
+RegisterNUICallback("phoneApps",function(Data,Callback)
+    Callback(GetResourceState("lb-phone") == "started" and exports["lb-phone"]:ManagementApps() or {})
+end)
+
+RegisterNUICallback("phonePosition",function(Data,Callback)
+    local Coords = GetEntityCoords(PlayerPedId())
+    Callback({ X = Coords.x,Y = Coords.y })
 end)
 
 RegisterNetEvent("Night_Management:catalog",function(Name,Data)

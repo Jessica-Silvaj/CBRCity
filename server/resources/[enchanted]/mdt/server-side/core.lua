@@ -1138,7 +1138,7 @@ AddEventHandler("mdt:Vehicle", function(Entity)
     local Plate = Entity[1]
     local Passport = vRP.Passport(source)
     local OtherPassport = vRP.PassportPlate(Plate)
-    local Service = vRP.HasService(Passport,"Policia")
+    local Service = vRP.HasService(Passport,"PoliciaCBR")
     
     if not Permission[Passport] then
         for Group in pairs(Groups.Policia?.Permission or {}) do

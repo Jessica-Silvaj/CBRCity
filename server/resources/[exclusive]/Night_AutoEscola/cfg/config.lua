@@ -3,11 +3,11 @@
 -----------------------------------------------------------------------------------------------------------------------------------------
 comandos = {
     verMinhaCnh          = { cmd = "cnh",     perms = { "Admin"} },
-    policiaConsultarCnh  = { cmd = "vcnh",    perms = { "Policia", "Admin" } },
-    policiaRemoverCnh    = { cmd = "rcnh",    perms = { "Policia", "Admin" } },
+    policiaConsultarCnh  = { cmd = "vcnh",    perms = { "PoliciaCBR", "Admin" } },
+    policiaRemoverCnh    = { cmd = "rcnh",    perms = { "PoliciaCBR", "Admin" } },
     policiaAddCnh        = { cmd = "acnh",    perms = { "Admin" } },
-    policiaRemoverPontos = { cmd = "rpontos", perms = { "Policia", "Admin" } },
-    policiaAddPontos     = { cmd = "apontos", perms = { "Policia", "Admin" } },
+    policiaRemoverPontos = { cmd = "rpontos", perms = { "PoliciaCBR", "Admin" } },
+    policiaAddPontos     = { cmd = "apontos", perms = { "PoliciaCBR", "Admin" } },
     gravarRota           = { cmd = "zgc",     perms = { "Admin" } },
     colocarCones         = { cmd = "zcc",     perms = { "Admin" } },
     resetCooldown        = { cmd = "rcooldown",  perms = { "Admin" } },

@@ -165,7 +165,7 @@ AddEventHandler("player:cvFunctions",function(Mode)
 	local Passport = vRP.Passport(source)
 	local OtherSource = vRPC.ClosestPed(source,Distance)
 	if Passport and OtherSource then
-		if vRP.HasService(Passport,"Emergencia") or vRP.HasService(Passport,"Policias") or vRP.ConsultItem(Passport,"rope",1) then
+		if vRP.HasService(Passport,"Emergencia") or vRP.HasService(Passport,"PoliciaCBR") or vRP.ConsultItem(Passport,"rope",1) then
 			local Vehicle,Network = vRPC.VehicleList(source)
 			if Vehicle then
 				local Networked = NetworkGetEntityFromNetworkId(Network)
@@ -265,7 +265,7 @@ RegisterServerEvent("player:Preset")
 AddEventHandler("player:Preset",function(Number)
 	local source = source
 	local Passport = vRP.Passport(source)
-	if Passport and vRP.HasService(Passport,"Emergencia") or vRP.HasService(Passport,"Policias") and Preset[Number] then
+	if Passport and vRP.HasService(Passport,"Emergencia") or vRP.HasService(Passport,"PoliciaCBR") and Preset[Number] then
 		local Model = vRP.ModelPlayer(source)
 
 		if Preset[Number][Model] then

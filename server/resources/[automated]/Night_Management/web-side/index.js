@@ -839,6 +839,8 @@ $(document).ready(function () {
             "create-service": "Criar Bate Ponto",
             "manage-services": "Gerenciar Bate Pontos",
             "manage-robberies": "Gerenciar Roubos",
+            "manage-phone-apps": "Acesso aos Apps",
+            "manage-phone-companies": "Empresas do Celular",
             "manage-robbery-points": "Pontos de Roubo",
             "create-house": "Adicionar Casa",
             "manage-houses": "Gerenciar Casas",
@@ -4673,11 +4675,41 @@ $(function () {
             $('<td>').append($('<label class="toggle-switch" style="margin: 0;">').append(enabled, '<span class="slider"></span>')).appendTo(row);
             const inputs = {};
             fields.forEach(([key, min, max]) => {
-                inputs[key] = $('<input type="number" step="1" required class="table-input">').attr({ min, max, 'aria-label': key }).val(entry[key]).css('width', '90px');
+                inputs[key] = $('<input type="number" step="1" required class="table-input">').attr({ min, max, 'aria-label': key }).val(entry[key]).css('width', '70px');
                 $('<td>').append(inputs[key]).appendTo(row);
             });
+            // Item exigido (vazio = nenhum), quantidade e se é consumido
+            // Vários itens: todos são exigidos (salvo separado por vírgula)
+            let needItems = String(entry.NeedItem || '').split(',').map(i => i.trim()).filter(Boolean);
+            const chips = $('<div style="display: flex; flex-wrap: wrap; gap: 4px; max-width: 220px;">');
+            const drawChips = () => {
+                chips.empty();
+                if (!needItems.length) chips.append($('<small style="color: var(--text-muted);">').text('nenhum item'));
+                needItems.forEach(item => chips.append(
+                    $('<span class="phone-chip" style="cursor: pointer;" title="Clique para remover">').text(item + ' ×').on('click', () => { needItems = needItems.filter(i => i !== item); drawChips(); })
+                ));
+            };
+            drawChips();
+            const needItem = $('<input type="text" class="table-input" list="robbery-items" placeholder="item">').css('width', '110px');
+            const addItem = () => {
+                const item = needItem.val().trim();
+                if (item && !needItems.includes(item)) needItems.push(item);
+                needItem.val('');
+                drawChips();
+            };
+            needItem.on('change', addItem).on('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); addItem(); } });
+            const needAmount = $('<input type="number" min="1" max="100" step="1" class="table-input" title="Quantidade">').val(entry.NeedAmount || 1).css('width', '56px');
+            const needConsume = $('<input type="checkbox">').prop('checked', entry.NeedConsume === true);
+            $('<td>').append(
+                chips,
+                $('<div style="display: flex; align-items: center; gap: 6px; margin-top: 6px;">').append(
+                    needItem, needAmount,
+                    $('<label class="toggle-switch" style="margin: 0;" title="Consome o item">').append(needConsume, '<span class="slider"></span>'),
+                    $('<small style="color: var(--text-muted);">').text('consome')
+                )
+            ).appendTo(row);
             const save = $('<button class="btn-icon" type="button" title="Salvar">').html('<i class="fa-solid fa-floppy-disk"></i>').on('click', function () {
-                const data = { id: entry.id, Enabled: enabled.is(':checked') };
+                const data = { id: entry.id, Enabled: enabled.is(':checked'), NeedItem: needItems.join(','), NeedAmount: Number(needAmount.val()) || 1, NeedConsume: needConsume.is(':checked') };
                 for (const [key] of fields) {
                     if (!inputs[key][0].reportValidity()) return;
                     data[key] = Number(inputs[key].val());
@@ -4775,6 +4807,10 @@ $(function () {
     window.addEventListener('message', event => {
         const message = event.data;
         if (message.action === 'updateRobberies') renderRobberies(message.data);
+        if (message.action === 'updateRobberyItems') {
+            const list = $('#robbery-items').empty();
+            (message.data || []).forEach(item => list.append($('<option>').val(item.id).text(item.Name)));
+        }
         if (message.action === 'updateRobberyPoints') renderRobberyPoints(Array.isArray(message.data) ? message.data : Object.values(message.data || {}));
         if (message.action === 'updateStocks') { stocks = message.data; renderStocks(); }
         if (message.action === 'updateHouses') {

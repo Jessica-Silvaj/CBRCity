@@ -2,5 +2,5 @@
 -- PARENTGROUPS
 -----------------------------------------------------------------------------------------------------------------------------------------
 ParentGroups = {
-	Policia = { "LSPD","BCSO","SAPR","Corredor","Boosting","Robbery" }
+	Policia = { "PoliciaCBR","LSPD","BCSO","SAPR","Corredor","Boosting","Robbery" }
 }

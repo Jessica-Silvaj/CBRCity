@@ -19,7 +19,7 @@ RegisterServerEvent("prison:Itens")
 AddEventHandler("prison:Itens",function(OtherSource)
 	local source = source
 	local Passport = vRP.Passport(source)
-	if not Passport or not OtherSource or not vRP.HasService(Passport,"Policia") or vRP.GetHealth(source) <= 100 then
+	if not Passport or not OtherSource or not vRP.HasService(Passport,"PoliciaCBR") or vRP.GetHealth(source) <= 100 then
 		return false
 	end
 
@@ -39,7 +39,7 @@ RegisterServerEvent("prison:Plate")
 AddEventHandler("prison:Plate",function(Entitys)
 	local source = source
 	local Passport = vRP.Passport(source)
-	if not Passport or not vRP.HasService(Passport,"Policia") then
+	if not Passport or not vRP.HasService(Passport,"PoliciaCBR") then
 		return false
 	end
 

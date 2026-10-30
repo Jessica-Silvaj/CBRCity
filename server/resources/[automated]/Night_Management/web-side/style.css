@@ -900,3 +900,13 @@ svg[viewBox="0 0 256 194.3"] { color:rgb(var(--main)); }
     -webkit-appearance: none;
     margin: 0;
 }
+
+/* Gerenciar Roubos: colunas compactas para caber o salvar/excluir */
+#robberies-table th,
+#robberies-table td {
+    padding: 10px 6px;
+}
+
+#robberies-table td:first-child {
+    min-width: 120px;
+}

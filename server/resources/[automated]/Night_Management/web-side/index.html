@@ -460,6 +460,20 @@
                         </div>
                     </div>
                 </div>
+                <div class="nav-category">
+                    <div class="category-header">
+                        <span><i class="fa-solid fa-mobile-screen" style="margin-right: 6px;"></i> APLICATIVOS</span>
+                        <i class="fa-solid fa-chevron-down chevron"></i>
+                    </div>
+                    <div class="nav-items-wrapper">
+                        <div class="nav-item" data-page="manage-phone-apps">
+                            <i class="fa-solid fa-lock"></i> Acesso aos Apps
+                        </div>
+                        <div class="nav-item" data-page="manage-phone-companies">
+                            <i class="fa-solid fa-building"></i> Empresas do Celular
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="main-content">
@@ -1727,10 +1741,101 @@
                     </div>
                 </div>
 
+                <!-- Aplicativos do celular -->
+                <style>
+                    .phone-app-actions { display: flex; flex-direction: row; align-items: center; gap: 8px; margin: 0; }
+                    .phone-app-actions select { min-width: 200px; padding: 8px 32px 8px 12px; font-size: 13px; }
+                    .phone-chip { display: inline-flex; align-items: center; gap: 8px; margin: 2px 4px 2px 0; padding: 5px 10px; border-radius: 6px; background: rgba(255, 255, 255, 0.08); border: 1px solid var(--border); font-size: 13px; }
+                    .phone-chip i { cursor: pointer; color: var(--text-muted); transition: color 0.2s; }
+                    .phone-chip i:hover { color: var(--danger); }
+                </style>
+                <div class="page-content" id="manage-phone-apps" style="display: none;">
+                    <p style="color: var(--text-muted); margin-bottom: 16px;">Escolha os grupos de trabalho que podem usar cada app. Sem nenhum grupo marcado, o app fica liberado para todos. A mudança vale na hora, sem reiniciar.</p>
+                    <div class="search-bar-container">
+                        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                        <input type="text" class="search-input" id="phone-app-search" data-custom-search placeholder="Procurar app...">
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>App</th>
+                                    <th>Grupos com acesso</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="phone-apps-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="page-content" id="manage-phone-companies" style="display: none;">
+                    <form id="phone-company-form">
+                        <input id="phone-company-index" type="hidden">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Grupo</label>
+                                <select id="phone-company-job" required></select>
+                            </div>
+                            <div class="form-group">
+                                <label>Nome no celular</label>
+                                <input id="phone-company-name" type="text" maxlength="50" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Ícone (URL da imagem)</label>
+                                <input id="phone-company-icon" type="text" maxlength="300">
+                            </div>
+                            <div class="form-group">
+                                <label>Cargos de chefe (separados por vírgula)</label>
+                                <input id="phone-company-ranks" type="text" placeholder="Coronel, Major">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Nome do local</label>
+                                <input id="phone-company-location" type="text" maxlength="80">
+                            </div>
+                            <div class="form-group"><label>X</label><input id="phone-company-x" type="number" step="any"></div>
+                            <div class="form-group"><label>Y</label><input id="phone-company-y" type="number" step="any"></div>
+                        </div>
+                        <div class="form-row" style="gap: 24px; margin-bottom: 16px;">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <label class="toggle-switch" style="margin: 0;"><input type="checkbox" id="phone-company-message" checked><span class="slider"></span></label>
+                                <span>Receber mensagens</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <label class="toggle-switch" style="margin: 0;"><input type="checkbox" id="phone-company-call"><span class="slider"></span></label>
+                                <span>Receber ligações</span>
+                            </div>
+                        </div>
+                        <p style="color: var(--text-muted); margin-bottom: 16px;">A empresa aparece aberta no app Serviços quando há alguém do grupo em serviço (com o ponto batido).</p>
+                        <div class="form-actions" style="justify-content: flex-start; margin-bottom: 16px;">
+                            <button type="button" class="btn-secondary" id="phone-company-here"><i class="fa-solid fa-location-crosshairs"></i> Usar minha posição</button>
+                            <button type="button" class="btn-secondary" id="phone-company-cancel" style="display: none;">Cancelar edição</button>
+                            <button type="submit" class="btn-primary" id="phone-company-save"><i class="fa-solid fa-plus"></i> Adicionar Empresa</button>
+                        </div>
+                    </form>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Empresa</th>
+                                    <th>Grupo</th>
+                                    <th>Contato</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="phone-companies-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+
                 <!-- Managed catalogs -->
                 <div class="page-content" id="manage-robberies" style="display: none;">
-                    <p style="color: var(--text-muted); margin-bottom: 16px;">Ative cada tipo e ajuste policiais, tempos em segundos e recompensa. Caixa eletrônico (Eletronic): recompensa e duração de explosão são controladas pelo sistema C4; os valores desta aba aplicam-se ao inventory.</p>
-                    <div class="table-container">
+                    <p style="color: var(--text-muted); margin-bottom: 16px;">Ative cada tipo e ajuste policiais, tempos em segundos e recompensa. Caixa eletrônico (Eletronic) vale para o roubo com C4 nos ATMs de <b>Pontos bancários</b>: ativo, policiais, espera por caixa, procurado e recompensa em dinheiro sujo. A duração vem da explosão.</p>
+                    <div class="table-container" style="overflow-x: auto;">
                         <table id="robberies-table">
                             <thead>
                                 <tr>
@@ -1742,10 +1847,12 @@
                                     <th>Procurado (s)</th>
                                     <th>Mínimo</th>
                                     <th>Máximo</th>
+                                    <th>Item exigido</th>
                                     <th>Ações</th>
                                 </tr>
                             </thead>
                             <tbody id="robberies-body"></tbody>
+                        <datalist id="robbery-items"></datalist>
                         </table>
                     </div>
                 </div>
@@ -3062,6 +3169,7 @@
         </div>
     </template>
     <script src="index.js"></script>
+    <script src="phone.js"></script>
 </body>
 
 </html>

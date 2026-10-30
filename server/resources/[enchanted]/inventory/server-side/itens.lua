@@ -140,7 +140,7 @@ Use = {
 	
 			end	
 		else
-			TriggerClientEvent("Notify",source,"Atenção","Precisa do <b>"..ItemName("dronecontrol").."</b>.","amarelo",5000)
+			TriggerClientEvent("Notify",source,"Atenção","Precisa do <b>"..exports.vrp:ItemName("dronecontrol").."</b>.","amarelo",5000)
 		end
 	end,
 
@@ -1170,7 +1170,7 @@ Use = {
 					Percentage = 500,
 					Name = NotifyTitle,
 					Passport = Passport,
-					Permission = "Policia",
+					Permission = "PoliciaCBR",
 					Vehicle = exports.vrp:VehicleName(Model).." - "..Plate
 				})
 			end
@@ -1285,7 +1285,7 @@ Use = {
 					Percentage = 500,
 					Name = NotifyTitle,
 					Passport = Passport,
-					Permission = "Policia",
+					Permission = "PoliciaCBR",
 					Vehicle = exports.vrp:VehicleName(Model).." - "..Plate
 				})
 			end

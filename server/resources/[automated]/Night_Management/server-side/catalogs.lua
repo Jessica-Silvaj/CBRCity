@@ -29,6 +29,13 @@ end
 
 local function Robberies(Source)
     if GetResourceState("inventory") ~= "started" then Notify(Source,"O inventory precisa estar iniciado.") return end
+    -- lista de itens para o campo "Item exigido"
+    local Items = {}
+    for Index,Item in pairs(exports.vrp:ItemList() or {}) do
+        Items[#Items + 1] = { id = Index,Name = type(Item) == "table" and Item.Name or Index }
+    end
+    table.sort(Items,function(a,b) return a.id < b.id end)
+    TriggerClientEvent("Night_Management:catalog",Source,"RobberyItems",Items)
     TriggerClientEvent("Night_Management:catalog",Source,"Robberies",exports.inventory:ManagementRobberies())
 end
 
@@ -49,6 +56,17 @@ RegisterNetEvent("Night_Management:saveRobbery",function(Data)
         if not Entry[Key] then Notify(Source,"Preencha os valores inteiros dentro dos limites.") return end
     end
     if Entry.Min > Entry.Max then Notify(Source,"A recompensa mínima não pode superar a máxima.") return end
+    -- Item exigido: "" = nenhum; precisa existir no vrp
+    -- vários itens separados por vírgula (todos exigidos)
+    local NeedItems = {}
+    for Item in (type(Data.NeedItem) == "string" and Data.NeedItem or ""):gmatch("[^,%s]+") do
+        if not exports.vrp:ItemExist(Item) then Notify(Source,"O item <b>"..Item.."</b> não existe.") return end
+        NeedItems[#NeedItems + 1] = Item
+    end
+    if #NeedItems > 10 then Notify(Source,"Escolha no máximo 10 itens.") return end
+    Entry.NeedItem = table.concat(NeedItems,",")
+    Entry.NeedAmount = Integer(Data.NeedAmount,1,100) or 1
+    Entry.NeedConsume = Data.NeedConsume == true
     local Entries = Read("data/robberies.json")
     Entries[Data.id] = Entry
     if Save(Source,"data/robberies.json",Entries) then

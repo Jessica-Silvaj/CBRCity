@@ -156,7 +156,7 @@ AddEventHandler("target:Blackout",function()
 		return false
 	end
 
-	local Permission = "Policia"
+	local Permission = "PoliciaCBR"
 	local IsBlackout = GlobalState.Blackout
 	local IsPolice = vRP.HasService(Passport,Permission)
 

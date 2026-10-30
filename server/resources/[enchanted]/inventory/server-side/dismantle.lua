@@ -81,7 +81,7 @@ function Creative.CreateVehicle(Model,Coords)
 		vRP.CallPolice({
 			Source = source,
 			Passport = Passport,
-			Permission = "Policia",
+			Permission = "PoliciaCBR",
 			Name = "Desmanche de Veículo",
 			Vehicle = exports.vrp:VehicleName(Model).." - "..Plate,
 			Coords = Coords,
