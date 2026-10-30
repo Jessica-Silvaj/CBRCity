@@ -17,9 +17,8 @@ server_scripts {
 	"server-side/core.lua"
 }
 
-files {
-	"stream/prop_astra_vape_01.ydr",
-	"stream/oxlyn_vape.ytyp"
-}
+ui_page "web-side/index.html"
 
-data_file "DLC_ITYP_REQUEST" "stream/oxlyn_vape.ytyp"
+files {
+	"web-side/index.html"
+}

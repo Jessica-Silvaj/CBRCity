@@ -6609,6 +6609,13 @@ CreateThread(function()
 		Wait(1000)
 	end
 
+	for _,Item in ipairs(exports.Night_Vape:Vapes() or {}) do
+		Use[Item] = function(source,Passport)
+			exports.Night_Vape:Toggle(source,Passport,Item)
+			return true
+		end
+	end
+
 	for _,Item in ipairs(exports.Night_Vape:Liquids() or {}) do
 		Use[Item] = function(source,Passport,Amount,Slot,Full)
 			return exports.Night_Vape:Refill(source,Passport,Item,Full,Slot)

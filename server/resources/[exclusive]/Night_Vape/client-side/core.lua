@@ -1,13 +1,22 @@
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- VARIABLES
 -----------------------------------------------------------------------------------------------------------------------------------------
-local Equipped = false
+local Current = nil
 local Object = nil
-local Puffing = false
-local Tank = { Ml = 0.0, Capacity = Config.Capacity, Flavor = nil }
+-- Busy: puxando ou recarregando
+local Busy = false
+local PanelOpen = false
+-- Efeito do sabor em andamento: { Effect, Label, Description, Until, Duration }
+local Active = nil
+local Tank = { Ml = 0.0, Capacity = Config.Capacity, Flavor = nil, Color = nil }
+-- Pulmão de 0 a 100 (ver Config.Lung)
+local Lung = 0.0
 
-local PuffDict,PuffAnim = "mp_player_inteat@burger","mp_player_int_eat_burger"
-local SmokeAsset,SmokeName = "core","exp_grd_bzgas_smoke"
+local CoughDict,CoughAnim = "timetable@gardener@smoking_joint","idle_cough"
+
+local PuffDict,PuffAnim = "amb@world_human_smoking@male@male_b@idle_a","idle_a"
+-- fumaça colorida dos aviões de acrobacia: aceita SetParticleFxLoopedColour (a de granada ignora a cor)
+local SmokeAsset,SmokeName = "scr_ar_planes","scr_ar_trail_smoke"
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- HELPERS
 -----------------------------------------------------------------------------------------------------------------------------------------
@@ -29,6 +38,17 @@ local function LoadAsset(Asset)
 	end
 end
 
+local function LoadModel(Hash)
+	RequestModel(Hash)
+
+	local Timeout = GetGameTimer() + 5000
+	while not HasModelLoaded(Hash) and GetGameTimer() < Timeout do
+		Wait(10)
+	end
+
+	return HasModelLoaded(Hash)
+end
+
 local function RemoveProp()
 	if Object and DoesEntityExist(Object) then
 		DetachEntity(Object,true,true)
@@ -41,15 +61,9 @@ end
 local function AttachProp()
 	RemoveProp()
 
-	local Hash = GetHashKey(Config.Prop.Model)
-	RequestModel(Hash)
-
-	local Timeout = GetGameTimer() + 5000
-	while not HasModelLoaded(Hash) and GetGameTimer() < Timeout do
-		Wait(10)
-	end
-
-	if not HasModelLoaded(Hash) then
+	local Prop = Config.Vapes[Current] or Config.Vapes["vape"]
+	local Hash = GetHashKey(Prop.Model)
+	if not LoadModel(Hash) then
 		return
 	end
 
@@ -58,55 +72,140 @@ local function AttachProp()
 	Object = CreateObject(Hash,Coords.x,Coords.y,Coords.z,true,true,false)
 	SetModelAsNoLongerNeeded(Hash)
 
-	local Offset,Rotation = Config.Prop.Offset,Config.Prop.Rotation
-	AttachEntityToEntity(Object,Ped,GetPedBoneIndex(Ped,Config.Prop.Bone),Offset.x,Offset.y,Offset.z,Rotation.x,Rotation.y,Rotation.z,true,true,false,true,1,true)
+	local Offset,Rotation = Prop.Offset,Prop.Rotation
+	AttachEntityToEntity(Object,Ped,GetPedBoneIndex(Ped,Prop.Bone),Offset.x,Offset.y,Offset.z,Rotation.x,Rotation.y,Rotation.z,true,true,false,true,1,true)
+end
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- HUD: aparece durante a puxada/recarga e enquanto o efeito do sabor estiver ativo
+-----------------------------------------------------------------------------------------------------------------------------------------
+local function EffectActive()
+	return Active and GetGameTimer() < Active.Until
 end
 
-local function Unequip(Notify)
-	if not Equipped then
-		return
-	end
-
-	Equipped = false
-	Puffing = false
-	ClearPedSecondaryTask(PlayerPedId())
-	RemoveProp()
-
-	if Notify then
-		TriggerServerEvent("Night_Vape:Store")
-	end
+local function Hud()
+	local Prop = Config.Vapes[Current] or Config.Vapes["vape"]
+	SendNUIMessage({
+		Action = "Update",
+		Name = Prop.Name,
+		Flavor = Tank.Flavor,
+		Color = Tank.Color,
+		Ml = Tank.Ml,
+		Capacity = Tank.Capacity,
+		Lung = Lung,
+		LungWarning = Config.Lung.Warning,
+		Effect = EffectActive() and {
+			Label = Active.Label,
+			Description = Active.Description,
+			Left = (Active.Until - GetGameTimer()) / Active.Duration,
+			Seconds = math.ceil((Active.Until - GetGameTimer()) / 1000)
+		} or nil
+	})
 end
 
-local function HelpText()
-	local Status = Tank.Flavor and (Tank.Flavor.." "..string.format("%.1f/%.0f ml",Tank.Ml,Tank.Capacity)) or "Tanque vazio"
-	BeginTextCommandDisplayHelp("STRING")
-	AddTextComponentSubstringPlayerName("~INPUT_CONTEXT~ Puxar   ~INPUT_DETONATE~ Guardar~n~"..Status)
-	EndTextCommandDisplayHelp(0,false,false,-1)
+-- Crise de tosse: animação, câmera tremendo e um pouco de vida
+local function Cough()
+	local Ped = PlayerPedId()
+
+	LoadDict(CoughDict)
+	TaskPlayAnim(Ped,CoughDict,CoughAnim,8.0,-8.0,4000,49,0,false,false,false)
+	ShakeGameplayCam("SMALL_EXPLOSION_SHAKE",0.08)
+
+	local Health = GetEntityHealth(Ped)
+	if Health > Config.Lung.MinHealth then
+		SetEntityHealth(Ped,math.max(Config.Lung.MinHealth,Health - Config.Lung.Damage))
+	end
+
+	TriggerEvent("Notify","Vape","Você puxou demais e começou a tossir.","vermelho",5000)
+	Wait(4000)
+	StopAnimTask(Ped,CoughDict,CoughAnim,2.0)
+end
+
+local function ClosePanel()
+	PanelOpen = false
+	SetNuiFocus(false,false)
+	SendNUIMessage({ Action = "CloseRefill" })
 end
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- EVENTS
 -----------------------------------------------------------------------------------------------------------------------------------------
-RegisterNetEvent("Night_Vape:Tank",function(Ml,Capacity,Flavor)
-	Tank.Ml,Tank.Capacity,Tank.Flavor = Ml,Capacity,Flavor
+RegisterNetEvent("Night_Vape:Tank",function(Ml,Capacity,Flavor,Color)
+	Tank.Ml,Tank.Capacity,Tank.Flavor,Tank.Color = Ml,Capacity,Flavor,Color
 end)
 
-RegisterNetEvent("Night_Vape:Equip",function(Status)
-	if Status then
-		Equipped = true
-		AttachProp()
-	else
-		Unequip(false)
+-- Usar o vape: tira da bolsa, leva à boca, solta a fumaça e guarda
+RegisterNetEvent("Night_Vape:Use",function(Item)
+	if Busy or PanelOpen then
+		return
 	end
+
+	local Ped = PlayerPedId()
+	if IsPedSwimming(Ped) or IsPedRagdoll(Ped) then
+		return
+	end
+
+	Busy = true
+	Current = Item
+	AttachProp()
+
+	LoadDict(PuffDict)
+	TaskPlayAnim(Ped,PuffDict,PuffAnim,8.0,-8.0,3000,49,0,false,false,false)
+
+	-- solta a fumaça quando a mão sai da boca
+	Wait(1500)
+	TriggerServerEvent("Night_Vape:Puff",Config.Intensity)
+
+	-- puxou com o pulmão já cheio: crise de tosse
+	local Overload = Lung >= 100
+	Lung = math.min(100.0,Lung + Config.Lung.PerPuff)
+
+	Wait(1500)
+	StopAnimTask(Ped,PuffDict,PuffAnim,2.0)
+	RemoveProp()
+
+	if Overload then
+		Cough()
+	elseif Lung >= Config.Lung.Warning then
+		TriggerEvent("Notify","Vape","Sua garganta está irritada. Dê um tempo antes de puxar de novo.","amarelo",5000)
+	end
+
+	SetTimeout(math.max(0,Config.PuffCooldown * 1000 - 3000),function()
+		Busy = false
+	end)
 end)
 
--- Animação curta de encaixar o frasco
+-- Animação de encaixar o frasco, com o frasco na mão esquerda e o vape na direita
 RegisterNetEvent("Night_Vape:Refill",function()
+	local Ped = PlayerPedId()
+	local Refill = Config.Refill
+
+	Busy = true
+	AttachProp()
+
+	local Bottle = nil
+	local Hash = GetHashKey(Refill.Model)
+	if LoadModel(Hash) then
+		local Coords = GetEntityCoords(Ped)
+		Bottle = CreateObject(Hash,Coords.x,Coords.y,Coords.z,true,true,false)
+		SetModelAsNoLongerNeeded(Hash)
+		AttachEntityToEntity(Bottle,Ped,GetPedBoneIndex(Ped,Refill.Bone),Refill.Offset.x,Refill.Offset.y,Refill.Offset.z,Refill.Rotation.x,Refill.Rotation.y,Refill.Rotation.z,true,true,false,true,1,true)
+	end
+
 	LoadDict("mp_arresting")
-	TaskPlayAnim(PlayerPedId(),"mp_arresting","a_uncuff",8.0,-8.0,2500,49,0,false,false,false)
+	TaskPlayAnim(Ped,"mp_arresting","a_uncuff",8.0,-8.0,Refill.Duration,49,0,false,false,false)
+
+	Wait(Refill.Duration)
+
+	if Bottle and DoesEntityExist(Bottle) then
+		DetachEntity(Bottle,true,true)
+		DeleteEntity(Bottle)
+	end
+
+	RemoveProp()
+	Busy = false
 end)
 
 -- Vapor colorido saindo da boca de quem puxou
-RegisterNetEvent("Night_Vape:Smoke",function(ServerId,Color)
+RegisterNetEvent("Night_Vape:Smoke",function(ServerId,Color,Intensity)
 	local Player = GetPlayerFromServerId(ServerId)
 	if Player == -1 then
 		return
@@ -117,78 +216,167 @@ RegisterNetEvent("Night_Vape:Smoke",function(ServerId,Color)
 		return
 	end
 
+	Intensity = tonumber(Intensity) or 1.0
 	LoadAsset(SmokeAsset)
 
-	-- espera o fim da puxada para soltar o vapor
-	SetTimeout(1800,function()
-		if not DoesEntityExist(Ped) then
-			return
+	-- o efeito é em loop (NonLooped não aparece)
+	UseParticleFxAssetNextCall(SmokeAsset)
+	local Handle = StartParticleFxLoopedOnEntityBone(SmokeName,Ped,0.0,0.15,0.0,0.0,0.0,0.0,GetPedBoneIndex(Ped,31086),0.08 + (Intensity * 0.08),false,false,false)
+	SetParticleFxLoopedColour(Handle,Color[1] / 255.0,Color[2] / 255.0,Color[3] / 255.0,false)
+	SetParticleFxLoopedAlpha(Handle,0.8)
+
+	Wait(math.floor(1000 + (Intensity * 2000)))
+	StopParticleFxLooped(Handle,false)
+end)
+
+-- Painel de recarga (abre ao usar o vape com o tanque vazio)
+RegisterNetEvent("Night_Vape:RefillPanel",function(Data)
+	PanelOpen = true
+	Data.Action = "OpenRefill"
+	SetNuiFocus(true,true)
+	SendNUIMessage(Data)
+end)
+
+RegisterNUICallback("Refill",function(Data,Callback)
+	ClosePanel()
+	TriggerServerEvent("Night_Vape:RefillFrom",Data.Item)
+	Callback("Ok")
+end)
+
+RegisterNUICallback("Close",function(_,Callback)
+	ClosePanel()
+	Callback("Ok")
+end)
+
+-- Efeito do sabor: aparece no painel com o tempo restante; puxar de novo renova
+RegisterNetEvent("Night_Vape:Effect",function(Effect)
+	local Data = Config.Effects[Effect]
+	if not Data then
+		return
+	end
+
+	-- só abre um loop novo se o efeito não está rodando (senão só renova o tempo)
+	local Fresh = not Active or Active.Effect ~= Effect or GetGameTimer() >= Active.Until
+
+	if Data.Duration <= 0 then
+		-- efeito instantâneo: só mostra o rótulo por alguns segundos
+		Active = { Effect = Effect, Label = Data.Label, Description = Data.Description, Until = GetGameTimer() + 4000, Duration = 4000 }
+		return
+	end
+
+	local Duration = Data.Duration * 1000
+	Active = { Effect = Effect, Label = Data.Label, Description = Data.Description, Until = GetGameTimer() + Duration, Duration = Duration }
+
+	if not Fresh then
+		return
+	end
+
+	-- loop do efeito enquanto estiver ativo
+	CreateThread(function()
+		local Ped = PlayerPedId()
+
+		-- visuais definidos no config
+		if Data.Timecycle then
+			SetTimecycleModifier(Data.Timecycle)
+			SetTimecycleModifierStrength(Data.Strength or 0.5)
 		end
 
-		for Index = 1,3 do
-			UseParticleFxAssetNextCall(SmokeAsset)
-			SetParticleFxNonLoopedColour(Color[1] / 255.0,Color[2] / 255.0,Color[3] / 255.0)
-			SetParticleFxNonLoopedAlpha(0.6)
-			StartParticleFxNonLoopedOnPedBone(SmokeName,Ped,0.0,0.15,0.0,0.0,0.0,0.0,GetPedBoneIndex(Ped,31086),0.18 + (Index * 0.06),false,false,false)
-			Wait(350)
+		if Data.Postfx then
+			AnimpostfxPlay(Data.Postfx,0,true)
+		end
+
+		if Data.Shake then
+			ShakeGameplayCam(Data.Shake,Data.ShakeAmp or 0.5)
+		end
+
+		if Data.Walk then
+			RequestAnimSet(Data.Walk)
+			local Timeout = GetGameTimer() + 3000
+			while not HasAnimSetLoaded(Data.Walk) and GetGameTimer() < Timeout do
+				Wait(10)
+			end
+			SetPedMovementClipset(Ped,Data.Walk,0.5)
+		end
+
+		if Effect == "speed" then
+			SetRunSprintMultiplierForPlayer(PlayerId(),1.10)
+		end
+
+		-- termina quando o tempo acaba ou outro sabor substitui o efeito
+		while Active and Active.Effect == Effect and GetGameTimer() < Active.Until do
+			if Effect == "stamina" then
+				RestorePlayerStamina(PlayerId(),1.0)
+			end
+
+			Wait(250)
+		end
+
+		if Data.Timecycle then
+			ClearTimecycleModifier()
+		end
+
+		if Data.Postfx then
+			AnimpostfxStop(Data.Postfx)
+		end
+
+		if Data.Shake then
+			StopGameplayCamShaking(false)
+		end
+
+		if Data.Walk then
+			-- volta para o andar escolhido no vrp (state.Walk) ou o padrão
+			local Walk = LocalPlayer.state.Walk
+			if Walk and HasAnimSetLoaded(Walk) then
+				SetPedMovementClipset(PlayerPedId(),Walk,0.5)
+			else
+				ResetPedMovementClipset(PlayerPedId(),0.5)
+			end
+		end
+
+		if Effect == "speed" then
+			SetRunSprintMultiplierForPlayer(PlayerId(),1.0)
 		end
 	end)
 end)
-
-RegisterNetEvent("Night_Vape:Effect",function(Effect,Duration)
-	local Ped = PlayerPedId()
-	Duration = (tonumber(Duration) or 12) * 1000
-	if Effect == "stamina" then
-		RestorePlayerStamina(PlayerId(),1.0)
-	elseif Effect == "focus" then
-		StartScreenEffect("FocusIn",Duration,false)
-	elseif Effect == "speed" then
-		SetRunSprintMultiplierForPlayer(PlayerId(),1.05)
-		SetTimeout(Duration,function()
-			SetRunSprintMultiplierForPlayer(PlayerId(),1.0)
-		end)
-	end
-end)
 -----------------------------------------------------------------------------------------------------------------------------------------
--- THREAD
+-- THREAD: recupera o pulmão e mostra o painel enquanto puxa/recarrega, com efeito ativo ou pulmão carregado
 -----------------------------------------------------------------------------------------------------------------------------------------
 CreateThread(function()
+	local Visible = false
+	local Last = GetGameTimer()
+	local LungSent = -1
+
 	while true do
 		local TimeDistance = 500
 
-		if Equipped then
-			TimeDistance = 1
-			local Ped = PlayerPedId()
+		local Now = GetGameTimer()
+		if Lung > 0 then
+			Lung = math.max(0.0,Lung - Config.Lung.Recover * (Now - Last) / 1000)
+		end
+		Last = Now
 
-			-- Guarda sozinho em situações onde não faz sentido segurar o vape
-			if LocalPlayer.state.Death or LocalPlayer.state.Crawl or LocalPlayer.state.Handcuff or IsPedSwimming(Ped) or IsPedRagdoll(Ped) then
-				Unequip(true)
-			else
-				HelpText()
-				DisablePlayerFiring(Ped,true)
-				DisableControlAction(0,24,true)
-				DisableControlAction(0,25,true)
-				DisableControlAction(0,140,true)
+		-- círculo do pulmão na HUD (ao lado de vida/colete/fome/sede)
+		local Rounded = math.ceil(Lung)
+		if Rounded ~= LungSent then
+			LungSent = Rounded
+			TriggerEvent("hud:Lung",Rounded)
+		end
 
-				if Object and not DoesEntityExist(Object) then
-					AttachProp()
-				end
+		if Lung > 0 then
+			TimeDistance = 200
+		end
 
-				if IsControlJustPressed(0,Config.Keys.Store) then
-					Unequip(true)
-				elseif not Puffing and IsControlPressed(0,Config.Keys.Puff) then
-					Puffing = true
+		if Busy or EffectActive() then
+			TimeDistance = 100
+			Hud()
 
-					CreateThread(function()
-						LoadDict(PuffDict)
-						TaskPlayAnim(Ped,PuffDict,PuffAnim,8.0,-8.0,1600,49,0,false,false,false)
-						TriggerServerEvent("Night_Vape:Puff")
-
-						Wait(Config.PuffCooldown * 1000)
-						Puffing = false
-					end)
-				end
+			if not Visible then
+				Visible = true
+				SendNUIMessage({ Action = "Show" })
 			end
+		elseif Visible then
+			Visible = false
+			SendNUIMessage({ Action = "Hide" })
 		end
 
 		Wait(TimeDistance)
@@ -200,5 +388,9 @@ end)
 AddEventHandler("onResourceStop",function(Resource)
 	if Resource == GetCurrentResourceName() then
 		RemoveProp()
+
+		if PanelOpen then
+			SetNuiFocus(false,false)
+		end
 	end
 end)

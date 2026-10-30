@@ -1,18 +1,18 @@
 # Patch Notes — Night Vape
 
-## Integração Oxlyn
+## Recursos próprios (sem Oxlyn)
 
-- Adicionado o prop oficial `prop_astra_vape_01`.
-- Adicionado o arquivo `oxlyn_vape.ytyp` ao `fxmanifest.lua`.
-- Ajustados os offsets, rotação e osso da mão para o modelo Oxlyn.
-- Adicionadas as imagens oficiais do vape e dos líquidos.
-- Atualizado o `vape.png` do inventário.
+- Removidos o prop, o `.ytyp` e as imagens do pacote Oxlyn (cópia sem licença).
+- Vape agora usa o prop do próprio GTA `ba_prop_battle_vape_01`, na mão direita.
+- Pose de fumar enquanto segura o vape e puxada com animação de fumar do GTA.
+- Recarga com frasco (`prop_cs_script_bottle_01`) na mão esquerda.
+- Vapor colorido corrigido (o efeito é em loop) e com uma cor distinta por sabor.
+- Imagens dos líquidos redesenhadas (frasco conta-gotas na cor do sabor).
 
 ## Sistema de líquidos
 
-- Mantidos os sabores neutro, morango, menta, mirtilo e uva.
-- Aplicada a paleta verde do projeto ao vapor.
-- Adicionados efeitos por sabor:
+- Sabores neutro, morango, menta, mirtilo e uva.
+- Efeitos por sabor:
   - Menta: recuperação de stamina.
   - Mirtilo: efeito visual de foco.
   - Uva: leve aumento temporário de velocidade.
@@ -20,6 +20,6 @@
 
 ## Inventário
 
-- O item `vape` agora utiliza o `Night_Vape`.
+- O item `vape` utiliza o `Night_Vape`.
 - Os líquidos são registrados automaticamente no inventário.
 - O tanque, consumo e persistência continuam controlados pelo sistema.

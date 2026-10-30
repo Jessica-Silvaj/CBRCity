@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+	<meta charset="utf-8">
+	<style>
+		* { margin: 0; padding: 0; box-sizing: border-box; }
+
+		body {
+			width: 100vw;
+			height: 100vh;
+			overflow: hidden;
+			background: transparent;
+			font-family: "Segoe UI", Arial, sans-serif;
+			color: #f2f2f2;
+			user-select: none;
+		}
+
+		.tecla {
+			display: inline-block;
+			min-width: 20px;
+			padding: 1px 6px;
+			margin-right: 5px;
+			border-radius: 4px;
+			background: rgba(255, 255, 255, 0.12);
+			border: 1px solid rgba(255, 255, 255, 0.2);
+			text-align: center;
+			font-weight: 700;
+			color: #fff;
+		}
+
+		.barra { height: 8px; border-radius: 4px; background: rgba(255, 255, 255, 0.08); overflow: hidden; }
+		.barra div { height: 100%; width: 0; border-radius: 4px; background: rgb(var(--cor)); transition: width 0.3s, background 0.4s; }
+
+		@keyframes pisca { 50% { opacity: 0.45; } }
+
+		/* ---------- PAINEL DO VAPE NA MÃO ---------- */
+		#vape {
+			--cor: 46, 139, 87;
+			position: absolute;
+			right: 2vw;
+			bottom: 22vh;
+			width: 260px;
+			padding: 14px 16px;
+			border-radius: 12px;
+			background: rgba(14, 16, 18, 0.82);
+			border: 1px solid rgba(var(--cor), 0.45);
+			box-shadow: 0 0 18px rgba(var(--cor), 0.18);
+			opacity: 0;
+			transform: translateX(20px);
+			transition: opacity 0.25s, transform 0.25s, border-color 0.4s, box-shadow 0.4s;
+		}
+
+		#vape.aberto { opacity: 1; transform: translateX(0); }
+
+		.topo { display: flex; justify-content: space-between; align-items: baseline; }
+		.nome { font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #9aa0a6; }
+		.ml { font-size: 12px; color: #9aa0a6; font-variant-numeric: tabular-nums; }
+
+		.sabor { display: flex; align-items: center; gap: 8px; margin: 8px 0 10px; font-size: 17px; font-weight: 600; }
+		.bolinha {
+			width: 12px;
+			height: 12px;
+			border-radius: 50%;
+			background: rgb(var(--cor));
+			box-shadow: 0 0 8px rgb(var(--cor));
+			transition: background 0.4s, box-shadow 0.4s;
+		}
+
+		#tanque.baixo { animation: pisca 1s infinite; }
+
+		#carga { margin-top: 6px; height: 4px; opacity: 0; transition: opacity 0.2s; }
+		#carga.ativa { opacity: 1; }
+		#carga div { background: #f2f2f2; transition: none; }
+
+		#pulmao { margin-top: 10px; }
+		#pulmao .linha { display: flex; justify-content: space-between; font-size: 12px; color: #9aa0a6; margin-bottom: 4px; }
+		#pulmao .barra { height: 5px; }
+		#pulmao-barra { transition: width 0.3s, background 0.3s !important; }
+		#pulmao.cheio #pulmao-texto { color: #ff5a5a; font-weight: 700; animation: pisca 0.8s infinite; }
+		#pulmao.irritado #pulmao-texto { color: #e8b04a; font-weight: 700; }
+
+		#efeito {
+			display: none;
+			margin-top: 10px;
+			padding: 8px 10px;
+			border-radius: 8px;
+			background: rgba(var(--cor), 0.14);
+			border: 1px solid rgba(var(--cor), 0.35);
+		}
+		#efeito.ativo { display: block; }
+		#efeito .linha { display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; }
+		#efeito .desc { font-size: 11px; color: #c9cdd1; margin: 2px 0 6px; }
+		#efeito .barra { height: 3px; }
+		#efeito .barra div { transition: width 0.1s linear; }
+
+		.teclas { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 12px; font-size: 12px; color: #c9cdd1; }
+		.teclas .esperando { opacity: 0.4; }
+
+		/* ---------- PAINEL DE RECARGA ---------- */
+		#recarga {
+			--cor: 46, 139, 87;
+			--nova: 46, 139, 87;
+			position: absolute;
+			inset: 0;
+			display: none;
+			align-items: center;
+			justify-content: center;
+			background: rgba(0, 0, 0, 0.45);
+		}
+		#recarga.aberto { display: flex; }
+
+		.janela {
+			width: 720px;
+			max-width: 94vw;
+			padding: 22px 24px;
+			border-radius: 16px;
+			background: rgba(14, 16, 18, 0.95);
+			border: 1px solid rgba(255, 255, 255, 0.08);
+			box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+		}
+
+		.cabecalho { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+		.cabecalho h1 { font-size: 20px; font-weight: 700; }
+		.cabecalho h1 small { font-size: 13px; font-weight: 600; color: #9aa0a6; margin-left: 8px; }
+		.fechar { background: none; border: none; color: #9aa0a6; font-size: 13px; cursor: pointer; }
+		.fechar:hover { color: #fff; }
+
+		.corpo { display: flex; gap: 22px; }
+
+		/* tubo do tanque: nível atual + prévia do que fica depois de recarregar */
+		.lado { width: 130px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+		.tubo {
+			position: relative;
+			width: 64px;
+			height: 230px;
+			border-radius: 32px;
+			background: rgba(255, 255, 255, 0.06);
+			border: 2px solid rgba(255, 255, 255, 0.15);
+			overflow: hidden;
+		}
+		.tubo div { position: absolute; left: 0; right: 0; bottom: 0; transition: height 0.4s, background 0.4s; }
+		#previa { background: repeating-linear-gradient(45deg, rgba(var(--nova), 0.55) 0 6px, rgba(var(--nova), 0.3) 6px 12px); }
+		#atual { background: rgb(var(--cor)); box-shadow: 0 0 16px rgba(var(--cor), 0.6); }
+		.tubo-ml { font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; }
+		.tubo-sabor { font-size: 12px; color: #9aa0a6; text-align: center; }
+
+		.lista { flex: 1; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; max-height: 330px; overflow-y: auto; align-content: start; }
+		.lista::-webkit-scrollbar { width: 4px; }
+		.lista::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 2px; }
+
+		.card {
+			--c: 46, 139, 87;
+			position: relative;
+			padding: 10px;
+			border-radius: 10px;
+			background: rgba(255, 255, 255, 0.04);
+			border: 1px solid rgba(255, 255, 255, 0.08);
+			cursor: pointer;
+			transition: border-color 0.2s, background 0.2s, transform 0.15s;
+		}
+		.card:hover { background: rgba(var(--c), 0.1); border-color: rgba(var(--c), 0.5); transform: translateY(-2px); }
+		.card.escolhido { background: rgba(var(--c), 0.18); border-color: rgb(var(--c)); box-shadow: 0 0 14px rgba(var(--c), 0.35); }
+		.card.vazio { opacity: 0.35; cursor: default; pointer-events: none; }
+		.card img { display: block; width: 56px; height: 56px; margin: 0 auto 6px; }
+		.card .titulo { display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 700; }
+		.card .titulo span { width: 9px; height: 9px; border-radius: 50%; background: rgb(var(--c)); }
+		.card .ef { font-size: 11px; font-weight: 700; color: rgb(var(--c)); margin-top: 4px; }
+		.card .ds { font-size: 11px; color: #9aa0a6; }
+		.card .qtd { position: absolute; top: 8px; right: 10px; font-size: 12px; font-weight: 700; color: #c9cdd1; }
+
+		.rodape { display: flex; justify-content: space-between; align-items: center; margin-top: 18px; gap: 16px; }
+		#aviso { font-size: 12px; color: #e8b04a; min-height: 16px; }
+		#confirmar {
+			padding: 10px 22px;
+			border: none;
+			border-radius: 8px;
+			background: rgb(var(--nova));
+			color: #0e1012;
+			font-size: 14px;
+			font-weight: 800;
+			cursor: pointer;
+			transition: filter 0.2s, opacity 0.2s, background 0.4s;
+		}
+		#confirmar:hover { filter: brightness(1.15); }
+		#confirmar:disabled { opacity: 0.35; cursor: default; filter: none; }
+	</style>
+</head>
+<body>
+	<div id="vape">
+		<div class="topo">
+			<span class="nome" id="nome">Vape</span>
+			<span class="ml" id="ml">0.0 / 5 ml</span>
+		</div>
+		<div class="sabor"><span class="bolinha"></span><span id="sabor">Tanque vazio</span></div>
+		<div class="barra" id="tanque"><div id="nivel"></div></div>
+		<div id="efeito">
+			<div class="linha"><span id="efeito-nome"></span><span id="efeito-tempo"></span></div>
+			<div class="desc" id="efeito-desc"></div>
+			<div class="barra"><div id="efeito-barra"></div></div>
+		</div>
+	</div>
+
+	<div id="recarga">
+		<div class="janela">
+			<div class="cabecalho">
+				<h1>Recarregar<small id="recarga-vape">Vape</small></h1>
+				<button class="fechar" id="fechar"><span class="tecla">ESC</span>Fechar</button>
+			</div>
+			<div class="corpo">
+				<div class="lado">
+					<div class="tubo"><div id="previa"></div><div id="atual"></div></div>
+					<div class="tubo-ml" id="tubo-ml">0.0 / 5 ml</div>
+					<div class="tubo-sabor" id="tubo-sabor">Tanque vazio</div>
+				</div>
+				<div class="lista" id="lista"></div>
+			</div>
+			<div class="rodape">
+				<span id="aviso"></span>
+				<button id="confirmar" disabled>Escolha um líquido</button>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		const $ = (Id) => document.getElementById(Id);
+		const Post = (Name, Data = {}) => fetch(`https://${GetParentResourceName()}/${Name}`, { method: "POST", body: JSON.stringify(Data) });
+		const Padrao = [46, 139, 87];
+
+		// ---------- painel do vape na mão ----------
+		function Atualizar(Data) {
+			const Cor = Data.Color || Padrao;
+			const Fracao = Data.Capacity > 0 ? Math.max(0, Math.min(1, Data.Ml / Data.Capacity)) : 0;
+
+			$("vape").style.setProperty("--cor", Cor.join(", "));
+			$("nome").textContent = Data.Name || "Vape";
+			$("ml").textContent = `${Data.Ml.toFixed(1)} / ${Data.Capacity.toFixed(0)} ml`;
+			$("sabor").textContent = Data.Flavor && Data.Ml > 0 ? Data.Flavor : "Tanque vazio";
+			$("nivel").style.width = `${Fracao * 100}%`;
+			$("tanque").classList.toggle("baixo", Fracao > 0 && Fracao <= 0.2);
+
+			const Efeito = Data.Effect;
+			$("efeito").classList.toggle("ativo", !!Efeito);
+			if (Efeito) {
+				$("efeito-nome").textContent = Efeito.Label;
+				$("efeito-desc").textContent = Efeito.Description;
+				$("efeito-tempo").textContent = `${Efeito.Seconds}s`;
+				$("efeito-barra").style.width = `${Math.max(0, Efeito.Left) * 100}%`;
+			}
+		}
+
+		// ---------- painel de recarga ----------
+		let Recarga = null;
+		let Escolhido = null;
+
+		function Tubo() {
+			const { Ml, Capacity, Bottle, Flavor, FlavorName, Color } = Recarga;
+			const Atual = Capacity > 0 ? Ml / Capacity : 0;
+			$("recarga").style.setProperty("--cor", (Color || Padrao).join(", "));
+
+			if (!Escolhido) {
+				$("atual").style.height = `${Atual * 100}%`;
+				$("previa").style.height = "0%";
+				$("tubo-ml").textContent = `${Ml.toFixed(1)} / ${Capacity.toFixed(0)} ml`;
+				$("tubo-sabor").textContent = FlavorName && Ml > 0 ? FlavorName : "Tanque vazio";
+				$("aviso").textContent = "";
+				$("confirmar").disabled = true;
+				$("confirmar").textContent = "Escolha um líquido";
+				$("recarga").style.setProperty("--nova", Padrao.join(", "));
+				return;
+			}
+
+			// trocar de sabor descarta o que sobrou, igual ao servidor
+			const Mesmo = Flavor === Escolhido.Item;
+			const Base = Mesmo ? Ml : 0;
+			const Depois = Math.min(Capacity, Base + Bottle);
+
+			$("recarga").style.setProperty("--nova", Escolhido.Color.join(", "));
+			$("atual").style.height = `${(Mesmo ? Atual : 0) * 100}%`;
+			$("previa").style.height = `${(Depois / Capacity) * 100}%`;
+			$("tubo-ml").textContent = `${Depois.toFixed(1)} / ${Capacity.toFixed(0)} ml`;
+			$("tubo-sabor").textContent = Escolhido.Name;
+
+			if (Mesmo && Ml >= Capacity) {
+				$("aviso").textContent = "O tanque já está cheio desse sabor.";
+				$("confirmar").disabled = true;
+			} else {
+				$("aviso").textContent = !Mesmo && Ml > 0 ? `Trocar de sabor descarta ${Ml.toFixed(1)} ml de ${FlavorName}.` : "";
+				$("confirmar").disabled = false;
+			}
+
+			$("confirmar").textContent = `Recarregar com ${Escolhido.Name}`;
+		}
+
+		function AbrirRecarga(Data) {
+			Recarga = Data;
+			Escolhido = null;
+			$("recarga-vape").textContent = Data.Vape || "Vape";
+
+			const Lista = $("lista");
+			Lista.innerHTML = "";
+
+			for (const Liquido of Data.Liquids) {
+				const Card = document.createElement("div");
+				Card.className = "card" + (Liquido.Amount > 0 ? "" : " vazio");
+				Card.style.setProperty("--c", Liquido.Color.join(", "));
+				Card.innerHTML = `
+					<span class="qtd">${Liquido.Amount > 0 ? "x" + Liquido.Amount : "Sem"}</span>
+					<img src="nui://vrp/config/inventory/${Liquido.Item}.png" onerror="this.style.visibility='hidden'">
+					<div class="titulo"><span></span>${Liquido.Name}</div>
+					<div class="ef">${Liquido.Effect || ""}</div>
+					<div class="ds">${Liquido.Description || ""}</div>`;
+
+				Card.addEventListener("click", () => {
+					Escolhido = Liquido;
+					Lista.querySelectorAll(".card").forEach((Outro) => Outro.classList.remove("escolhido"));
+					Card.classList.add("escolhido");
+					Tubo();
+				});
+
+				Lista.appendChild(Card);
+			}
+
+			Tubo();
+			$("recarga").classList.add("aberto");
+		}
+
+		function FecharRecarga() {
+			$("recarga").classList.remove("aberto");
+			Recarga = null;
+			Escolhido = null;
+		}
+
+		$("confirmar").addEventListener("click", () => {
+			if (Escolhido) {
+				Post("Refill", { Item: Escolhido.Item });
+				FecharRecarga();
+			}
+		});
+
+		$("fechar").addEventListener("click", () => {
+			Post("Close");
+			FecharRecarga();
+		});
+
+		document.addEventListener("keydown", (Event) => {
+			if (Event.key === "Escape" && Recarga) {
+				Post("Close");
+				FecharRecarga();
+			}
+		});
+
+		window.addEventListener("message", ({ data }) => {
+			if (data.Action === "Show") $("vape").classList.add("aberto");
+			else if (data.Action === "Hide") $("vape").classList.remove("aberto");
+			else if (data.Action === "Update") Atualizar(data);
+			else if (data.Action === "OpenRefill") AbrirRecarga(data);
+			else if (data.Action === "CloseRefill") FecharRecarga();
+		});
+	</script>
+</body>
+</html>

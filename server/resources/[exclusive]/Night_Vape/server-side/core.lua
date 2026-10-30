@@ -7,6 +7,7 @@ local vRP = module("vrp","lib/Proxy").getInterface("vRP")
 -----------------------------------------------------------------------------------------------------------------------------------------
 local Tanks = {}
 local Equipped = {}
+local EquippedItem = {}
 local LastPuff = {}
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- NOTIFY
@@ -39,30 +40,43 @@ end
 local function SyncTank(source,Passport)
 	local Data = Tank(Passport)
 	local Flavor = Data.Flavor and Config.Flavors[Data.Flavor]
-	TriggerClientEvent("Night_Vape:Tank",source,Data.Ml,Config.Capacity,Flavor and Flavor.Name or nil)
+	TriggerClientEvent("Night_Vape:Tank",source,Data.Ml,Config.Capacity,Flavor and Flavor.Name or nil,Flavor and Flavor.Color or nil)
 end
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- TOGGLE: chamado pelo inventory ao usar o item vape
 -----------------------------------------------------------------------------------------------------------------------------------------
-local function Toggle(source,Passport)
-	if Equipped[source] then
-		Equipped[source] = nil
-		TriggerClientEvent("Night_Vape:Equip",source,false)
-		return
+local function HasVape(Passport)
+	for Item in pairs(Config.Vapes) do
+		if vRP.ConsultItem(Passport,Item,1) then
+			return true
+		end
 	end
+
+	return false
+end
+
+local OpenRefill
+
+-- Usar o vape (inventário ou hotbar) = uma puxada completa; com o tanque vazio abre o painel de recarga
+local function Toggle(source,Passport,Item)
+	Item = Config.Vapes[Item] and Item or "vape"
 
 	local State = Player(source).state
 	if State.Death or State.Crawl or State.Handcuff then
 		return
 	end
 
-	Equipped[source] = Passport
-	SyncTank(source,Passport)
-	TriggerClientEvent("Night_Vape:Equip",source,true)
+	TriggerClientEvent("inventory:Close",source)
 
-	if Tank(Passport).Ml < Config.PerPuff then
-		Notify(source,"O tanque está vazio. Use um líquido para recarregar.")
+	if Tank(Passport).Ml < Config.PerPuff * 0.5 then
+		OpenRefill(source,Passport,Item)
+		return
 	end
+
+	Equipped[source] = Passport
+	EquippedItem[source] = Item
+	SyncTank(source,Passport)
+	TriggerClientEvent("Night_Vape:Use",source,Item)
 end
 exports("Toggle",Toggle)
 -----------------------------------------------------------------------------------------------------------------------------------------
@@ -74,7 +88,7 @@ local function Refill(source,Passport,Item,Full,Slot)
 		return false
 	end
 
-	if not vRP.ConsultItem(Passport,Config.Item,1) then
+	if not HasVape(Passport) then
 		Notify(source,"Você precisa de um vape para usar o líquido.")
 		return false
 	end
@@ -107,8 +121,65 @@ local function Refill(source,Passport,Item,Full,Slot)
 end
 exports("Refill",Refill)
 -----------------------------------------------------------------------------------------------------------------------------------------
+-- PAINEL DE RECARGA: lista os líquidos da mochila e recarrega pelo escolhido
+-----------------------------------------------------------------------------------------------------------------------------------------
+function OpenRefill(source,Passport,Vape)
+	local Liquids = {}
+	for Item,Flavor in pairs(Config.Flavors) do
+		local Consult = vRP.ConsultItem(Passport,Item,1)
+		local Effect = Config.Effects[Flavor.Effect] or {}
+		Liquids[#Liquids + 1] = { Item = Item, Name = Flavor.Name, Color = Flavor.Color, Effect = Effect.Label, Description = Effect.Description, Amount = Consult and Consult.Amount or 0 }
+	end
+
+	table.sort(Liquids,function(a,b)
+		if (a.Amount > 0) ~= (b.Amount > 0) then
+			return a.Amount > 0
+		end
+
+		return a.Name < b.Name
+	end)
+
+	local Data = Tank(Passport)
+	local Flavor = Data.Flavor and Config.Flavors[Data.Flavor]
+	TriggerClientEvent("Night_Vape:RefillPanel",source,{
+		Liquids = Liquids,
+		Ml = Data.Ml,
+		Capacity = Config.Capacity,
+		Bottle = Config.BottleSize,
+		Flavor = Data.Flavor,
+		FlavorName = Flavor and Flavor.Name or nil,
+		Color = Flavor and Flavor.Color or nil,
+		Vape = Config.Vapes[Vape] and Config.Vapes[Vape].Name or "Vape"
+	})
+end
+
+RegisterNetEvent("Night_Vape:RefillFrom",function(Item)
+	local source = source
+	local Passport = vRP.Passport(source)
+	if not Passport or not Config.Flavors[Item] then
+		return
+	end
+
+	local Consult = vRP.ConsultItem(Passport,Item,1)
+	if not Consult then
+		Notify(source,"Você não tem esse líquido.")
+		return
+	end
+
+	Refill(source,Passport,Item,Consult.Item,Consult.Slot)
+end)
+-----------------------------------------------------------------------------------------------------------------------------------------
 -- LIQUIDS: o inventory registra estes itens como usáveis
 -----------------------------------------------------------------------------------------------------------------------------------------
+exports("Vapes",function()
+	local List = {}
+	for Item in pairs(Config.Vapes) do
+		List[#List + 1] = Item
+	end
+
+	return List
+end)
+
 exports("Liquids",function()
 	local List = {}
 	for Item in pairs(Config.Flavors) do
@@ -120,8 +191,10 @@ end)
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- PUFF
 -----------------------------------------------------------------------------------------------------------------------------------------
-RegisterNetEvent("Night_Vape:Puff",function()
+RegisterNetEvent("Night_Vape:Puff",function(Intensity)
 	local source = source
+	-- 0.0 = puxada curta, 1.0 = longa (Config.Intensity)
+	Intensity = math.min(1.0,math.max(0.0,tonumber(Intensity) or 1.0))
 	local Passport = Equipped[source]
 	if not Passport or vRP.Passport(source) ~= Passport then
 		return
@@ -131,25 +204,33 @@ RegisterNetEvent("Night_Vape:Puff",function()
 		return
 	end
 
-	if not vRP.ConsultItem(Passport,Config.Item,1) then
+	if not vRP.ConsultItem(Passport,EquippedItem[source],1) then
 		Equipped[source] = nil
-		TriggerClientEvent("Night_Vape:Equip",source,false)
+		EquippedItem[source] = nil
 		return
 	end
 
 	local Data = Tank(Passport)
-	if not Data.Flavor or Data.Ml < Config.PerPuff then
+	if not Data.Flavor or Data.Ml < Config.PerPuff * 0.5 then
 		Notify(source,"O tanque está vazio. Use um líquido para recarregar.")
 		return
 	end
 
 	LastPuff[source] = os.time()
-	Data.Ml = math.max(0.0,Data.Ml - Config.PerPuff)
+	local Before = Data.Ml
+	Data.Ml = math.max(0.0,Data.Ml - Config.PerPuff * (0.5 + Intensity))
+
+	local Low = Config.Capacity * Config.LowTank
+	if Data.Ml < Config.PerPuff * 0.5 then
+		Notify(source,"O líquido acabou. Use um líquido para recarregar.")
+	elseif Before > Low and Data.Ml <= Low then
+		Notify(source,"Tanque quase vazio ("..string.format("%.1f",Data.Ml).." ml).")
+	end
 	SaveTank(Passport)
-	vRP.DowngradeStress(Passport,Config.Stress)
 	local Effect = Config.Flavors[Data.Flavor].Effect
-	if Effect and Effect ~= "stress" then
-		TriggerClientEvent("Night_Vape:Effect",source,Effect,Config.EffectDuration)
+	vRP.DowngradeStress(Passport,Effect == "stress" and Config.Stress * 3 or Config.Stress)
+	if Config.Effects[Effect] then
+		TriggerClientEvent("Night_Vape:Effect",source,Effect)
 	end
 	SyncTank(source,Passport)
 
@@ -159,7 +240,7 @@ RegisterNetEvent("Night_Vape:Puff",function()
 	for _,Target in ipairs(GetPlayers()) do
 		Target = tonumber(Target)
 		if #(GetEntityCoords(GetPlayerPed(Target)) - Coords) <= Config.SyncDistance then
-			TriggerClientEvent("Night_Vape:Smoke",Target,source,Color)
+			TriggerClientEvent("Night_Vape:Smoke",Target,source,Color,Intensity)
 		end
 	end
 end)
@@ -168,6 +249,7 @@ end)
 -----------------------------------------------------------------------------------------------------------------------------------------
 RegisterNetEvent("Night_Vape:Store",function()
 	Equipped[source] = nil
+	EquippedItem[source] = nil
 end)
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- PLAYERDROPPED
@@ -175,6 +257,7 @@ end)
 AddEventHandler("playerDropped",function()
 	local Passport = Equipped[source]
 	Equipped[source] = nil
+	EquippedItem[source] = nil
 	LastPuff[source] = nil
 
 	if Passport then

@@ -6804,6 +6804,17 @@ local List = {
 		LostWater = true,
 		Economy = 4750
 	},
+	["vape_pro"] = {
+		AdminLevel = 1,
+		Index = "vape_pro",
+		Name = "Vape Pro",
+		Repair = "repairkit02",
+		Type = "Consumível",
+		Durability = 240,
+		Weight = 0.75,
+		LostWater = true,
+		Economy = 6500
+	},
 	["liquido_neutro"] = {
 		Index = "liquido_neutro",
 		Name = "Líquido Neutro",
@@ -6835,6 +6846,27 @@ local List = {
 	["liquido_uva"] = {
 		Index = "liquido_uva",
 		Name = "Líquido de Uva",
+		Type = "Consumível",
+		Weight = 0.10,
+		Economy = 175
+	},
+	["liquido_manga"] = {
+		Index = "liquido_manga",
+		Name = "Líquido de Manga",
+		Type = "Consumível",
+		Weight = 0.10,
+		Economy = 175
+	},
+	["liquido_limao"] = {
+		Index = "liquido_limao",
+		Name = "Líquido de Limão",
+		Type = "Consumível",
+		Weight = 0.10,
+		Economy = 175
+	},
+	["liquido_chiclete"] = {
+		Index = "liquido_chiclete",
+		Name = "Líquido de Chiclete",
 		Type = "Consumível",
 		Weight = 0.10,
 		Economy = 175

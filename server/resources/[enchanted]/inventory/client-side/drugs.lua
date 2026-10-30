@@ -174,11 +174,11 @@ end
 -----------------------------------------------------------------------------------------------------------------------------------------
 RegisterNetEvent("Cocaine")
 AddEventHandler("Cocaine",function()
-	-- if AnimpostfxIsRunning("MinigameTransitionIn") then
-		-- AnimpostfxStop("MinigameTransitionIn")
-	-- end
+	if AnimpostfxIsRunning("MinigameTransitionIn") then
+		AnimpostfxStop("MinigameTransitionIn")
+	end
 
-	-- AnimpostfxPlay("MinigameTransitionIn",0,true)
+	AnimpostfxPlay("MinigameTransitionIn",0,true)
 	Cocaine = Cocaine + 30
 end)
 -----------------------------------------------------------------------------------------------------------------------------------------
@@ -186,11 +186,11 @@ end)
 -----------------------------------------------------------------------------------------------------------------------------------------
 RegisterNetEvent("Methamphetamine")
 AddEventHandler("Methamphetamine",function()
-	-- if AnimpostfxIsRunning("Dont_tazeme_bro") then
-		-- AnimpostfxStop("Dont_tazeme_bro")
-	-- end
+	if AnimpostfxIsRunning("Dont_tazeme_bro") then
+		AnimpostfxStop("Dont_tazeme_bro")
+	end
 
-	-- AnimpostfxPlay("Dont_tazeme_bro",0,true)
+	AnimpostfxPlay("Dont_tazeme_bro",0,true)
 	Methamphetamine = Methamphetamine + 30
 end)
 -----------------------------------------------------------------------------------------------------------------------------------------
@@ -198,11 +198,11 @@ end)
 -----------------------------------------------------------------------------------------------------------------------------------------
 RegisterNetEvent("Metadone")
 AddEventHandler("Metadone",function()
-	-- if AnimpostfxIsRunning("DeathFailMPDark") then
-		-- AnimpostfxStop("DeathFailMPDark")
-	-- end
+	if AnimpostfxIsRunning("DeathFailMPDark") then
+		AnimpostfxStop("DeathFailMPDark")
+	end
 
-	-- AnimpostfxPlay("DeathFailMPDark",90000,false)
+	AnimpostfxPlay("DeathFailMPDark",90000,false)
 
 	if not LocalPlayer["state"]["DamageModify"] then
 		LocalPlayer["state"]:set("DamageModify",true,false)
@@ -219,13 +219,13 @@ end)
 -----------------------------------------------------------------------------------------------------------------------------------------
 RegisterNetEvent("Heroin")
 AddEventHandler("Heroin",function()
-	-- if AnimpostfxIsRunning("DrugsMichaelAliensFight") then
-		-- AnimpostfxStop("DrugsMichaelAliensFight")
-	-- end
+	if AnimpostfxIsRunning("DrugsMichaelAliensFight") then
+		AnimpostfxStop("DrugsMichaelAliensFight")
+	end
 
 	SetPedMaxHealth(PlayerPedId(),250)
 	SetEntityMaxHealth(PlayerPedId(),250)
-	-- AnimpostfxPlay("DrugsMichaelAliensFight",90000,false)
+	AnimpostfxPlay("DrugsMichaelAliensFight",90000,false)
 
 	Heroin = 900
 end)
@@ -234,11 +234,11 @@ end)
 -----------------------------------------------------------------------------------------------------------------------------------------
 RegisterNetEvent("Crack")
 AddEventHandler("Crack",function()
-	-- if AnimpostfxIsRunning("HeistCelebPassBW") then
-		-- AnimpostfxStop("HeistCelebPassBW")
-	-- end
+	if AnimpostfxIsRunning("HeistCelebPassBW") then
+		AnimpostfxStop("HeistCelebPassBW")
+	end
 
-	-- AnimpostfxPlay("HeistCelebPassBW",300000,false)
+	AnimpostfxPlay("HeistCelebPassBW",300000,false)
 	TriggerEvent("Hunger",90000)
 	TriggerEvent("Thirst",90000)
 	Crack = 600
@@ -248,11 +248,11 @@ end)
 -----------------------------------------------------------------------------------------------------------------------------------------
 RegisterNetEvent("Joint")
 AddEventHandler("Joint",function()
-	-- if AnimpostfxIsRunning("DeathFailMPIn") then
-		-- AnimpostfxStop("DeathFailMPIn")
-	-- end
+	if AnimpostfxIsRunning("DeathFailMPIn") then
+		AnimpostfxStop("DeathFailMPIn")
+	end
 
-	-- AnimpostfxPlay("DeathFailMPIn",0,true)
+	AnimpostfxPlay("DeathFailMPIn",0,true)
 	Joint = Joint + 30
 end)
 -----------------------------------------------------------------------------------------------------------------------------------------
@@ -260,11 +260,11 @@ end)
 -----------------------------------------------------------------------------------------------------------------------------------------
 RegisterNetEvent("Oxycontin")
 AddEventHandler("Oxycontin",function()
-	-- if AnimpostfxIsRunning("DrugsMichaelAliensFight") then
-		-- AnimpostfxStop("DrugsMichaelAliensFight")
-	-- end
+	if AnimpostfxIsRunning("DrugsMichaelAliensFight") then
+		AnimpostfxStop("DrugsMichaelAliensFight")
+	end
 
-	-- AnimpostfxPlay("DrugsMichaelAliensFight",0,true)
+	AnimpostfxPlay("DrugsMichaelAliensFight",0,true)
 	Oxycontin = 30
 end)
 -----------------------------------------------------------------------------------------------------------------------------------------
@@ -306,9 +306,9 @@ CreateThread(function()
 			CocaineTimer = GetGameTimer() + 1000
 
 			if Cocaine <= 0 or Health <= 100 then
-				-- if AnimpostfxIsRunning("MinigameTransitionIn") then
-					-- AnimpostfxStop("MinigameTransitionIn")
-				-- end
+				if AnimpostfxIsRunning("MinigameTransitionIn") then
+					AnimpostfxStop("MinigameTransitionIn")
+				end
 
 				Cocaine = 0
 			end
@@ -319,9 +319,9 @@ CreateThread(function()
 			MethamphetamineTimer = GetGameTimer() + 1000
 
 			if Methamphetamine <= 0 or Health <= 100 then
-				-- if AnimpostfxIsRunning("Dont_tazeme_bro") then
-					-- AnimpostfxStop("Dont_tazeme_bro")
-				-- end
+				if AnimpostfxIsRunning("Dont_tazeme_bro") then
+					AnimpostfxStop("Dont_tazeme_bro")
+				end
 
 				Methamphetamine = 0
 			end
@@ -332,9 +332,9 @@ CreateThread(function()
 			MetadoneTimer = GetGameTimer() + 1000
 
 			if Metadone <= 0 or GetEntityHealth(Ped) <= 100 then
-				-- if AnimpostfxIsRunning("DeathFailMPDark") then
-					-- AnimpostfxStop("DeathFailMPDark")
-				-- end
+				if AnimpostfxIsRunning("DeathFailMPDark") then
+					AnimpostfxStop("DeathFailMPDark")
+				end
 
 				Metadone = 0
 				SetAiWeaponDamageModifier(0.5)
@@ -350,9 +350,9 @@ CreateThread(function()
 			HeroinTimer = GetGameTimer() + 1000
 
 			if Heroin <= 0 or Health <= 100 then
-				-- if AnimpostfxIsRunning("DrugsMichaelAliensFight") then
-					-- AnimpostfxStop("DrugsMichaelAliensFight")
-				-- end
+				if AnimpostfxIsRunning("DrugsMichaelAliensFight") then
+					AnimpostfxStop("DrugsMichaelAliensFight")
+				end
 
 				if GetEntityHealth(Ped) > 200 then
 					SetEntityHealth(Ped,200)
@@ -369,9 +369,9 @@ CreateThread(function()
 			CrackTimer = GetGameTimer() + 1000
 
 			if Crack <= 0 or Health <= 100 then
-				-- if AnimpostfxIsRunning("HeistCelebPassBW") then
-					-- AnimpostfxStop("HeistCelebPassBW")
-				-- end
+				if AnimpostfxIsRunning("HeistCelebPassBW") then
+					AnimpostfxStop("HeistCelebPassBW")
+				end
 
 				TriggerEvent("Hunger",180000)
 				TriggerEvent("Thirst",180000)
@@ -384,9 +384,9 @@ CreateThread(function()
 			JointTimer = GetGameTimer() + 1000
 
 			if Joint <= 0 or GetEntityHealth(Ped) <= 100 then
-				-- if AnimpostfxIsRunning("DeathFailMPIn") then
-					-- AnimpostfxStop("DeathFailMPIn")
-				-- end
+				if AnimpostfxIsRunning("DeathFailMPIn") then
+					AnimpostfxStop("DeathFailMPIn")
+				end
 
 				Joint = 0
 			end
@@ -397,9 +397,9 @@ CreateThread(function()
 			OxycontinTimer = GetGameTimer() + 1000
 
 			if Oxycontin <= 0 or Health <= 100 then
-				-- if AnimpostfxIsRunning("DrugsMichaelAliensFight") then
-					-- AnimpostfxStop("DrugsMichaelAliensFight")
-				-- end
+				if AnimpostfxIsRunning("DrugsMichaelAliensFight") then
+					AnimpostfxStop("DrugsMichaelAliensFight")
+				end
 
 				Oxycontin = 0
 			end
