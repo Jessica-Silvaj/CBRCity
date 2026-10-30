@@ -20,5 +20,10 @@ server_scripts {
 ui_page "web-side/index.html"
 
 files {
-	"web-side/index.html"
+	"web-side/index.html",
+	"web-side/vape-loop.wav",
+	"stream/oxlyn_vape_variants.ytyp"
 }
+
+-- prop do Vape Volt (pacote Oxlyn)
+data_file "DLC_ITYP_REQUEST" "stream/oxlyn_vape_variants.ytyp"

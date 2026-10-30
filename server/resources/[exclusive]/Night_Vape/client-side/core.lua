@@ -9,6 +9,7 @@ local PanelOpen = false
 -- Efeito do sabor em andamento: { Effect, Label, Description, Until, Duration }
 local Active = nil
 local Tank = { Ml = 0.0, Capacity = Config.Capacity, Flavor = nil, Color = nil }
+math.randomseed(GetGameTimer())
 -- Pulmão de 0 a 100 (ver Config.Lung)
 local Lung = 0.0
 
@@ -73,7 +74,7 @@ local function AttachProp()
 	SetModelAsNoLongerNeeded(Hash)
 
 	local Offset,Rotation = Prop.Offset,Prop.Rotation
-	AttachEntityToEntity(Object,Ped,GetPedBoneIndex(Ped,Prop.Bone),Offset.x,Offset.y,Offset.z,Rotation.x,Rotation.y,Rotation.z,true,true,false,true,1,true)
+	AttachEntityToEntity(Object,Ped,GetPedBoneIndex(Ped,Prop.Bone),Offset.x,Offset.y,Offset.z,Rotation.x,Rotation.y,Rotation.z,true,true,false,true,Prop.Order or 1,true)
 end
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- HUD: aparece durante a puxada/recarga e enquanto o efeito do sabor estiver ativo
@@ -152,10 +153,12 @@ RegisterNetEvent("Night_Vape:Use",function(Item)
 
 	-- segurando a tecla da hotbar (1-4) continua puxando, até Config.MaxHold segundos
 	local Started = GetGameTimer()
+	SendNUIMessage({ Action = "PuffStart", Volume = Config.PuffVolume })
 	Wait(1000)
 	while (GetGameTimer() - Started) < Config.MaxHold * 1000 and (IsDisabledControlPressed(0,157) or IsDisabledControlPressed(0,158) or IsDisabledControlPressed(0,160) or IsDisabledControlPressed(0,164)) do
 		Wait(0)
 	end
+	SendNUIMessage({ Action = "PuffStop" })
 
 	-- quanto mais tempo segurou, maior a nuvem e o gasto (puxada curta = Config.Intensity)
 	local Held = (GetGameTimer() - Started) / 1000
@@ -163,7 +166,8 @@ RegisterNetEvent("Night_Vape:Use",function(Item)
 	TriggerServerEvent("Night_Vape:Puff",Intensity)
 
 	-- a puxada passou do limite do pulmão: crise de tosse
-	local Gain = Config.Lung.PerPuff * (0.5 + Intensity)
+	-- sabor "Desperto" faz o pulmão encher pela metade
+	local Gain = Config.Lung.PerPuff * (0.5 + Intensity) * ((EffectActive() and Active.Effect == "awake") and 0.5 or 1)
 	local Overload = Config.Lung.Enabled and Lung + Gain > 100
 	if Config.Lung.Enabled then
 		Lung = math.min(100.0,Lung + Gain)
@@ -185,11 +189,12 @@ RegisterNetEvent("Night_Vape:Use",function(Item)
 end)
 
 -- Animação de encaixar o frasco, com o frasco na mão esquerda e o vape na direita
-RegisterNetEvent("Night_Vape:Refill",function()
+RegisterNetEvent("Night_Vape:Refill",function(Vape)
 	local Ped = PlayerPedId()
 	local Refill = Config.Refill
 
 	Busy = true
+	Current = Config.Vapes[Vape] and Vape or Current
 	AttachProp()
 
 	local Bottle = nil
@@ -215,8 +220,17 @@ RegisterNetEvent("Night_Vape:Refill",function()
 	Busy = false
 end)
 
--- Vapor colorido saindo da boca de quem puxou
-RegisterNetEvent("Night_Vape:Smoke",function(ServerId,Color,Intensity)
+-- Tanque quase vazio: 3 bipes
+RegisterNetEvent("Night_Vape:Beep",function()
+	for _ = 1,3 do
+		PlaySoundFrontend(-1,"Beep_Red","DLC_HEIST_HACKING_SNAKE_SOUNDS",true)
+		Wait(220)
+	end
+end)
+
+-- Vapor colorido: sai da boca e depois solta no ar. Na rua segue o vento (com uma leve ondulação);
+-- em lugar fechado fica parado, sobe devagar e some no próprio tempo
+RegisterNetEvent("Night_Vape:Smoke",function(ServerId,Color,Cloud)
 	local Player = GetPlayerFromServerId(ServerId)
 	if Player == -1 then
 		return
@@ -227,30 +241,63 @@ RegisterNetEvent("Night_Vape:Smoke",function(ServerId,Color,Intensity)
 		return
 	end
 
-	Intensity = tonumber(Intensity) or 1.0
+	Cloud = math.max(0.15,tonumber(Cloud) or 1.0)
 	LoadAsset(SmokeAsset)
 
-	-- o efeito é em loop (NonLooped não aparece)
+	-- saída da boca (o efeito é em loop; NonLooped não aparece)
 	UseParticleFxAssetNextCall(SmokeAsset)
-	local Handle = StartParticleFxLoopedOnEntityBone(SmokeName,Ped,0.0,0.15,0.0,0.0,0.0,0.0,GetPedBoneIndex(Ped,31086),0.08 + (Intensity * 0.08),false,false,false)
-	SetParticleFxLoopedColour(Handle,Color[1] / 255.0,Color[2] / 255.0,Color[3] / 255.0,false)
-	SetParticleFxLoopedAlpha(Handle,0.8)
+	local Mouth = StartParticleFxLoopedOnEntityBone(SmokeName,Ped,0.0,0.15,0.0,0.0,0.0,0.0,GetPedBoneIndex(Ped,31086),0.06 + (Cloud * 0.07),false,false,false)
+	SetParticleFxLoopedColour(Mouth,Color[1] / 255.0,Color[2] / 255.0,Color[3] / 255.0,false)
+	SetParticleFxLoopedAlpha(Mouth,0.8)
+	Wait(600)
+	StopParticleFxLooped(Mouth,false)
 
-	Wait(math.floor(1000 + (Intensity * 2000)))
+	-- nuvem solta no ar, deslocada pelo vento
+	local Indoor = GetInteriorFromEntity(Ped) ~= 0
+	local Position = GetPedBoneCoords(Ped,31086,0.0,0.0,0.0) + (GetEntityForwardVector(Ped) * 0.25)
+	local Wind = Indoor and vec3(0.0,0.0,0.0) or (GetWindDirection() * math.min(3.0,GetWindSpeed()) * 0.35)
+	local Rise = Indoor and 0.05 or 0.12
+	local Drift = math.random() * 6.28
+
+	UseParticleFxAssetNextCall(SmokeAsset)
+	local Handle = StartParticleFxLoopedAtCoord(SmokeName,Position.x,Position.y,Position.z,0.0,0.0,0.0,0.08 + (Cloud * 0.1),false,false,false,false)
+	SetParticleFxLoopedColour(Handle,Color[1] / 255.0,Color[2] / 255.0,Color[3] / 255.0,false)
+
+	local Duration = math.floor((Indoor and 2600 or 1600) + (Cloud * 1800))
+	local Started = GetGameTimer()
+	local Last = Started
+	while GetGameTimer() - Started < Duration do
+		local Now = GetGameTimer()
+		local Delta = (Now - Last) / 1000
+		local Elapsed = (Now - Started) / 1000
+		Last = Now
+
+		-- ondulação limitada para não ficar uma coluna reta
+		local Wander = Indoor and vec3(0.0,0.0,0.0) or vec3(math.sin(Elapsed * 1.7 + Drift) * 0.12,math.cos(Elapsed * 1.3 + Drift) * 0.12,0.0)
+		Position = Position + ((Wind + Wander + vec3(0.0,0.0,Rise)) * Delta)
+		SetParticleFxLoopedOffsets(Handle,Position.x,Position.y,Position.z,0.0,0.0,0.0)
+		SetParticleFxLoopedAlpha(Handle,0.75 * (1.0 - (Now - Started) / Duration))
+
+		Wait(0)
+	end
+
 	StopParticleFxLooped(Handle,false)
 end)
 
--- Painel de recarga (abre ao usar o vape com o tanque vazio)
+-- Estação de recarga: abre ao usar um líquido ou o vape vazio; depois de cada despejo só atualiza
 RegisterNetEvent("Night_Vape:RefillPanel",function(Data)
+	if Data.Update and not PanelOpen then
+		return
+	end
+
 	PanelOpen = true
-	Data.Action = "OpenRefill"
+	Data.Action = Data.Update and "UpdateRefill" or "OpenRefill"
 	SetNuiFocus(true,true)
 	SendNUIMessage(Data)
 end)
 
-RegisterNUICallback("Refill",function(Data,Callback)
-	ClosePanel()
-	TriggerServerEvent("Night_Vape:RefillFrom",Data.Item)
+RegisterNUICallback("Pour",function(Data,Callback)
+	TriggerServerEvent("Night_Vape:Pour",Data.Vape,Data.Item)
 	Callback("Ok")
 end)
 
@@ -311,6 +358,8 @@ RegisterNetEvent("Night_Vape:Effect",function(Effect)
 
 		if Effect == "speed" then
 			SetRunSprintMultiplierForPlayer(PlayerId(),1.10)
+		elseif Effect == "swim" then
+			SetSwimMultiplierForPlayer(PlayerId(),1.20)
 		end
 
 		-- termina quando o tempo acaba ou outro sabor substitui o efeito
@@ -354,6 +403,8 @@ RegisterNetEvent("Night_Vape:Effect",function(Effect)
 
 		if Effect == "speed" then
 			SetRunSprintMultiplierForPlayer(PlayerId(),1.0)
+		elseif Effect == "swim" then
+			SetSwimMultiplierForPlayer(PlayerId(),1.0)
 		end
 	end)
 end)
@@ -410,6 +461,7 @@ end)
 AddEventHandler("onResourceStop",function(Resource)
 	if Resource == GetCurrentResourceName() then
 		RemoveProp()
+		SendNUIMessage({ Action = "PuffStop" })
 
 		if PanelOpen then
 			SetNuiFocus(false,false)

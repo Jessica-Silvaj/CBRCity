@@ -4,13 +4,18 @@
 -- Usar um líquido recarrega o tanque com aquele sabor. Cada vape tem o próprio tanque, salvo por personagem.
 -----------------------------------------------------------------------------------------------------------------------------------------
 Config = {
-	-- Capacidade do tanque e gasto por puxada (ml)
+	-- Capacidade padrão do tanque (cada vape pode ter a sua em Vapes) e gasto base por puxada (ml)
 	Capacity = 5.0,
 	PerPuff = 0.1,
-	-- Cada frasco de líquido recarrega isto (ml); o que passar da capacidade é perdido
+	-- Cada frasco tem isto (ml). O que não couber no tanque fica no frasco aberto para a próxima recarga
 	BottleSize = 5.0,
-	-- Avisa quando o tanque fica abaixo desta fração da capacidade
-	LowTank = 0.2,
+	-- true: qualquer frasco completa qualquer tanque e o líquido novo define o sabor/cor do tanque inteiro.
+	-- false: um sabor diferente só entra com o tanque vazio. A quantidade é sempre conservada
+	AllowMix = true,
+	-- Avisa (notificação + 3 bipes, uma vez por recarga) quando o tanque fica abaixo desta fração da capacidade
+	LowTank = 0.15,
+	-- Volume do som da puxada (0.0 a 1.0), só quem puxa ouve
+	PuffVolume = 0.35,
 
 	-- Tamanho da puxada ao usar o vape (0.0 = curta, 1.0 = longa): define a nuvem e o gasto (0.5x a 1.5x PerPuff)
 	Intensity = 0.6,
@@ -65,6 +70,22 @@ Config = {
 			Label = "Gelado", Description = "Pulmão se recupera 3x mais rápido", Duration = 30,
 			Timecycle = "glasses_blue", Strength = 0.25
 		},
+		["tropical"] = {
+			Label = "Tropical", Description = "Mata a fome a cada puxada", Duration = 15,
+			Timecycle = "MP_Arena_theme_evening", Strength = 0.3
+		},
+		["swim"] = {
+			Label = "Nadador", Description = "Nada 20% mais rápido", Duration = 30,
+			Timecycle = "underwater_deep", Strength = 0.15
+		},
+		["serene"] = {
+			Label = "Sereno", Description = "Tira estresse aos poucos", Duration = 25,
+			Postfx = "ChopVision"
+		},
+		["awake"] = {
+			Label = "Desperto", Description = "Pulmão enche pela metade", Duration = 30,
+			Timecycle = "NG_filmic10", Strength = 0.3
+		},
 		["trip"] = {
 			Label = "Viagem", Description = "Tontura, visão alterada e andar mole", Duration = 25,
 			Timecycle = "drug_flying_base", Strength = 0.8, Shake = "DRUNK_SHAKE", ShakeAmp = 1.2, Walk = "move_m@drunk@slightlydrunk"
@@ -73,10 +94,12 @@ Config = {
 	-- Distância (metros) em que outros jogadores veem o vapor
 	SyncDistance = 60.0,
 
-	-- Vapes: item do inventário => prop do próprio GTA na mão direita (mesmas posições dos emotes "vape" e "vape2")
+	-- Vapes: item do inventário => prop na mão direita.
+	-- Capacity = tanque (ml), Consumption = gasto por puxada (x), Cloud = tamanho da nuvem (x), Style = visual na estação de recarga
 	Vapes = {
 		["vape"] = {
 			Name = "Vape",
+			Capacity = 5.0, Consumption = 1.0, Cloud = 1.0, Style = "classic",
 			Model = "ba_prop_battle_vape_01",
 			Bone = 28422,
 			Offset = vec3(-0.0290,0.0070,-0.0050),
@@ -84,10 +107,20 @@ Config = {
 		},
 		["vape_pro"] = {
 			Name = "Vape Pro",
+			Capacity = 4.0, Consumption = 1.3, Cloud = 1.4, Style = "pro",
 			Model = "xm3_prop_xm3_vape_01a",
 			Bone = 28422,
 			Offset = vec3(-0.02,-0.02,0.02),
 			Rotation = vec3(58.0,110.0,10.0)
+		},
+		["vape_volt"] = {
+			Name = "Vape Volt",
+			Capacity = 3.0, Consumption = 1.6, Cloud = 0.65, Style = "volt",
+			Model = "prop_oxlyn_vape_volt",
+			Bone = 57005,
+			Offset = vec3(0.0950,0.0177,-0.0280),
+			Rotation = vec3(-69.42,-19.05,-31.89),
+			Order = 2
 		}
 	},
 
@@ -109,6 +142,10 @@ Config = {
 		["liquido_uva"] = { Name = "Uva", Effect = "speed", Color = { 160, 50, 230 } },
 		["liquido_manga"] = { Name = "Manga", Effect = "fresh", Color = { 255, 150, 30 } },
 		["liquido_limao"] = { Name = "Limão", Effect = "stamina", Color = { 230, 240, 40 } },
-		["liquido_chiclete"] = { Name = "Chiclete", Effect = "trip", Color = { 255, 110, 220 } }
+		["liquido_chiclete"] = { Name = "Chiclete", Effect = "trip", Color = { 255, 110, 220 } },
+		["liquido_coco"] = { Name = "Coco", Effect = "tropical", Color = { 250, 245, 225 } },
+		["liquido_melancia"] = { Name = "Melancia", Effect = "swim", Color = { 255, 80, 70 } },
+		["liquido_maracuja"] = { Name = "Maracujá", Effect = "serene", Color = { 255, 205, 0 } },
+		["liquido_cafe"] = { Name = "Café", Effect = "awake", Color = { 120, 70, 35 } }
 	}
 }
