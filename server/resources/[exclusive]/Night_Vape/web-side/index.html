@@ -195,7 +195,6 @@
 		<div class="barra" id="tanque"><div id="nivel"></div></div>
 		<div id="efeito">
 			<div class="linha"><span id="efeito-nome"></span><span id="efeito-tempo"></span></div>
-			<div class="desc" id="efeito-desc"></div>
 			<div class="barra"><div id="efeito-barra"></div></div>
 		</div>
 	</div>
@@ -242,7 +241,6 @@
 			$("efeito").classList.toggle("ativo", !!Efeito);
 			if (Efeito) {
 				$("efeito-nome").textContent = Efeito.Label;
-				$("efeito-desc").textContent = Efeito.Description;
 				$("efeito-tempo").textContent = `${Efeito.Seconds}s`;
 				$("efeito-barra").style.width = `${Math.max(0, Efeito.Left) * 100}%`;
 			}

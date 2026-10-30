@@ -1,7 +1,7 @@
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- VAPE
 -- Usar um item de Config.Vapes (inventário ou hotbar 1-4) dá uma puxada completa; com o tanque vazio abre o painel de recarga.
--- Usar um líquido recarrega o tanque com aquele sabor. O tanque fica salvo por personagem (compartilhado entre os vapes).
+-- Usar um líquido recarrega o tanque com aquele sabor. Cada vape tem o próprio tanque, salvo por personagem.
 -----------------------------------------------------------------------------------------------------------------------------------------
 Config = {
 	-- Capacidade do tanque e gasto por puxada (ml)
@@ -14,11 +14,14 @@ Config = {
 
 	-- Tamanho da puxada ao usar o vape (0.0 = curta, 1.0 = longa): define a nuvem e o gasto (0.5x a 1.5x PerPuff)
 	Intensity = 0.6,
+	-- Segurando a tecla da hotbar a puxada dura até isto (segundos); quanto mais longa, mais vapor, gasto e pulmão
+	MaxHold = 6,
 	-- Segundos mínimos entre puxadas
 	PuffCooldown = 2,
 
 	-- Pulmão (0-100): cada puxada enche, recupera sozinho com o tempo. Puxar com ele cheio faz tossir e tira vida
 	Lung = {
+		Enabled = true,     -- false desliga o pulmão (círculo na HUD e tosse)
 		PerPuff = 22,       -- quanto cada puxada enche
 		Recover = 1.5,      -- quanto recupera por segundo
 		Warning = 70,       -- a partir daqui avisa que a garganta está irritada

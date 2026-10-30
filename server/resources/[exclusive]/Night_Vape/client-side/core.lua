@@ -148,27 +148,37 @@ RegisterNetEvent("Night_Vape:Use",function(Item)
 	AttachProp()
 
 	LoadDict(PuffDict)
-	TaskPlayAnim(Ped,PuffDict,PuffAnim,8.0,-8.0,3000,49,0,false,false,false)
+	TaskPlayAnim(Ped,PuffDict,PuffAnim,8.0,-8.0,-1,49,0,false,false,false)
 
-	-- solta a fumaça quando a mão sai da boca
-	Wait(1500)
-	TriggerServerEvent("Night_Vape:Puff",Config.Intensity)
+	-- segurando a tecla da hotbar (1-4) continua puxando, até Config.MaxHold segundos
+	local Started = GetGameTimer()
+	Wait(1000)
+	while (GetGameTimer() - Started) < Config.MaxHold * 1000 and (IsDisabledControlPressed(0,157) or IsDisabledControlPressed(0,158) or IsDisabledControlPressed(0,160) or IsDisabledControlPressed(0,164)) do
+		Wait(0)
+	end
+
+	-- quanto mais tempo segurou, maior a nuvem e o gasto (puxada curta = Config.Intensity)
+	local Held = (GetGameTimer() - Started) / 1000
+	local Intensity = math.min(1.0,math.max(Config.Intensity,Held / Config.MaxHold))
+	TriggerServerEvent("Night_Vape:Puff",Intensity)
 
 	-- puxou com o pulmão já cheio: crise de tosse
-	local Overload = Lung >= 100
-	Lung = math.min(100.0,Lung + Config.Lung.PerPuff)
+	local Overload = Config.Lung.Enabled and Lung >= 100
+	if Config.Lung.Enabled then
+		Lung = math.min(100.0,Lung + Config.Lung.PerPuff * (0.5 + Intensity))
+	end
 
-	Wait(1500)
+	Wait(1000)
 	StopAnimTask(Ped,PuffDict,PuffAnim,2.0)
 	RemoveProp()
 
 	if Overload then
 		Cough()
-	elseif Lung >= Config.Lung.Warning then
+	elseif Config.Lung.Enabled and Lung >= Config.Lung.Warning then
 		TriggerEvent("Notify","Vape","Sua garganta está irritada. Dê um tempo antes de puxar de novo.","amarelo",5000)
 	end
 
-	SetTimeout(math.max(0,Config.PuffCooldown * 1000 - 3000),function()
+	SetTimeout(math.max(0,Config.PuffCooldown * 1000 - (GetGameTimer() - Started)),function()
 		Busy = false
 	end)
 end)
