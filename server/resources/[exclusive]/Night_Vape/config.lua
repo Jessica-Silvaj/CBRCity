@@ -38,45 +38,52 @@ Config = {
 	-- Estresse reduzido por puxada (qualquer sabor)
 	Stress = 2,
 
-	-- Efeitos dos sabores (campo Effect em Flavors). Duration em segundos; puxar de novo renova o tempo.
-	-- Visuais opcionais (nomes do próprio GTA): Timecycle + Strength (filtro de tela), Postfx (efeito de tela),
-	-- Shake + ShakeAmp (câmera balançando), Walk (jeito de andar)
+	-- Avisa (notificação curta) qual efeito começou e por quanto tempo
+	EffectNotify = true,
+	-- Tempo máximo (ms) da mão subindo até a boca antes de a puxada começar
+	RaiseTimeout = 3500,
+
+	-- Efeitos dos sabores (campo Effect em Flavors). Duration em segundos; puxar o mesmo sabor renova o tempo.
+	-- Visuais (nomes do próprio GTA): Timecycle + Strength (filtro de tela), Postfx (efeito de tela),
+	-- Shake + ShakeAmp (câmera balançando), Walk (jeito de andar).
+	-- Jogo: Sprint (corrida, máx 1.49), Swim (nado, máx 1.49), Stamina (fôlego infinito), Heal (vida a cada 2 s),
+	-- Thirst / Hunger (sede / fome por puxada), Stress (estresse extra tirado por puxada)
 	Effects = {
 		["stress"] = {
 			Label = "Relaxante", Description = "Tira o triplo de estresse e deixa leve", Duration = 15,
-			Timecycle = "drug_wobbly", Strength = 0.35, Shake = "DRUNK_SHAKE", ShakeAmp = 0.3
+			Timecycle = "drug_wobbly", Strength = 0.5, Shake = "DRUNK_SHAKE", ShakeAmp = 0.5, Stress = 4
 		},
 		["stamina"] = {
 			Label = "Fôlego", Description = "Stamina infinita", Duration = 20,
-			Postfx = "RaceTurbo"
+			Postfx = "RaceTurbo", Stamina = true
 		},
 		["focus"] = {
 			Label = "Foco", Description = "Visão focada e nítida", Duration = 20,
-			Postfx = "FocusIn"
+			Postfx = "FocusIn", Timecycle = "NG_filmic19", Strength = 0.5
 		},
 		["speed"] = {
-			Label = "Energia", Description = "Corre 10% mais rápido", Duration = 20,
-			Timecycle = "drug_drive_blend01", Strength = 0.4, Shake = "HAND_SHAKE", ShakeAmp = 0.4
+			Label = "Energia", Description = "Corre 15% mais rápido", Duration = 20,
+			Timecycle = "drug_drive_blend01", Strength = 0.55, Shake = "HAND_SHAKE", ShakeAmp = 0.5, Sprint = 1.15
 		},
 		["heal"] = {
 			Label = "Doce", Description = "Recupera vida aos poucos", Duration = 20,
-			Postfx = "SuccessFranklin"
+			Postfx = "SuccessFranklin", Heal = 4
 		},
 		["fresh"] = {
 			Label = "Refrescante", Description = "Mata a sede a cada puxada", Duration = 15,
-			Timecycle = "MP_Arena_theme_atlantis", Strength = 0.3
+			Timecycle = "MP_Arena_theme_atlantis", Strength = 0.5, Thirst = 6
 		},
 		["breath"] = {
 			Label = "Gelado", Description = "Pulmão se recupera 3x mais rápido", Duration = 30,
-			Timecycle = "glasses_blue", Strength = 0.25
+			Timecycle = "glasses_blue", Strength = 0.45
 		},
 		["tropical"] = {
 			Label = "Tropical", Description = "Mata a fome a cada puxada", Duration = 15,
-			Timecycle = "MP_Arena_theme_evening", Strength = 0.3
+			Timecycle = "MP_Arena_theme_evening", Strength = 0.5, Hunger = 6
 		},
 		["swim"] = {
-			Label = "Nadador", Description = "Nada 20% mais rápido", Duration = 30,
-			Timecycle = "underwater_deep", Strength = 0.15
+			Label = "Nadador", Description = "Nada 30% mais rápido", Duration = 30,
+			Timecycle = "underwater_deep", Strength = 0.3, Swim = 1.30
 		},
 		["serene"] = {
 			Label = "Sereno", Description = "Tira estresse aos poucos", Duration = 25,
@@ -84,7 +91,7 @@ Config = {
 		},
 		["awake"] = {
 			Label = "Desperto", Description = "Pulmão enche pela metade", Duration = 30,
-			Timecycle = "NG_filmic10", Strength = 0.3
+			Timecycle = "NG_filmic10", Strength = 0.5
 		},
 		["trip"] = {
 			Label = "Viagem", Description = "Tontura, visão alterada e andar mole", Duration = 25,

@@ -122,6 +122,7 @@ local function OpenRefill(source,Passport,Selected,Liquid,Update)
 				Ml = Round(Data.Ml),
 				Capacity = Capacity(Item),
 				Consumption = Prop.Consumption or 1.0,
+				Cloud = Prop.Cloud or 1.0,
 				Flavor = Data.Ml > 0 and Data.Flavor or nil,
 				FlavorName = Data.Ml > 0 and Flavor and Flavor.Name or nil,
 				Color = Data.Ml > 0 and Flavor and Flavor.Color or nil
@@ -336,15 +337,19 @@ RegisterNetEvent("Night_Vape:Puff",function(Intensity)
 	SaveTank(Passport,Vape)
 
 	local Effect = Config.Flavors[Data.Flavor].Effect
-	vRP.DowngradeStress(Passport,Effect == "stress" and Config.Stress * 3 or Config.Stress)
-	-- sabor "Refrescante" mata um pouco da sede a cada puxada
-	if Effect == "fresh" then
-		vRP.UpgradeThirst(Passport,3)
-	-- sabor "Tropical" mata um pouco da fome a cada puxada
-	elseif Effect == "tropical" then
-		vRP.UpgradeHunger(Passport,3)
+	local Bonus = Config.Effects[Effect] or {}
+
+	-- toda puxada tira um pouco de estresse; alguns sabores tiram mais, matam sede ou fome
+	vRP.DowngradeStress(Passport,Config.Stress + (Bonus.Stress or 0))
+	if Bonus.Thirst then
+		vRP.UpgradeThirst(Passport,Bonus.Thirst)
+	end
+	if Bonus.Hunger then
+		vRP.UpgradeHunger(Passport,Bonus.Hunger)
+	end
+
 	-- sabor "Sereno" tira 1 de estresse a cada 5 segundos enquanto dura (puxar de novo reinicia)
-	elseif Effect == "serene" then
+	if Effect == "serene" then
 		Serene[Passport] = os.time() + Config.Effects.serene.Duration
 		if not SereneLoop[Passport] then
 			SereneLoop[Passport] = true

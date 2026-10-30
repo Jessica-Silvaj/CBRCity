@@ -127,6 +127,54 @@ local function ClosePanel()
 	SendNUIMessage({ Action = "CloseRefill" })
 end
 -----------------------------------------------------------------------------------------------------------------------------------------
+-- SEGURAR: as teclas 1-5 são atalhos do vrp (GuiBind) e só avisam quando apertam;
+-- estes atalhos na mesma tecla avisam também quando soltam
+-----------------------------------------------------------------------------------------------------------------------------------------
+local Pressed = {}
+for Index = 1,5 do
+	RegisterCommand("+vapepuxar"..Index,function() Pressed[Index] = true end,false)
+	RegisterCommand("-vapepuxar"..Index,function() Pressed[Index] = nil end,false)
+	RegisterKeyMapping("+vapepuxar"..Index,"Vape: segurar a puxada (botão "..Index..")","keyboard",tostring(Index))
+end
+
+local function Holding()
+	return next(Pressed) ~= nil or IsDisabledControlPressed(0,157) or IsDisabledControlPressed(0,158) or IsDisabledControlPressed(0,160) or IsDisabledControlPressed(0,164) or IsDisabledControlPressed(0,165)
+end
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- RAISETOMOUTH: toca a animação de fumar e devolve o instante em que a mão chega mais perto da boca
+-- (a puxada congela a animação nesse instante enquanto a tecla estiver segurada)
+-----------------------------------------------------------------------------------------------------------------------------------------
+local function RaiseToMouth(Ped)
+	LoadDict(PuffDict)
+	TaskPlayAnim(Ped,PuffDict,PuffAnim,4.0,4.0,-1,49,0,false,false,false)
+
+	local Best,BestTime = 99.0,nil
+	local Limit = GetGameTimer() + Config.RaiseTimeout
+	while GetGameTimer() < Limit do
+		Wait(0)
+
+		if IsEntityPlayingAnim(Ped,PuffDict,PuffAnim,3) then
+			-- mão direita (SKEL_R_Hand) até a cabeça (SKEL_Head)
+			local Distance = #(GetPedBoneCoords(Ped,57005,0.0,0.0,0.0) - GetPedBoneCoords(Ped,31086,0.0,0.0,0.0))
+			local Time = GetEntityAnimCurrentTime(Ped,PuffDict,PuffAnim)
+
+			if Distance < Best then
+				Best,BestTime = Distance,Time
+			elseif Best < 0.28 and Distance > Best + 0.03 then
+				-- a mão já começou a descer: o ponto mais perto foi o anterior
+				break
+			end
+		end
+	end
+
+	if BestTime then
+		SetEntityAnimCurrentTime(Ped,PuffDict,PuffAnim,BestTime)
+		SetEntityAnimSpeed(Ped,PuffDict,PuffAnim,0.0)
+	end
+
+	return BestTime
+end
+-----------------------------------------------------------------------------------------------------------------------------------------
 -- EVENTS
 -----------------------------------------------------------------------------------------------------------------------------------------
 RegisterNetEvent("Night_Vape:Tank",function(Ml,Capacity,Flavor,Color)
@@ -148,17 +196,24 @@ RegisterNetEvent("Night_Vape:Use",function(Item)
 	Current = Item
 	AttachProp()
 
-	LoadDict(PuffDict)
-	TaskPlayAnim(Ped,PuffDict,PuffAnim,8.0,-8.0,-1,49,0,false,false,false)
-
-	-- segurando a tecla da hotbar (1-4) continua puxando, até Config.MaxHold segundos
+	-- leva o vape à boca e a mão fica parada lá enquanto a tecla estiver segurada (até Config.MaxHold segundos)
 	local Started = GetGameTimer()
+	local Frozen = RaiseToMouth(Ped)
+
 	SendNUIMessage({ Action = "PuffStart", Volume = Config.PuffVolume })
-	Wait(1000)
-	while (GetGameTimer() - Started) < Config.MaxHold * 1000 and (IsDisabledControlPressed(0,157) or IsDisabledControlPressed(0,158) or IsDisabledControlPressed(0,160) or IsDisabledControlPressed(0,164)) do
+	local Inhale = GetGameTimer()
+	while (GetGameTimer() - Inhale) < 300 or (Holding() and (GetGameTimer() - Started) < Config.MaxHold * 1000) do
+		if Frozen then
+			SetEntityAnimCurrentTime(Ped,PuffDict,PuffAnim,Frozen)
+			SetEntityAnimSpeed(Ped,PuffDict,PuffAnim,0.0)
+		end
+
 		Wait(0)
 	end
 	SendNUIMessage({ Action = "PuffStop" })
+
+	-- soltou: a animação continua e a mão desce soltando a fumaça
+	SetEntityAnimSpeed(Ped,PuffDict,PuffAnim,1.0)
 
 	-- quanto mais tempo segurou, maior a nuvem e o gasto (puxada curta = Config.Intensity)
 	local Held = (GetGameTimer() - Started) / 1000
@@ -173,7 +228,7 @@ RegisterNetEvent("Night_Vape:Use",function(Item)
 		Lung = math.min(100.0,Lung + Gain)
 	end
 
-	Wait(1000)
+	Wait(1300)
 	StopAnimTask(Ped,PuffDict,PuffAnim,2.0)
 	RemoveProp()
 
@@ -306,105 +361,131 @@ RegisterNUICallback("Close",function(_,Callback)
 	Callback("Ok")
 end)
 
--- Efeito do sabor: aparece no painel com o tempo restante; puxar de novo renova
+-- Liga os visuais e modificadores de um efeito (filtro, efeito de tela, câmera, andar, corrida e nado)
+local function ApplyEffect(Effect)
+	local Data = Config.Effects[Effect]
+	local Ped = PlayerPedId()
+
+	if Data.Timecycle then
+		SetTimecycleModifier(Data.Timecycle)
+		SetTimecycleModifierStrength(Data.Strength or 0.5)
+	end
+
+	if Data.Postfx then
+		AnimpostfxPlay(Data.Postfx,0,true)
+	end
+
+	if Data.Shake then
+		ShakeGameplayCam(Data.Shake,Data.ShakeAmp or 0.5)
+	end
+
+	if Data.Walk then
+		RequestAnimSet(Data.Walk)
+		local Timeout = GetGameTimer() + 3000
+		while not HasAnimSetLoaded(Data.Walk) and GetGameTimer() < Timeout do
+			Wait(10)
+		end
+		SetPedMovementClipset(Ped,Data.Walk,0.5)
+	end
+
+	if Data.Sprint then
+		SetRunSprintMultiplierForPlayer(PlayerId(),Data.Sprint)
+	end
+
+	if Data.Swim then
+		SetSwimMultiplierForPlayer(PlayerId(),Data.Swim)
+	end
+end
+
+-- Desliga tudo o que ApplyEffect ligou
+local function ClearEffect(Effect)
+	local Data = Config.Effects[Effect]
+
+	if Data.Timecycle then
+		ClearTimecycleModifier()
+	end
+
+	if Data.Postfx then
+		AnimpostfxStop(Data.Postfx)
+	end
+
+	if Data.Shake then
+		StopGameplayCamShaking(false)
+	end
+
+	if Data.Walk then
+		-- volta para o andar escolhido no vrp (state.Walk) ou o padrão
+		local Walk = LocalPlayer.state.Walk
+		if Walk and HasAnimSetLoaded(Walk) then
+			SetPedMovementClipset(PlayerPedId(),Walk,0.5)
+		else
+			ResetPedMovementClipset(PlayerPedId(),0.5)
+		end
+	end
+
+	if Data.Sprint then
+		SetRunSprintMultiplierForPlayer(PlayerId(),1.0)
+	end
+
+	if Data.Swim then
+		SetSwimMultiplierForPlayer(PlayerId(),1.0)
+	end
+end
+
+-- Efeito do sabor: puxar o mesmo sabor renova o tempo; outro sabor tira o efeito anterior e liga o novo
+local EffectToken = 0
+
 RegisterNetEvent("Night_Vape:Effect",function(Effect)
 	local Data = Config.Effects[Effect]
 	if not Data then
 		return
 	end
 
-	-- só abre um loop novo se o efeito não está rodando (senão só renova o tempo)
-	local Fresh = not Active or Active.Effect ~= Effect or GetGameTimer() >= Active.Until
-
-	if Data.Duration <= 0 then
-		-- efeito instantâneo: só mostra o rótulo por alguns segundos
-		Active = { Effect = Effect, Label = Data.Label, Description = Data.Description, Until = GetGameTimer() + 4000, Duration = 4000 }
-		return
+	local Duration = math.max(4,Data.Duration) * 1000
+	local Renew = EffectActive() and Active.Effect == Effect
+	if not Renew and EffectActive() then
+		ClearEffect(Active.Effect)
 	end
 
-	local Duration = Data.Duration * 1000
 	Active = { Effect = Effect, Label = Data.Label, Description = Data.Description, Until = GetGameTimer() + Duration, Duration = Duration }
 
-	if not Fresh then
+	if Renew then
 		return
 	end
 
-	-- loop do efeito enquanto estiver ativo
+	EffectToken = EffectToken + 1
+	local Token = EffectToken
+
+	ApplyEffect(Effect)
+
+	if Config.EffectNotify then
+		TriggerEvent("Notify","Vape","Efeito <b>"..Data.Label.."</b> por "..Data.Duration.." segundos.","verde",4000)
+	end
+
+	-- só o efeito mais recente desliga os visuais; um efeito substituído só para de rodar
 	CreateThread(function()
-		local Ped = PlayerPedId()
-
-		-- visuais definidos no config
-		if Data.Timecycle then
-			SetTimecycleModifier(Data.Timecycle)
-			SetTimecycleModifierStrength(Data.Strength or 0.5)
-		end
-
-		if Data.Postfx then
-			AnimpostfxPlay(Data.Postfx,0,true)
-		end
-
-		if Data.Shake then
-			ShakeGameplayCam(Data.Shake,Data.ShakeAmp or 0.5)
-		end
-
-		if Data.Walk then
-			RequestAnimSet(Data.Walk)
-			local Timeout = GetGameTimer() + 3000
-			while not HasAnimSetLoaded(Data.Walk) and GetGameTimer() < Timeout do
-				Wait(10)
-			end
-			SetPedMovementClipset(Ped,Data.Walk,0.5)
-		end
-
-		if Effect == "speed" then
-			SetRunSprintMultiplierForPlayer(PlayerId(),1.10)
-		elseif Effect == "swim" then
-			SetSwimMultiplierForPlayer(PlayerId(),1.20)
-		end
-
-		-- termina quando o tempo acaba ou outro sabor substitui o efeito
 		local NextHeal = GetGameTimer() + 2000
-		while Active and Active.Effect == Effect and GetGameTimer() < Active.Until do
-			if Effect == "stamina" then
+
+		while Token == EffectToken and GetGameTimer() < Active.Until do
+			if Data.Stamina then
 				RestorePlayerStamina(PlayerId(),1.0)
-			elseif Effect == "heal" and GetGameTimer() >= NextHeal then
-				-- +2 de vida a cada 2 segundos (não levanta quem está caído)
+			end
+
+			if Data.Heal and GetGameTimer() >= NextHeal then
+				-- vida a cada 2 segundos (não levanta quem está caído)
 				NextHeal = GetGameTimer() + 2000
-				local Health = GetEntityHealth(PlayerPedId())
-				if Health > 101 and Health < GetEntityMaxHealth(PlayerPedId()) then
-					SetEntityHealth(PlayerPedId(),math.min(GetEntityMaxHealth(PlayerPedId()),Health + 2))
+				local Ped = PlayerPedId()
+				local Health = GetEntityHealth(Ped)
+				if Health > 101 and Health < GetEntityMaxHealth(Ped) then
+					SetEntityHealth(Ped,math.min(GetEntityMaxHealth(Ped),Health + Data.Heal))
 				end
 			end
 
 			Wait(250)
 		end
 
-		if Data.Timecycle then
-			ClearTimecycleModifier()
-		end
-
-		if Data.Postfx then
-			AnimpostfxStop(Data.Postfx)
-		end
-
-		if Data.Shake then
-			StopGameplayCamShaking(false)
-		end
-
-		if Data.Walk then
-			-- volta para o andar escolhido no vrp (state.Walk) ou o padrão
-			local Walk = LocalPlayer.state.Walk
-			if Walk and HasAnimSetLoaded(Walk) then
-				SetPedMovementClipset(PlayerPedId(),Walk,0.5)
-			else
-				ResetPedMovementClipset(PlayerPedId(),0.5)
-			end
-		end
-
-		if Effect == "speed" then
-			SetRunSprintMultiplierForPlayer(PlayerId(),1.0)
-		elseif Effect == "swim" then
-			SetSwimMultiplierForPlayer(PlayerId(),1.0)
+		if Token == EffectToken then
+			ClearEffect(Effect)
 		end
 	end)
 end)
