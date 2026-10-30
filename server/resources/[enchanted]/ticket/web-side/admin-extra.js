@@ -46,6 +46,7 @@
         overlay.close = Close;
         overlays.add(overlay);
         host.append(overlay);
+        requestAnimationFrame(() => overlay.scrollIntoView({ block: "nearest", behavior: "smooth" }));
         return overlay;
     }
 
@@ -365,7 +366,21 @@
         }
 
         for (const overlay of [...overlays]) if (!overlay.isConnected) overlay.close();
+        Fit();
     }
+
+    // abas de inventário/veículos: altura até a barra de baixo, com rolagem
+    function Fit() {
+        for (const id of ["adm-inventory", "adm-vehicles"]) {
+            const root = document.getElementById(id);
+            if (!root || !root.isConnected) continue;
+            const top = root.getBoundingClientRect().top;
+            root.style.maxHeight = `${Math.max(160, window.innerHeight - top - window.innerHeight * 0.17)}px`;
+            root.style.overflowY = "auto";
+        }
+    }
+
+    window.addEventListener("resize", Fit);
 
 
 

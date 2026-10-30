@@ -1,5 +1,7 @@
 /* Abas Inventário / Veículos e catálogos /item e /car da Central Administrativa */
-.adm-panel { width: 100%; display: flex; flex-direction: column; gap: 0.6rem; font-family: "Manrope", sans-serif; color: #fff; }
+.adm-panel { width: 100%; display: flex; flex-direction: column; gap: 0.6rem; font-family: "Manrope", sans-serif; color: #fff; max-height: 100%; min-height: 0; overflow-y: auto; padding-right: 0.25rem; }
+.adm-panel::-webkit-scrollbar, .adm-list::-webkit-scrollbar { width: 4px; }
+.adm-panel::-webkit-scrollbar-thumb, .adm-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,.15); border-radius: 2px; }
 .adm-head { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
 .adm-head h3 { font-size: 0.85rem; font-weight: 600; color: rgba(255,255,255,.7); }
 .adm-badge { font-size: 0.7rem; padding: 0.15rem 0.5rem; border-radius: 999px; background: rgba(255,255,255,.08); margin-left: 0.4rem; }
