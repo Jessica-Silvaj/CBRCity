@@ -58,6 +58,10 @@ local BlipCards = {
 		Image = "hotel",
 		Text = "Um quarto simples, uma cama macia e um teto sobre a cabeça. O lugar certo para recomeçar depois de um dia difícil."
 	},
+	["Joalheria"] = {
+		Image = "joalheria",
+		Text = "Pequenos detalhes, grandes promessas. Escolha anéis de compromisso, noivado e alianças para marcar cada capítulo da sua história."
+	},
 	["Loja de Armas"] = {
 		Image = "loja_de_armas",
 		Text = "Balcão de vidro, prateleiras cheias e um atendente que não faz perguntas demais. Armas, munições e acessórios."

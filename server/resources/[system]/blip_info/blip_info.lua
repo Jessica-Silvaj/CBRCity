@@ -19,6 +19,7 @@ local BlipImages = {
 	"floricultura",
 	"garagem",
 	"hotel",
+	"joalheria",
 	"loja_de_armas",
 	"loja_de_departamento",
 	"loja_de_eletronicos",
