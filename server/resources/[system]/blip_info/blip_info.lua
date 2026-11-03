@@ -16,6 +16,7 @@ local BlipImages = {
 	"concessionaria",
 	"departamento_de_policia_v2",
 	"embarcacoes",
+	"floricultura",
 	"garagem",
 	"hotel",
 	"loja_de_armas",

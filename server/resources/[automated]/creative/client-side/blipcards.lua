@@ -46,6 +46,10 @@ local BlipCards = {
 		Image = "embarcacoes",
 		Text = "O mar chama. Retire seu barco ou jet ski e aproveite a costa de Los Santos com o vento na cara."
 	},
+	["Floricultura"] = {
+		Image = "floricultura",
+		Text = "Flores que dizem o que falta em palavras. Escolha rosas, buquês e presentes para surpreender quem faz parte da sua história."
+	},
 	["Garagem"] = {
 		Image = "garagem",
 		Text = "Seu veículo guardado e seguro. Retire, guarde e siga viagem. Na hora de sair, não esqueça: a chave vira no Z."
