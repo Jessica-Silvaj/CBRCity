@@ -17,6 +17,8 @@ vCLIENT = Tunnel.getInterface("inspect")
 local Admin = {}
 local Players = {}
 local Sourcers = {}
+-- Itens que não somem ao morrer, mas podem ser levados na revista
+local Stealable = { ["datingring"] = true, ["engagementring"] = true, ["weddingring"] = true }
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- INV
 -----------------------------------------------------------------------------------------------------------------------------------------
@@ -283,7 +285,7 @@ function Creative.Store(Item,Slot,Amount,Target)
 		return false
 	end
 
-	if not SelectPlayer or exports.vrp:BlockDelete(Item) or vRP.MaxItens(SelectPlayer,Item,Amount) then
+	if not SelectPlayer or (exports.vrp:BlockDelete(Item) and not Stealable[ItemName]) or vRP.MaxItens(SelectPlayer,Item,Amount) then
 		TriggerClientEvent("inventory:Update",source)
 		return false
 	end
@@ -337,7 +339,7 @@ function Creative.Take(Item,Slot,Target,Amount)
 		return false
 	end
 
-	if not SelectPlayer or exports.vrp:BlockDelete(Item) or vRP.MaxItens(Passport,Item,Amount) then
+	if not SelectPlayer or (exports.vrp:BlockDelete(Item) and not Stealable[ItemName]) or vRP.MaxItens(Passport,Item,Amount) then
 		TriggerClientEvent("inventory:Update",source)
 		return false
 	end
