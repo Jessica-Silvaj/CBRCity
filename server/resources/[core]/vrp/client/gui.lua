@@ -159,6 +159,16 @@ end)
 -----------------------------------------------------------------------------------------------------------------------------------------
 function tvRP.CreateObjects(Dict,Anim,Prop,Flag,Hands,Height,Pos1,Pos2,Pos3,Pos4,Pos5)
 	local Ped = PlayerPedId()
+	if IsPedInAnyVehicle(Ped) then
+		return false
+	end
+
+	-- Carrega o modelo no cliente antes de solicitar o objeto de rede ao servidor.
+	if not LoadModel(Prop) then
+		TriggerEvent("Notify","Atenção","Não foi possível carregar o objeto deste item.","amarelo",5000)
+		return false
+	end
+
 	if DoesEntityExist(Object) then
 		TriggerServerEvent("DeleteObject",NetworkGetNetworkIdFromEntity(Object))
 		Object = nil
@@ -170,10 +180,6 @@ function tvRP.CreateObjects(Dict,Anim,Prop,Flag,Hands,Height,Pos1,Pos2,Pos3,Pos4
 		end
 
 		AnimVars = { Dict,Anim,true,Flag }
-	end
-
-	if IsPedInAnyVehicle(Ped) then
-		return false
 	end
 
 	local Coords = GetEntityCoords(Ped)
