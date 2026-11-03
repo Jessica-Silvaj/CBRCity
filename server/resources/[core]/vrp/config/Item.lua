@@ -1541,7 +1541,7 @@ local List = {
 		Index = "MyMelody",
 		Name = "Pelúcia My Melody",
 		Description = "Pelúcia para presentear. Envie pelo inventário.",
-		Type = "Comum",
+		Type = "Consumível",
 		Weight = 0.5,
 		Economy = 400
 	},
@@ -1549,7 +1549,7 @@ local List = {
 		Index = "Cinnamoroll",
 		Name = "Pelúcia Cinnamoroll",
 		Description = "Pelúcia para presentear. Envie pelo inventário.",
-		Type = "Comum",
+		Type = "Consumível",
 		Weight = 0.5,
 		Economy = 400
 	},
@@ -1557,7 +1557,7 @@ local List = {
 		Index = "pompompurin",
 		Name = "Pelúcia Pompompurin",
 		Description = "Pelúcia para presentear. Envie pelo inventário.",
-		Type = "Comum",
+		Type = "Consumível",
 		Weight = 0.5,
 		Economy = 400
 	},
@@ -1565,7 +1565,7 @@ local List = {
 		Index = "pochacco",
 		Name = "Pelúcia Pochacco",
 		Description = "Pelúcia para presentear. Envie pelo inventário.",
-		Type = "Comum",
+		Type = "Consumível",
 		Weight = 0.5,
 		Economy = 400
 	},
@@ -1573,7 +1573,7 @@ local List = {
 		Index = "Kitty_badtzmaru",
 		Name = "Pelúcia Badtz-Maru",
 		Description = "Pelúcia para presentear. Envie pelo inventário.",
-		Type = "Comum",
+		Type = "Consumível",
 		Weight = 0.5,
 		Economy = 400
 	},
