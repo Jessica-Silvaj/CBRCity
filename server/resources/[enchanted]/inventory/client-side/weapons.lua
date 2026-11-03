@@ -213,7 +213,7 @@ local Config = {
 	["WEAPON_PARAFAL"] = {
 		-- em pé nas costas, cano para cima
 		["Bone"] = 24818,
-		["x"] = -0.10,
+		["x"] = -0.02,
 		["y"] = -0.15,
 		["z"] = 0.0,
 		["RotX"] = 0.0,

@@ -122,9 +122,6 @@ AddEventHandler("dynamic:Clothes",function(Mode)
 					if not Consult[Check] then
 						Consult[Check] = vSKINSHOP.Customization(source)
 						vRP.SetSrvData("Clothes:"..Passport,Consult,true)
-						TriggerClientEvent("dynamic:AddMenu",source,Check,"Informações da vestimenta.",Check,"wardrobe")
-						TriggerClientEvent("dynamic:AddButton",source,"Aplicar","Vestir-se com as vestimentas.","dynamic:Clothes","Apply-"..Check,Check,true)
-						TriggerClientEvent("dynamic:AddButton",source,"Remover","Deletar a vestimenta do armário.","dynamic:Clothes","Delete-"..Check,Check,true,true)
 					end
 				else
 					TriggerClientEvent("Notify",source,"Armário","Nome escolhido precisa possuir mínimo de 4 letras.","amarelo",5000)
