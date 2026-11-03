@@ -469,6 +469,24 @@ function CreateAndManageObject(Selected,Data,Coords,Theft)
 					service = "Vault:"..Inside..":"..Selected
 				}
 			}
+		elseif Frames[Data.Object] then
+			Options = {
+				{
+					event = "propertys:Frame",
+					label = "Imagem",
+					tunnel = "server",
+					service = Inside.."-"..Selected
+				},{
+					event = "propertys:FrameAdjust",
+					label = "Ajustar",
+					tunnel = "products",
+					service = Selected
+				},{
+					event = "inventory:StoreObjects",
+					label = "Guardar",
+					tunnel = "server"
+				}
+			}
 		else
 			Options = {
 				{
@@ -508,7 +526,111 @@ function DestroyObject(Selected)
 	end
 
 	Init[Selected] = nil
+	DestroyPicture(Selected)
 end
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- PICTURES
+-----------------------------------------------------------------------------------------------------------------------------------------
+local Pictures = {}
+local PictureTxd = CreateRuntimeTxd("propertys_frames")
+local PictureCount = 0
+local Adjusting = false
+
+local function Encode(Value)
+	return (tostring(Value):gsub("[^%w%-%._~]",function(Char) return string.format("%%%02X",string.byte(Char)) end))
+end
+
+local function PictureAdjust(Selected,Data)
+	if Adjusting and Adjusting.Selected == Selected then
+		return Adjusting.Adjust
+	end
+
+	return Data.Adjust or {}
+end
+
+local function AdjustKey(Adjust)
+	return (Adjust.Zoom or 1).."|"..(Adjust.X or 0).."|"..(Adjust.Y or 0).."|"..(Adjust.Fit and 1 or 0)
+end
+
+function DestroyPicture(Selected)
+	local Picture = Pictures[Selected]
+	if Picture then
+		DestroyDui(Picture.Dui)
+		Pictures[Selected] = nil
+	end
+end
+
+local function PictureCorners(Entity,Config,Side)
+	local Min,Max = GetModelDimensions(GetEntityModel(Entity))
+	local Y = (Side > 0 and Max.y or Min.y) + Config.Depth * Side
+	local X1,X2 = Min.x + Config.Margin,Max.x - Config.Margin
+	local Z1,Z2 = Min.z + Config.Margin,Max.z - Config.Margin
+
+	return {
+		GetOffsetFromEntityInWorldCoords(Entity,X1,Y,Z2),
+		GetOffsetFromEntityInWorldCoords(Entity,X2,Y,Z2),
+		GetOffsetFromEntityInWorldCoords(Entity,X2,Y,Z1),
+		GetOffsetFromEntityInWorldCoords(Entity,X1,Y,Z1)
+	}
+end
+
+local function DrawQuad(C,Txn,Mirror)
+	local L,R = Mirror and 1.0 or 0.0,Mirror and 0.0 or 1.0
+
+	DrawSpritePoly(C[1].x,C[1].y,C[1].z,C[2].x,C[2].y,C[2].z,C[3].x,C[3].y,C[3].z,255,255,255,255,"propertys_frames",Txn,L,0.0,1.0,R,0.0,1.0,R,1.0,1.0)
+	DrawSpritePoly(C[1].x,C[1].y,C[1].z,C[3].x,C[3].y,C[3].z,C[4].x,C[4].y,C[4].z,255,255,255,255,"propertys_frames",Txn,L,0.0,1.0,R,1.0,1.0,L,1.0,1.0)
+	DrawSpritePoly(C[3].x,C[3].y,C[3].z,C[2].x,C[2].y,C[2].z,C[1].x,C[1].y,C[1].z,255,255,255,255,"propertys_frames",Txn,R,1.0,1.0,R,0.0,1.0,L,0.0,1.0)
+	DrawSpritePoly(C[4].x,C[4].y,C[4].z,C[3].x,C[3].y,C[3].z,C[1].x,C[1].y,C[1].z,255,255,255,255,"propertys_frames",Txn,L,1.0,1.0,R,1.0,1.0,L,0.0,1.0)
+end
+
+CreateThread(function()
+	while true do
+		local TimeDistance = 1000
+
+		if Inside and Inside ~= "Hotel" then
+			local Coords = GetEntityCoords(PlayerPedId())
+
+			for Selected,Entity in pairs(Init) do
+				local Data = Objects[Selected]
+				local Config = Data and Frames[Data.Object]
+				if Config and DoesEntityExist(Entity) then
+					local Picture = Pictures[Selected]
+					if Picture and Picture.Url ~= Data.Image then
+						DestroyPicture(Selected)
+						Picture = nil
+					end
+
+					if Data.Image and #(Coords - GetEntityCoords(Entity)) <= 25.0 then
+						local Adjust = PictureAdjust(Selected,Data)
+						if not Picture then
+							PictureCount = PictureCount + 1
+							local Txn = "frame_"..PictureCount
+							local Dui = CreateDui(("nui://propertys/html/frame.html?url=%s&zoom=%s&x=%s&y=%s&fit=%s"):format(Encode(Data.Image),Adjust.Zoom or 1,Adjust.X or 0,Adjust.Y or 0,Adjust.Fit and 1 or 0),1024,1024)
+							CreateRuntimeTextureFromDuiHandle(PictureTxd,Txn,GetDuiHandle(Dui))
+							Picture = { Dui = Dui, Txn = Txn, Url = Data.Image, Key = AdjustKey(Adjust) }
+							Pictures[Selected] = Picture
+						elseif Picture.Key ~= AdjustKey(Adjust) then
+							Picture.Key = AdjustKey(Adjust)
+							SendDuiMessage(Picture.Dui,json.encode({ Adjust = Adjust }))
+						end
+
+						TimeDistance = 1
+						DrawQuad(PictureCorners(Entity,Config,1),Picture.Txn,true)
+						DrawQuad(PictureCorners(Entity,Config,-1),Picture.Txn,false)
+					elseif Picture then
+						DestroyPicture(Selected)
+					end
+				end
+			end
+		elseif next(Pictures) then
+			for Selected in pairs(Pictures) do
+				DestroyPicture(Selected)
+			end
+		end
+
+		Wait(TimeDistance)
+	end
+end)
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- THREADOBJECTS
 -----------------------------------------------------------------------------------------------------------------------------------------
@@ -532,6 +654,46 @@ CreateThread(function()
 
 		Wait(1000)
 	end
+end)
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- PROPERTYS:FRAMEADJUST
+-----------------------------------------------------------------------------------------------------------------------------------------
+AddEventHandler("propertys:FrameAdjust",function(Selected)
+	local Data = Objects[Selected]
+	if Adjusting or Stealing or not Inside or not Data or not Data.Image or not vSERVER.Permission(Inside) then
+		return false
+	end
+
+	local Saved = Data.Adjust or {}
+	local Adjust = { Zoom = Saved.Zoom or 1.0, X = Saved.X or 0, Y = Saved.Y or 0, Fit = Saved.Fit or false }
+	Adjusting = { Selected = Selected, Adjust = Adjust }
+
+	TriggerEvent("Notify","Quadro","<b>Setas</b> movem, <b>Page Up/Down</b> zoom, <b>G</b> preencher/inteira, <b>Enter</b> salva e <b>Backspace</b> cancela.","azul",15000)
+
+	CreateThread(function()
+		while Adjusting do
+			DisableAllControlActions(0)
+			EnableControlAction(0,1,true)
+			EnableControlAction(0,2,true)
+
+			if IsDisabledControlPressed(0,172) then Adjust.Y = math.max(Adjust.Y - 0.5,-50) end
+			if IsDisabledControlPressed(0,173) then Adjust.Y = math.min(Adjust.Y + 0.5,50) end
+			if IsDisabledControlPressed(0,174) then Adjust.X = math.max(Adjust.X - 0.5,-50) end
+			if IsDisabledControlPressed(0,175) then Adjust.X = math.min(Adjust.X + 0.5,50) end
+			if IsDisabledControlPressed(0,10) then Adjust.Zoom = math.min(Adjust.Zoom + 0.01,3.0) end
+			if IsDisabledControlPressed(0,11) then Adjust.Zoom = math.max(Adjust.Zoom - 0.01,0.5) end
+			if IsDisabledControlJustPressed(0,47) then Adjust.Fit = not Adjust.Fit end
+
+			if IsDisabledControlJustPressed(0,191) then
+				TriggerServerEvent("propertys:FrameAdjust",Inside.."-"..Selected,Adjust)
+				Adjusting = false
+			elseif IsDisabledControlJustPressed(0,177) or not Inside or not Objects[Selected] then
+				Adjusting = false
+			end
+
+			Wait(0)
+		end
+	end)
 end)
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- PROPERTYS:ADICIONAR

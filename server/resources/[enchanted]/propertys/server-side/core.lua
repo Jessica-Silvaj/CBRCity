@@ -865,6 +865,125 @@ AddEventHandler("propertys:Adicionar",function(Property,Selected,Data)
 	TriggerClientEvent("propertys:Adicionar",-1,Selected,Data)
 end)
 -----------------------------------------------------------------------------------------------------------------------------------------
+-- PROPERTYS:FRAME
+-----------------------------------------------------------------------------------------------------------------------------------------
+local function FrameUrl(Url)
+	Url = Url and Url:gsub("^%s+",""):gsub("%s+$","")
+	if not Url or #Url > 300 or Url:find("[%s\"'<>\\]") then
+		return false
+	end
+
+	local Host,Path = Url:match("^https://([%w%.%-]+)(/[^?#]*)")
+	local Extension = Path and Path:lower():match("%.(%a+)$")
+	if not Host or not ({ png = true, jpg = true, jpeg = true, gif = true, webp = true })[Extension] then
+		return false
+	end
+
+	Host = Host:lower()
+	for _,Allowed in ipairs(FrameHosts) do
+		if Host == Allowed or Host:sub(-#Allowed - 1) == "."..Allowed then
+			return Url
+		end
+	end
+
+	return false
+end
+
+RegisterServerEvent("propertys:Frame")
+AddEventHandler("propertys:Frame",function(Service)
+	local source = source
+	local Passport = vRP.Passport(source)
+	if not Passport or type(Service) ~= "string" then
+		return false
+	end
+
+	local Property,Selected = Service:match("^(.+)%-(%w+)$")
+	if not Property or Interior[Passport] ~= Property or not Creative.Permission(Property) then
+		return false
+	end
+
+	Objects[Property] = Objects[Property] or vRP.GetSrvData("Probjects:"..Property,true)
+	local Data = Objects[Property][Selected]
+	if not Data or not Frames[Data.Object] then
+		return false
+	end
+
+	local Keyboard = vKEYBOARD.Primary(source,"Link da imagem (FiveManager, ImgBB, Imgur)")
+	if not Keyboard then
+		return false
+	end
+
+	local Url = FrameUrl(Keyboard[1])
+	if not Url then
+		TriggerClientEvent("Notify",source,"Quadro","Use o link direto da imagem (.png, .jpg, .gif ou .webp) do FiveManager, ImgBB ou Imgur.","amarelo",10000)
+		return false
+	end
+
+	Data.Image = Url
+	Data.Adjust = nil
+	TriggerEvent("propertys:Adicionar",Property,Selected,Data)
+	TriggerClientEvent("Notify",source,"Quadro","Imagem aplicada.","verde",5000)
+
+	local Identity = vRP.Identity(Passport)
+	local Name = Identity and (Identity.Name.." "..Identity.Lastname) or "Desconhecido"
+	PerformHttpRequest(exports.discord:Webhook("Quadros"),function() end,"POST",json.encode({
+		username = ServerName,
+		avatar_url = ServerAvatar,
+		embeds = {
+			{
+				color = 6171009,
+				description = ("**[PASSAPORTE]:** %s\n**[NOME]:** %s\n**[PROPRIEDADE]:** %s\n**[QUADRO]:** %s\n**[LINK]:** %s"):format(Passport,Name,Property,Selected,Url),
+				image = { url = Url },
+				footer = {
+					icon_url = ServerAvatar,
+					text = os.date("%d/%m/%Y %H:%M:%S")
+				}
+			}
+		}
+	}),{ ["Content-Type"] = "application/json" })
+end)
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- PROPERTYS:FRAMEADJUST
+-----------------------------------------------------------------------------------------------------------------------------------------
+RegisterServerEvent("propertys:FrameAdjust")
+AddEventHandler("propertys:FrameAdjust",function(Service,Adjust)
+	local source = source
+	local Passport = vRP.Passport(source)
+	if not Passport or type(Service) ~= "string" or type(Adjust) ~= "table" then
+		return false
+	end
+
+	local Property,Selected = Service:match("^(.+)%-(%w+)$")
+	if not Property or Interior[Passport] ~= Property or not Creative.Permission(Property) then
+		return false
+	end
+
+	Objects[Property] = Objects[Property] or vRP.GetSrvData("Probjects:"..Property,true)
+	local Data = Objects[Property][Selected]
+	if not Data or not Frames[Data.Object] or not Data.Image then
+		return false
+	end
+
+	local function Clamp(Value,Min,Max,Default)
+		Value = tonumber(Value)
+		if not Value or Value ~= Value then
+			return Default
+		end
+
+		return math.floor(math.min(math.max(Value,Min),Max) * 100 + 0.5) / 100
+	end
+
+	Data.Adjust = {
+		Zoom = Clamp(Adjust.Zoom,0.5,3.0,1.0),
+		X = Clamp(Adjust.X,-50,50,0),
+		Y = Clamp(Adjust.Y,-50,50,0),
+		Fit = Adjust.Fit == true
+	}
+
+	TriggerEvent("propertys:Adicionar",Property,Selected,Data)
+	TriggerClientEvent("Notify",source,"Quadro","Ajuste salvo.","verde",5000)
+end)
+-----------------------------------------------------------------------------------------------------------------------------------------
 -- PROPERTYS:REMOVER
 -----------------------------------------------------------------------------------------------------------------------------------------
 AddEventHandler("propertys:Remover",function(Property,Selected)

@@ -17,3 +17,7 @@ shared_scripts {
 	"@vrp/config/Global.lua",
 	"shared-side/*"
 }
+
+files {
+	"html/frame.html"
+}

@@ -49,7 +49,8 @@ local Discord = {
 	Chat = "",
 	Bank = "",
 	Mdt = "",
-	Painel = ""
+	Painel = "",
+	Quadros = "https://discord.com/api/webhooks/1567160435453468752/IBwX4qLEu9OIEflNyTfhG70ssdv8AXgZzrwX1Wosg1Q1icX9Xv1QOdGiGUUE4CxSYMHh"
 }
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- EMBED

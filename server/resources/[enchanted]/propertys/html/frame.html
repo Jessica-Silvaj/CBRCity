@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+	html,body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #000 }
+	img { width: 100%; height: 100%; object-fit: cover; transform-origin: center }
+</style>
+</head>
+<body>
+<img id="image">
+<script>
+	const Picture = document.getElementById("image");
+	const Param = (Name) => decodeURIComponent((location.search.match(new RegExp("[?&]" + Name + "=([^&]*)")) || [])[1] || "");
+
+	function Apply(Adjust) {
+		Picture.style.objectFit = Adjust.Fit ? "contain" : "cover";
+		Picture.style.transform = "translate(" + (Adjust.X || 0) + "%," + (Adjust.Y || 0) + "%) scale(" + (Adjust.Zoom || 1) + ")";
+	}
+
+	Picture.src = Param("url");
+	Apply({ Zoom: parseFloat(Param("zoom")) || 1, X: parseFloat(Param("x")) || 0, Y: parseFloat(Param("y")) || 0, Fit: Param("fit") === "1" });
+
+	window.addEventListener("message", (Event) => {
+		if (Event.data && Event.data.Adjust) {
+			Apply(Event.data.Adjust);
+		}
+	});
+</script>
+</body>
+</html>

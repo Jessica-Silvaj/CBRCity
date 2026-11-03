@@ -7516,6 +7516,13 @@ Furniture = {
 		Weight = 10.0,
 		Description = "Mesa de sinuca jogável. Posicione dentro da sua propriedade e chame os amigos para uma partida.",
 		AdminLevel = 1
+	},{
+		Item = "frame",
+		Name = "Quadro",
+		Rarity = "rare",
+		Hash = "h4_prop_h4_painting_01a",
+		Description = "Quadro personalizável. Posicione dentro da sua propriedade e coloque uma imagem do <common>FiveManager</common>, <common>ImgBB</common> ou <common>Imgur</common>.",
+		AdminLevel = 1
 	}
 }
 -----------------------------------------------------------------------------------------------------------------------------------------
