@@ -8,7 +8,8 @@
 </style>
 </head>
 <body>
-<img id="image">
+<img id="image" referrerpolicy="no-referrer">
+<div id="error" style="display:none;position:absolute;inset:0;align-items:center;justify-content:center;color:#fff;font:bold 64px sans-serif;text-align:center">Imagem não carregou</div>
 <script>
 	const Picture = document.getElementById("image");
 	const Param = (Name) => decodeURIComponent((location.search.match(new RegExp("[?&]" + Name + "=([^&]*)")) || [])[1] || "");
@@ -18,6 +19,7 @@
 		Picture.style.transform = "translate(" + (Adjust.X || 0) + "%," + (Adjust.Y || 0) + "%) scale(" + (Adjust.Zoom || 1) + ")";
 	}
 
+	Picture.onerror = () => { document.getElementById("error").style.display = "flex"; };
 	Picture.src = Param("url");
 	Apply({ Zoom: parseFloat(Param("zoom")) || 1, X: parseFloat(Param("x")) || 0, Y: parseFloat(Param("y")) || 0, Fit: Param("fit") === "1" });
 

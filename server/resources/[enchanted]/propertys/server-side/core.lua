@@ -887,7 +887,7 @@ local function FrameUrl(Url)
 end
 
 RegisterServerEvent("propertys:Frame")
-AddEventHandler("propertys:Frame",function(Service)
+AddEventHandler("propertys:Frame",function(_,Service)
 	local source = source
 	local Passport = vRP.Passport(source)
 	if not Passport or type(Service) ~= "string" then

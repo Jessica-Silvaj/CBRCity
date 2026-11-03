@@ -563,8 +563,8 @@ end
 local function PictureCorners(Entity,Config,Side)
 	local Min,Max = GetModelDimensions(GetEntityModel(Entity))
 	local Y = (Side > 0 and Max.y or Min.y) + Config.Depth * Side
-	local X1,X2 = Min.x + Config.Margin,Max.x - Config.Margin
-	local Z1,Z2 = Min.z + Config.Margin,Max.z - Config.Margin
+	local X1,X2 = Min.x + Config.Left,Max.x - Config.Right
+	local Z1,Z2 = Min.z + Config.Bottom,Max.z - Config.Top
 
 	return {
 		GetOffsetFromEntityInWorldCoords(Entity,X1,Y,Z2),
@@ -660,7 +660,12 @@ end)
 -----------------------------------------------------------------------------------------------------------------------------------------
 AddEventHandler("propertys:FrameAdjust",function(Selected)
 	local Data = Objects[Selected]
-	if Adjusting or Stealing or not Inside or not Data or not Data.Image or not vSERVER.Permission(Inside) then
+	if Adjusting or Stealing or not Inside or not Data or not vSERVER.Permission(Inside) then
+		return false
+	end
+
+	if not Data.Image then
+		TriggerEvent("Notify","Quadro","Aplique uma imagem antes de ajustar.","amarelo",5000)
 		return false
 	end
 
@@ -671,10 +676,16 @@ AddEventHandler("propertys:FrameAdjust",function(Selected)
 	TriggerEvent("Notify","Quadro","<b>Setas</b> movem, <b>Page Up/Down</b> zoom, <b>G</b> preencher/inteira, <b>Enter</b> salva e <b>Backspace</b> cancela.","azul",15000)
 
 	CreateThread(function()
+		local Timeout = GetGameTimer() + 60000
+
 		while Adjusting do
 			DisableAllControlActions(0)
 			EnableControlAction(0,1,true)
 			EnableControlAction(0,2,true)
+
+			BeginTextCommandDisplayHelp("STRING")
+			AddTextComponentSubstringPlayerName("~INPUT_CELLPHONE_UP~~INPUT_CELLPHONE_DOWN~~INPUT_CELLPHONE_LEFT~~INPUT_CELLPHONE_RIGHT~ mover  ~INPUT_SCRIPTED_FLY_ZUP~~INPUT_SCRIPTED_FLY_ZDOWN~ zoom  ~INPUT_DETONATE~ preencher~n~~INPUT_FRONTEND_RDOWN~ salvar  ~INPUT_CELLPHONE_CANCEL~ cancelar")
+			EndTextCommandDisplayHelp(0,false,false,-1)
 
 			if IsDisabledControlPressed(0,172) then Adjust.Y = math.max(Adjust.Y - 0.5,-50) end
 			if IsDisabledControlPressed(0,173) then Adjust.Y = math.min(Adjust.Y + 0.5,50) end
@@ -687,7 +698,7 @@ AddEventHandler("propertys:FrameAdjust",function(Selected)
 			if IsDisabledControlJustPressed(0,191) then
 				TriggerServerEvent("propertys:FrameAdjust",Inside.."-"..Selected,Adjust)
 				Adjusting = false
-			elseif IsDisabledControlJustPressed(0,177) or not Inside or not Objects[Selected] then
+			elseif IsDisabledControlJustPressed(0,177) or IsDisabledControlJustPressed(0,200) or GetGameTimer() > Timeout or not Inside or not Objects[Selected] then
 				Adjusting = false
 			end
 

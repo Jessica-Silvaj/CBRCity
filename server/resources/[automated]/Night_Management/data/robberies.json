@@ -1,20 +1,92 @@
 {
-    "Eletronic": {
-        "Enabled": false,
-        "Police": 2,
+    "FleecaBank": {
+        "Max": 475,
+        "Delay": 300,
+        "Police": 0,
+        "Timer": 15,
+        "Wanted": 120,
+        "Enabled": true,
+        "Min": 425
+    },
+    "Container": {
+        "Max": 375,
+        "Delay": 300,
+        "Police": 1,
         "Timer": 30,
         "Min": 325,
-        "Wanted": 600,
-        "Max": 375,
-        "Delay": 300
+        "Enabled": true,
+        "Wanted": 120
     },
     "Register": {
-        "Delay": 300,
+        "NeedItem": "lockpick",
         "Timer": 15,
-        "Police": 2,
-        "Min": 325,
+        "Enabled": true,
         "Wanted": 120,
         "Max": 375,
-        "Enabled": true
+        "Police": 0,
+        "NeedAmount": 1,
+        "Delay": 300,
+        "Min": 325,
+        "NeedConsume": true
+    },
+    "Department": {
+        "NeedItem": "card01",
+        "NeedAmount": 1,
+        "Enabled": true,
+        "Wanted": 120,
+        "Max": 375,
+        "Police": 0,
+        "Delay": 300,
+        "Min": 325,
+        "Timer": 15,
+        "NeedConsume": true
+    },
+    "Hennery": {
+        "Max": 575,
+        "Delay": 300,
+        "Police": 1,
+        "Timer": 15,
+        "Min": 525,
+        "Enabled": true,
+        "Wanted": 120
+    },
+    "Eletronic": {
+        "NeedItem": "c4",
+        "Timer": 30,
+        "Enabled": true,
+        "Wanted": 600,
+        "Max": 375,
+        "Police": 0,
+        "NeedAmount": 1,
+        "Delay": 300,
+        "Min": 325,
+        "NeedConsume": true
+    },
+    "Butcher": {
+        "Max": 575,
+        "Delay": 300,
+        "Police": 1,
+        "Timer": 15,
+        "Min": 525,
+        "Enabled": true,
+        "Wanted": 120
+    },
+    "Ammunation": {
+        "Max": 375,
+        "Delay": 300,
+        "Police": 1,
+        "Timer": 15,
+        "Min": 325,
+        "Enabled": true,
+        "Wanted": 120
+    },
+    "CentralBank": {
+        "Max": 675,
+        "Delay": 300,
+        "Police": 1,
+        "Timer": 15,
+        "Min": 625,
+        "Enabled": true,
+        "Wanted": 120
     }
 }

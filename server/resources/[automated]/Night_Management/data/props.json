@@ -1,1 +1,13 @@
-{}
+{
+    "1": {
+        "Collision": true,
+        "H": 270.01,
+        "Y": -1322.54,
+        "Model": "m24_1_prop_m41_arcade_safe_door",
+        "Z": 31.93,
+        "X": -193.45,
+        "Name": "Baú bennys",
+        "id": 1,
+        "Distance": 100
+    }
+}
