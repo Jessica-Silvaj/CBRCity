@@ -600,7 +600,8 @@ Propertys = {
 			"1 Garagem",
 			"Salário de R$5000 a cada 30 minutos"
 		}
-	},{
+	}--[[ Mansões 03, 04 e 05 ocultas
+	,{
 		Name = "Mansão 03",
 		Image = "mansao03",
 		Permission = "Mansao03",
@@ -642,7 +643,7 @@ Propertys = {
 			"1 Garagem",
 			"Salário de R$5000 a cada 30 minutos"
 		}
-	}
+	}]]
 }
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- SHOPITENS
