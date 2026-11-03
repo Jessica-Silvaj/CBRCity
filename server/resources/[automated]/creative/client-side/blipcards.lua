@@ -38,6 +38,10 @@ local BlipCards = {
 		Image = "concessionaria",
 		Text = "Cheiro de carro novo e vendedor sorridente. Faça o test drive, escolha a cor e saia dirigindo o seu próximo xodó."
 	},
+	["Departamento de Polícia"] = {
+		Image = "departamento_de_policia_v2",
+		Text = "Distintivo no peito e a cidade nas costas. Registre ocorrências, preste queixa ou bata o ponto e vista a farda da PoliciaCBR."
+	},
 	["Embarcações"] = {
 		Image = "embarcacoes",
 		Text = "O mar chama. Retire seu barco ou jet ski e aproveite a costa de Los Santos com o vento na cara."
@@ -81,6 +85,10 @@ local BlipCards = {
 	["Posto de Combustível"] = {
 		Image = "posto_de_combustivel",
 		Text = "Abasteça, confira o tanque e siga viagem. Combustível para atravessar a cidade sem ficar pelo caminho."
+	},
+	["Tabacaria"] = {
+		Image = "tabacaria_v2",
+		Text = "Luz baixa, som ambiente e fumaça com sabor. Essências, carvão e tudo para montar o narguilé da resenha."
 	},
 	["Moo Moo Cafe"] = {
 		Image = "moo_moo_cafe",

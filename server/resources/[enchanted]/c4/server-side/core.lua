@@ -140,7 +140,14 @@ function Creative.CheckSystems(targetId)
 		return false
 	end
 
+	-- lista do servidor pode estar velha (painel alterado sem o c4 receber): recarrega uma vez
+	targetId = tonumber(targetId) or targetId
 	local Atm = Config.AtmList[targetId]
+	if not Atm and GetResourceState("Night_Management") == "started" then
+		Config.LoadAtms(exports.Night_Management:AtmList())
+		Atm = Config.AtmList[targetId]
+	end
+
 	if not Atm or Atm.Safe then
 		TriggerClientEvent("Notify", source, "Atenção", "Este caixa não pode ser roubado.", "amarelo", 5000)
 		return false

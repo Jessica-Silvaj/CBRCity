@@ -162,6 +162,11 @@ function Creative.Drops(Item,Slot,Amount)
 	end
 
 	if Active[Passport] or Player(source).state.Handcuff or exports.hud:Wanted(Passport) or vRP.InsideVehicle(source) then
+		if exports.hud:Wanted(Passport) then
+			TriggerClientEvent("inventory:Notify",source,"Atenção","Procurado pela polícia não pode jogar itens no chão.","amarelo",5000)
+		elseif vRP.InsideVehicle(source) then
+			TriggerClientEvent("inventory:Notify",source,"Atenção","Saia do veículo para jogar itens no chão.","amarelo",5000)
+		end
 		TriggerClientEvent("inventory:Update",source)
 		return false
 	end

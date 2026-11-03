@@ -14,6 +14,7 @@ local BlipImages = {
 	"cat_cafe",
 	"central_de_empregos",
 	"concessionaria",
+	"departamento_de_policia_v2",
 	"embarcacoes",
 	"garagem",
 	"hotel",
@@ -26,6 +27,7 @@ local BlipImages = {
 	"mercado_central",
 	"moo_moo_cafe",
 	"posto_de_combustivel",
+	"tabacaria_v2",
 }
 
 for _,Name in ipairs(BlipImages) do

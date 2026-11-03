@@ -94,7 +94,7 @@ function Config.LoadAtms(List)
 
 	for _,Atm in ipairs(List or {}) do
 		if Atm.Kind ~= "agency" and Atm.Rob and Atm.Model then
-			AtmList[Atm.id] = {
+			AtmList[tonumber(Atm.id) or Atm.id] = {
 				Cds = vec3(Atm.X,Atm.Y,Atm.Z),
 				Prop = GetHashKey(Atm.Model),
 				PermittedTime = Atm.StartHour and Atm.EndHour and { Atm.StartHour,Atm.EndHour } or nil
