@@ -1,34 +1,126 @@
 -----------------------------------------------------------------------------------------------------------------------------------------
+-- DECORS
+-----------------------------------------------------------------------------------------------------------------------------------------
+DecorRegister("CREATIVE_VEHICLE", 2)
+-----------------------------------------------------------------------------------------------------------------------------------------
 -- VARIABLES
 -----------------------------------------------------------------------------------------------------------------------------------------
 local Object = nil
 local Model = "vw_prop_vw_luckywheel_02a"
+local PodiumVehicle = nil
+local PodiumObject = nil
 -----------------------------------------------------------------------------------------------------------------------------------------
--- THREADCASSINO
+-- APPLYVEHICLECOLORS
+-----------------------------------------------------------------------------------------------------------------------------------------
+local function ApplyVehicleColors(Vehicle)
+	if not DoesEntityExist(Vehicle) then
+		return
+	end
+
+	-- Cor Primaria RGB
+	if type(Podium.PrimaryColor) == "table" then
+		SetVehicleCustomPrimaryColour(Vehicle, Podium.PrimaryColor[1] or 0, Podium.PrimaryColor[2] or 0, Podium.PrimaryColor[3] or 0)
+	elseif type(Podium.PrimaryColor) == "number" then
+		local Sec = type(Podium.SecondaryColor) == "number" and Podium.SecondaryColor or 0
+		SetVehicleColours(Vehicle, Podium.PrimaryColor, Sec)
+	end
+
+	-- Cor Secundaria RGB
+	if type(Podium.SecondaryColor) == "table" then
+		SetVehicleCustomSecondaryColour(Vehicle, Podium.SecondaryColor[1] or 0, Podium.SecondaryColor[2] or 0, Podium.SecondaryColor[3] or 0)
+	end
+end
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- THREAD WHEEL
 -----------------------------------------------------------------------------------------------------------------------------------------
 CreateThread(function()
 	LoadModel(Model)
 
 	while true do
-		local TimeDistance = 999
+		local Sleep = 1000
 		local Ped = PlayerPedId()
-		if not IsPedInAnyVehicle(Ped) then
+		local Coords = GetEntityCoords(Ped)
+		local Distance = #(Coords - Wheel.xyz)
+
+		if Distance <= 50 then
+			Sleep = 250
+			if not Object then
+				Object = CreateObjectNoOffset(Model,Wheel.xyz,false,false,false)
+				SetEntityHeading(Object,Wheel.w)
+			end
+		elseif Object then
+			if DoesEntityExist(Object) then
+				DeleteEntity(Object)
+			end
+			Object = nil
+		end
+
+		Wait(Sleep)
+	end
+end)
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- THREAD PODIUM VEHICLE
+-----------------------------------------------------------------------------------------------------------------------------------------
+CreateThread(function()
+	while true do
+		local Sleep = 1000
+
+		if Podium and Podium.Model and Podium.Coords then
+			local Ped = PlayerPedId()
 			local Coords = GetEntityCoords(Ped)
-			if #(Coords - Wheel.xyz) <= 50 then
-				if not Object then
-					Object = CreateObjectNoOffset(Model,Wheel.xyz,false,false,false)
-					SetEntityHeading(Object,Wheel.w)
-				end
-			elseif Object then
-				if DoesEntityExist(Object) then
-					DeleteEntity(Object)
+			local Distance = #(Coords - Podium.Coords.xyz)
+
+			if Distance <= 80.0 then
+				if not PodiumVehicle or not DoesEntityExist(PodiumVehicle) then
+					if LoadModel(Podium.Model) then
+						ClearAreaOfVehicles(Podium.Coords.x, Podium.Coords.y, Podium.Coords.z, 4.0, false, false, false, false, false)
+						PodiumVehicle = CreateVehicle(GetHashKey(Podium.Model), Podium.Coords.x, Podium.Coords.y, Podium.Coords.z, Podium.Coords.w, false, false)
+						SetVehicleNumberPlateText(PodiumVehicle, "CASINO")
+						DecorSetBool(PodiumVehicle, "CREATIVE_VEHICLE", true)
+						Entity(PodiumVehicle).state:set("CasinoVehicle", true, false)
+						SetEntityInvincible(PodiumVehicle, true)
+						SetVehicleDirtLevel(PodiumVehicle, 0.0)
+						SetVehicleDoorsLocked(PodiumVehicle, 2)
+						SetVehicleCanBeUsedByFleeingPeds(PodiumVehicle, false)
+						SetVehicleHasBeenOwnedByPlayer(PodiumVehicle, true)
+						ApplyVehicleColors(PodiumVehicle)
+						SetVehicleOnGroundProperly(PodiumVehicle)
+						FreezeEntityPosition(PodiumVehicle, true)
+						SetEntityAsMissionEntity(PodiumVehicle, true, true)
+						SetModelAsNoLongerNeeded(GetHashKey(Podium.Model))
+					end
 				end
 
-				Object = nil
+				if Podium.Rotate and DoesEntityExist(PodiumVehicle) then
+					Sleep = 0
+
+					if not PodiumObject or PodiumObject == 0 or not DoesEntityExist(PodiumObject) then
+						PodiumObject = GetClosestObjectOfType(Podium.Coords.x, Podium.Coords.y, Podium.Coords.z, 10.0, -1561087446, false, false, false)
+					end
+
+					local CurHeadingCar = GetEntityHeading(PodiumVehicle)
+					local NextHeading = (CurHeadingCar + 0.075) % 360.0
+
+					SetEntityHeading(PodiumVehicle, NextHeading)
+
+					if PodiumObject and PodiumObject ~= 0 and DoesEntityExist(PodiumObject) then
+						SetEntityHeading(PodiumObject, NextHeading)
+					end
+				else
+					Sleep = 500
+				end
+			else
+				if PodiumVehicle then
+					if DoesEntityExist(PodiumVehicle) then
+						DeleteEntity(PodiumVehicle)
+					end
+					PodiumVehicle = nil
+					PodiumObject = nil
+				end
 			end
 		end
 
-		Wait(TimeDistance)
+		Wait(Sleep)
 	end
 end)
 -----------------------------------------------------------------------------------------------------------------------------------------
@@ -67,4 +159,18 @@ AddEventHandler("luckywheel:Start",function(Result)
 			Wait(0)
 		end
 	end)
+end)
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- ONRESOURCESTOP
+-----------------------------------------------------------------------------------------------------------------------------------------
+AddEventHandler("onResourceStop",function(Resource)
+	if GetCurrentResourceName() == Resource then
+		if Object and DoesEntityExist(Object) then
+			DeleteEntity(Object)
+		end
+
+		if PodiumVehicle and DoesEntityExist(PodiumVehicle) then
+			DeleteEntity(PodiumVehicle)
+		end
+	end
 end)

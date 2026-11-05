@@ -37,11 +37,16 @@ RegisterNetEvent("slotmachine:Init")
 AddEventHandler("slotmachine:Init",function(Entity)
 		Selected = nil
 
-		for k,v in pairs(Machines) do
+		if not Machines or not next(Machines) then
+			Machines = vSERVER.GetMachines()
+		end
+
+		local MinDistance = 0.5
+		for k,v in pairs(Machines or {}) do
 			local Distance = #(v["Coords"] - Entity[4])
-			if Distance <= 0.25 then
+			if Distance <= MinDistance then
 				Selected = k
-				break
+				MinDistance = Distance
 			end
 		end
 
@@ -168,3 +173,12 @@ end
 function Creative.UpdateMachines(Table)
 	Machines = Table
 end
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- THREAD
+-----------------------------------------------------------------------------------------------------------------------------------------
+CreateThread(function()
+	Wait(1000)
+	if not Machines or not next(Machines) then
+		Machines = vSERVER.GetMachines()
+	end
+end)

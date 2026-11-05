@@ -2,6 +2,23 @@
 -- USE
 -----------------------------------------------------------------------------------------------------------------------------------------
 Use = {
+	["casinovehicle"] = function(source,Passport,Amount,Slot,Full)
+		local Model = exports["luckywheel"]:PodiumModel()
+
+		if vRP.SelectVehicle(Passport,Model) then
+			TriggerClientEvent("Notify",source,"Aviso","Já possui um <b>"..exports.vrp:VehicleName(Model).."</b> na sua garagem.","amarelo")
+			return false
+		end
+
+		if vRP.TakeItem(Passport,Full,1,false,Slot) then
+			local Plate = vRP.GeneratePlate()
+			local Weight = exports.vrp:VehicleWeight(Model)
+
+			vRP.Query("vehicles/addVehicles",{ Passport = Passport, Vehicle = Model, Plate = Plate, Weight = Weight, Work = 0 })
+			TriggerClientEvent("Notify",source,"Sucesso","Veículo <b>"..exports.vrp:VehicleName(Model).."</b> adicionado.","verde")
+			TriggerClientEvent("inventory:Update",source)
+		end
+	end,
 	["pooltablecue"] = function(source,Passport,Amount,Slot,Full,Item,Split)
 		if GetResourceState("sinuca") ~= "started" then
 			TriggerClientEvent("Notify",source,"Sinuca","A sinuca está indisponível no momento.","amarelo",5000)

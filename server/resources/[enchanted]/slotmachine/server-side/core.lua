@@ -72,10 +72,10 @@ function Creative.Payment(Table)
 	local source = source
 	local Passport = vRP.Passport(source)
 	if Passport and Machines[Table] then
-		if vRP.PaymentBank(Passport,Machines[Table]["Value"]) then
+		if vRP.TakeItem(Passport,"chips",Machines[Table]["Value"],true) then
 			return true
 		else
-			TriggerClientEvent("Notify",source,"vermelho","<b>Dólares</b> insuficientes.",5000)
+			TriggerClientEvent("Notify",source,"Atenção","<b>Fichas</b> insuficientes.","vermelho",5000)
 		end
 	end
 
@@ -123,7 +123,7 @@ function Creative.Winner(Table,Result)
 				end
 
 				if Total > 0 then
-					vRP.GiveBank(Passport,Total)
+					vRP.GenerateItem(Passport,"chips",Total,true)
 				end
 			end
 
@@ -134,8 +134,23 @@ function Creative.Winner(Table,Result)
 	end
 end
 -----------------------------------------------------------------------------------------------------------------------------------------
+-- GETMACHINES
+-----------------------------------------------------------------------------------------------------------------------------------------
+function Creative.GetMachines()
+	return Machines
+end
+-----------------------------------------------------------------------------------------------------------------------------------------
 -- CONNECT
 -----------------------------------------------------------------------------------------------------------------------------------------
 AddEventHandler("Connect",function(Passport,source)
 	vCLIENT.UpdateMachines(source,Machines)
+end)
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- THREAD
+-----------------------------------------------------------------------------------------------------------------------------------------
+CreateThread(function()
+	Wait(1000)
+	for _, source in ipairs(GetPlayers()) do
+		vCLIENT.UpdateMachines(source,Machines)
+	end
 end)

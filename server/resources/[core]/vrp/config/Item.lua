@@ -2,6 +2,29 @@
 -- LIST
 -----------------------------------------------------------------------------------------------------------------------------------------
 local List = {
+	["luckywheelpass"] = {
+		Index = "luckywheelpass",
+		Name = "Vale - Roda da Fortuna",
+		Description = "Leve até o cassino para usa-lo.",
+		Type = "Comum",
+		Weight = 0.25,
+		Economy = 5000
+	},
+	["chips"] = {
+		Index = "chips",
+		Name = "Ficha",
+		Type = "Comum",
+		Weight = 0.0
+	},
+	["casinovehicle"] = {
+		Index = "casinovehicle",
+		Name = "Veículo do Cassino",
+		Description = "Certificado de vitória do veículo do pódio do Cassino.",
+		Type = "Consumível",
+		Weight = 0.5,
+		Economy = 100000,
+		Rarity = "legendary"
+	},
 	["pooltablecue"] = {
 		Index = "pooltablecue",
 		Name = "Taco de Sinuca",
