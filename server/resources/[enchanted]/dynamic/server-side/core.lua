@@ -11,7 +11,6 @@ vRP = Proxy.getInterface("vRP")
 Creative = {}
 Tunnel.bindInterface("dynamic",Creative)
 vSKINSHOP = Tunnel.getInterface("skinshop")
-vCHARACTER = Tunnel.getInterface("character")
 vKEYBOARD = Tunnel.getInterface("keyboard")
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- VARIABLES

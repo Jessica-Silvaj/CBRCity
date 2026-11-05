@@ -10,7 +10,7 @@ end)
 function Disconnect(source,Reason)
 	local Armour = 0
 	local Health = 100
-	local Coords = SpawnCoords[1]
+	local Coords = SpawnCoords.xyz
 	local Ped = GetPlayerPed(source)
 
 	if DoesEntityExist(Ped) then
@@ -194,4 +194,13 @@ end
 -----------------------------------------------------------------------------------------------------------------------------------------
 function vRP.RejoinPlayer(source)
 	Disconnect(source, "Troca de Personagem")
+end
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- LOGOUT
+-----------------------------------------------------------------------------------------------------------------------------------------
+function vRP.Logout(source)
+	local Ped = GetPlayerPed(source)
+	if Characters[source] and DoesEntityExist(Ped) then
+		Disconnect(source,"Troca de Personagem")
+	end
 end

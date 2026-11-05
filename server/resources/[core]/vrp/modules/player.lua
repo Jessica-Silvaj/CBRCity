@@ -14,10 +14,7 @@ AddEventHandler("CharacterChosen",function(Passport,source,Creation)
 
 	if Creation then
 		vRPC.NewLoadSceneStartSphere(source,CreatorCoords.xyz)
-
-		for _,v in pairs(SpawnCoords) do
-			vRPC.NewLoadSceneStartSphere(source,v)
-		end
+		vRPC.NewLoadSceneStartSphere(source,SpawnCoords.xyz)
 	end
 
 	if Datatable.Pos then
@@ -377,7 +374,7 @@ function vRP.Creation(source)
 	if source and Characters[source] then
 		local Ped = GetPlayerPed(source)
 		if DoesEntityExist(Ped) then
-			SetEntityCoords(Ped,SpawnCoords[math.random(#SpawnCoords)])
+			SetEntityCoords(Ped,SpawnCoords.xyz)
 			exports.vrp:Bucket(source,"Exit")
 		end
 	end
@@ -749,10 +746,14 @@ end
 -- SKINCHARACTER
 -----------------------------------------------------------------------------------------------------------------------------------------
 function vRP.SkinCharacter(Passport,Hash)
-	vRP.Query("characters/SetSkin",{ Passport = Passport, Skin = Hash })
+	local Lower = string.lower(tostring(Hash))
+	local Sex = (Lower == "mp_f_freemode_01" or string.find(Lower,"_f_") or string.find(Lower,"female")) and "F" or "M"
+
+	vRP.Query("characters/SetSkin",{ Passport = Passport, Skin = Hash, Sex = Sex })
 
 	local source = vRP.Source(Passport)
 	if Characters[source] then
 		Characters[source].Skin = Hash
+		Characters[source].Sex = Sex
 	end
 end

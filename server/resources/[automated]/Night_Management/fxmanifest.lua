@@ -18,7 +18,8 @@ client_scripts {
     "client-side/client.lua",
     "client-side/props.lua",
     "client-side/atms.lua",
-    "client-side/catalogs.lua"
+    "client-side/catalogs.lua",
+    "client-side/world.lua"
 }
 
 server_scripts {
@@ -29,12 +30,14 @@ server_scripts {
     "server-side/props.lua",
     "server-side/atms.lua",
     "server-side/catalogs.lua",
-    "server-side/phone.lua"
+    "server-side/phone.lua",
+    "server-side/world.lua"
 }
 
 files {
     'web-side/index.html',
     'web-side/style.css',
     'web-side/index.js',
-    'web-side/phone.js'
+    'web-side/phone.js',
+    'web-side/world.js'
 }

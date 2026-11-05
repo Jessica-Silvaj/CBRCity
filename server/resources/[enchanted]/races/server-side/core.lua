@@ -143,11 +143,17 @@ function Creative.Finish(Selected,Points,Vehicle)
 			Valuation = 1
 		end
 
+		Players[Selected][Passport] = nil
+
 		vRP.UpgradeStress(Passport,10)
-		exports.markers:Exit(source,Passport)
-		vRP.BattlepassPoints(Passport,GainExperience)
+		exports.markers:Exit(source,"Corredor")
 		vRP.PutExperience(Passport,"Race",GainExperience)
 		vRP.GenerateItem(Passport,ExchangeItem,Valuation,true)
+
+		-- Em thread separada: vRP.SimpleData não existe hoje e o erro não pode impedir o fim da corrida
+		CreateThread(function()
+			vRP.BattlepassPoints(Passport,GainExperience)
+		end)
 
 		TriggerClientEvent("Notify",source,"Corridas","Você finalizou a corrida.","verde",5000)
   
@@ -275,7 +281,7 @@ function Creative.Cancel()
 		return false
 	end
 
-	exports.markers:Exit(source,Passport)
+	exports.markers:Exit(source,"Corredor")
 
 	local Selected = Active[Passport].Selected
 	if not Players[Selected][Passport] then

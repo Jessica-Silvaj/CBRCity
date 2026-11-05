@@ -482,6 +482,11 @@ function CreateAndManageObject(Selected,Data,Coords,Theft)
 					tunnel = "products",
 					service = Selected
 				},{
+					event = "propertys:FrameClear",
+					label = "Remover imagem",
+					tunnel = "server",
+					service = Inside.."-"..Selected
+				},{
 					event = "inventory:StoreObjects",
 					label = "Guardar",
 					tunnel = "server"
@@ -531,7 +536,14 @@ end
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- PICTURES
 -----------------------------------------------------------------------------------------------------------------------------------------
+local PictureLoad = 25.0
+local PictureUnload = 30.0
+local PictureLimit = 8
+local PictureSide = 1024
+
 local Pictures = {}
+local PictureActive = {}
+local PicturePool = {}
 local PictureTxd = CreateRuntimeTxd("propertys_frames")
 local PictureCount = 0
 local Adjusting = false
@@ -552,11 +564,54 @@ local function AdjustKey(Adjust)
 	return (Adjust.Zoom or 1).."|"..(Adjust.X or 0).."|"..(Adjust.Y or 0).."|"..(Adjust.Fit and 1 or 0)
 end
 
+-- O DUI segue a proporção do quadro para a imagem não ser esticada ao ser desenhada.
+local function PictureSize(Entity,Config)
+	local Min,Max = GetModelDimensions(GetEntityModel(Entity))
+	local Width = math.max(Max.x - Min.x - Config.Left - Config.Right,0.01)
+	local Height = math.max(Max.z - Min.z - Config.Top - Config.Bottom,0.01)
+	local Scale = PictureSide / math.max(Width,Height)
+
+	return math.max(math.floor(Width * Scale / 4) * 4,64),math.max(math.floor(Height * Scale / 4) * 4,64)
+end
+
+-- Cada textura de DUI fica presa na TXD, então os DUIs são reaproveitados em vez de recriados.
+local function PictureAcquire(Entity,Config,Url,Adjust)
+	local Width,Height = PictureSize(Entity,Config)
+	local Size = Width.."x"..Height
+	local Pool = PicturePool[Size]
+	local Slot = Pool and table.remove(Pool)
+
+	if Slot then
+		SendDuiMessage(Slot.Dui,json.encode({ Url = Url, Adjust = Adjust }))
+	else
+		PictureCount = PictureCount + 1
+		Slot = { Size = Size, Txn = "frame_"..PictureCount }
+		Slot.Dui = CreateDui(("nui://propertys/html/frame.html?url=%s&zoom=%s&x=%s&y=%s&fit=%s"):format(Encode(Url),Adjust.Zoom or 1,Adjust.X or 0,Adjust.Y or 0,Adjust.Fit and 1 or 0),Width,Height)
+		CreateRuntimeTextureFromDuiHandle(PictureTxd,Slot.Txn,GetDuiHandle(Slot.Dui))
+	end
+
+	return Slot
+end
+
 function DestroyPicture(Selected)
 	local Picture = Pictures[Selected]
 	if Picture then
-		DestroyDui(Picture.Dui)
+		SendDuiMessage(Picture.Slot.Dui,json.encode({ Clear = true }))
+		PicturePool[Picture.Slot.Size] = PicturePool[Picture.Slot.Size] or {}
+		table.insert(PicturePool[Picture.Slot.Size],Picture.Slot)
 		Pictures[Selected] = nil
+	end
+end
+
+local function PictureSync(Selected,Data)
+	local Picture = Pictures[Selected]
+	if Picture then
+		local Adjust = PictureAdjust(Selected,Data)
+		local Key = AdjustKey(Adjust)
+		if Picture.Key ~= Key then
+			Picture.Key = Key
+			SendDuiMessage(Picture.Slot.Dui,json.encode({ Adjust = Adjust }))
+		end
 	end
 end
 
@@ -583,44 +638,57 @@ local function DrawQuad(C,Txn,Mirror)
 	DrawSpritePoly(C[4].x,C[4].y,C[4].z,C[3].x,C[3].y,C[3].z,C[1].x,C[1].y,C[1].z,255,255,255,255,"propertys_frames",Txn,L,1.0,1.0,R,1.0,1.0,L,0.0,1.0)
 end
 
+-- Varredura lenta: escolhe os quadros mais próximos e calcula a geometria fora do loop de desenho.
 CreateThread(function()
 	while true do
-		local TimeDistance = 1000
+		local Active = {}
 
 		if Inside and Inside ~= "Hotel" then
 			local Coords = GetEntityCoords(PlayerPedId())
+			local Candidates = {}
 
 			for Selected,Entity in pairs(Init) do
 				local Data = Objects[Selected]
 				local Config = Data and Frames[Data.Object]
-				if Config and DoesEntityExist(Entity) then
-					local Picture = Pictures[Selected]
-					if Picture and Picture.Url ~= Data.Image then
-						DestroyPicture(Selected)
-						Picture = nil
-					end
-
-					if Data.Image and #(Coords - GetEntityCoords(Entity)) <= 25.0 then
-						local Adjust = PictureAdjust(Selected,Data)
-						if not Picture then
-							PictureCount = PictureCount + 1
-							local Txn = "frame_"..PictureCount
-							local Dui = CreateDui(("nui://propertys/html/frame.html?url=%s&zoom=%s&x=%s&y=%s&fit=%s"):format(Encode(Data.Image),Adjust.Zoom or 1,Adjust.X or 0,Adjust.Y or 0,Adjust.Fit and 1 or 0),1024,1024)
-							CreateRuntimeTextureFromDuiHandle(PictureTxd,Txn,GetDuiHandle(Dui))
-							Picture = { Dui = Dui, Txn = Txn, Url = Data.Image, Key = AdjustKey(Adjust) }
-							Pictures[Selected] = Picture
-						elseif Picture.Key ~= AdjustKey(Adjust) then
-							Picture.Key = AdjustKey(Adjust)
-							SendDuiMessage(Picture.Dui,json.encode({ Adjust = Adjust }))
-						end
-
-						TimeDistance = 1
-						DrawQuad(PictureCorners(Entity,Config,1),Picture.Txn,true)
-						DrawQuad(PictureCorners(Entity,Config,-1),Picture.Txn,false)
-					elseif Picture then
-						DestroyPicture(Selected)
+				if Config and Data.Image and DoesEntityExist(Entity) then
+					local Distance = #(Coords - GetEntityCoords(Entity))
+					if Distance <= (Pictures[Selected] and PictureUnload or PictureLoad) then
+						Candidates[#Candidates + 1] = { Selected = Selected, Entity = Entity, Data = Data, Config = Config, Distance = Distance }
 					end
 				end
+			end
+
+			table.sort(Candidates,function(A,B) return A.Distance < B.Distance end)
+
+			local Keep = {}
+			for Index = 1,math.min(#Candidates,PictureLimit) do
+				Keep[Candidates[Index].Selected] = Candidates[Index].Data.Image
+			end
+
+			for Selected,Picture in pairs(Pictures) do
+				if Keep[Selected] ~= Picture.Url then
+					DestroyPicture(Selected)
+				end
+			end
+
+			for Index = 1,math.min(#Candidates,PictureLimit) do
+				local Item = Candidates[Index]
+				local Picture = Pictures[Item.Selected]
+
+				if not Picture then
+					local Adjust = PictureAdjust(Item.Selected,Item.Data)
+					Picture = { Selected = Item.Selected, Url = Item.Data.Image, Key = AdjustKey(Adjust) }
+					Picture.Slot = PictureAcquire(Item.Entity,Item.Config,Picture.Url,Adjust)
+					Pictures[Item.Selected] = Picture
+				else
+					PictureSync(Item.Selected,Item.Data)
+				end
+
+				Picture.Front = PictureCorners(Item.Entity,Item.Config,1)
+				Picture.Back = PictureCorners(Item.Entity,Item.Config,-1)
+				Picture.Center = (Picture.Front[1] + Picture.Back[3]) * 0.5
+				Picture.Normal = Picture.Front[1] - Picture.Back[1]
+				Active[#Active + 1] = Picture
 			end
 		elseif next(Pictures) then
 			for Selected in pairs(Pictures) do
@@ -628,7 +696,46 @@ CreateThread(function()
 			end
 		end
 
-		Wait(TimeDistance)
+		PictureActive = Active
+		Wait(250)
+	end
+end)
+
+-- Desenho: só o lado do quadro voltado para a câmera.
+CreateThread(function()
+	while true do
+		if #PictureActive > 0 then
+			local Camera = GetFinalRenderedCamCoord()
+
+			for _,Picture in ipairs(PictureActive) do
+				if Pictures[Picture.Selected] == Picture then
+					local View,Normal = Camera - Picture.Center,Picture.Normal
+					if View.x * Normal.x + View.y * Normal.y + View.z * Normal.z >= 0 then
+						DrawQuad(Picture.Front,Picture.Slot.Txn,true)
+					else
+						DrawQuad(Picture.Back,Picture.Slot.Txn,false)
+					end
+				end
+			end
+
+			Wait(0)
+		else
+			Wait(250)
+		end
+	end
+end)
+
+AddEventHandler("onResourceStop",function(Resource)
+	if Resource == GetCurrentResourceName() then
+		for _,Picture in pairs(Pictures) do
+			DestroyDui(Picture.Slot.Dui)
+		end
+
+		for _,Pool in pairs(PicturePool) do
+			for _,Slot in ipairs(Pool) do
+				DestroyDui(Slot.Dui)
+			end
+		end
 	end
 end)
 -----------------------------------------------------------------------------------------------------------------------------------------
@@ -671,12 +778,12 @@ AddEventHandler("propertys:FrameAdjust",function(Selected)
 
 	local Saved = Data.Adjust or {}
 	local Adjust = { Zoom = Saved.Zoom or 1.0, X = Saved.X or 0, Y = Saved.Y or 0, Fit = Saved.Fit or false }
+	local Property = Inside
 	Adjusting = { Selected = Selected, Adjust = Adjust }
 
-	TriggerEvent("Notify","Quadro","<b>Setas</b> movem, <b>Page Up/Down</b> zoom, <b>G</b> preencher/inteira, <b>Enter</b> salva e <b>Backspace</b> cancela.","azul",15000)
-
 	CreateThread(function()
-		local Timeout = GetGameTimer() + 60000
+		local Idle = 60000
+		local Timeout = GetGameTimer() + Idle
 
 		while Adjusting do
 			DisableAllControlActions(0)
@@ -684,22 +791,41 @@ AddEventHandler("propertys:FrameAdjust",function(Selected)
 			EnableControlAction(0,2,true)
 
 			BeginTextCommandDisplayHelp("STRING")
-			AddTextComponentSubstringPlayerName("~INPUT_CELLPHONE_UP~~INPUT_CELLPHONE_DOWN~~INPUT_CELLPHONE_LEFT~~INPUT_CELLPHONE_RIGHT~ mover  ~INPUT_SCRIPTED_FLY_ZUP~~INPUT_SCRIPTED_FLY_ZDOWN~ zoom  ~INPUT_DETONATE~ preencher~n~~INPUT_FRONTEND_RDOWN~ salvar  ~INPUT_CELLPHONE_CANCEL~ cancelar")
+			AddTextComponentSubstringPlayerName("~INPUT_CELLPHONE_UP~~INPUT_CELLPHONE_DOWN~~INPUT_CELLPHONE_LEFT~~INPUT_CELLPHONE_RIGHT~ mover  ~INPUT_SCRIPTED_FLY_ZUP~~INPUT_SCRIPTED_FLY_ZDOWN~ zoom  ~INPUT_SPRINT~ preciso~n~~INPUT_DETONATE~ preencher  ~INPUT_RELOAD~ resetar~n~~INPUT_FRONTEND_RDOWN~ salvar  ~INPUT_CELLPHONE_CANCEL~ cancelar")
 			EndTextCommandDisplayHelp(0,false,false,-1)
 
-			if IsDisabledControlPressed(0,172) then Adjust.Y = math.max(Adjust.Y - 0.5,-50) end
-			if IsDisabledControlPressed(0,173) then Adjust.Y = math.min(Adjust.Y + 0.5,50) end
-			if IsDisabledControlPressed(0,174) then Adjust.X = math.max(Adjust.X - 0.5,-50) end
-			if IsDisabledControlPressed(0,175) then Adjust.X = math.min(Adjust.X + 0.5,50) end
-			if IsDisabledControlPressed(0,10) then Adjust.Zoom = math.min(Adjust.Zoom + 0.01,3.0) end
-			if IsDisabledControlPressed(0,11) then Adjust.Zoom = math.max(Adjust.Zoom - 0.01,0.5) end
-			if IsDisabledControlJustPressed(0,47) then Adjust.Fit = not Adjust.Fit end
+			-- Velocidade por segundo, para não depender do FPS de quem está ajustando.
+			local Delta = GetFrameTime() * (IsDisabledControlPressed(0,21) and 0.25 or 1.0)
+			local Move,Scale = 30.0 * Delta,0.75 * Delta
+			local Changed = false
 
-			if IsDisabledControlJustPressed(0,191) then
-				TriggerServerEvent("propertys:FrameAdjust",Inside.."-"..Selected,Adjust)
+			if IsDisabledControlPressed(0,172) then Adjust.Y = math.max(Adjust.Y - Move,-50) Changed = true end
+			if IsDisabledControlPressed(0,173) then Adjust.Y = math.min(Adjust.Y + Move,50) Changed = true end
+			if IsDisabledControlPressed(0,174) then Adjust.X = math.max(Adjust.X - Move,-50) Changed = true end
+			if IsDisabledControlPressed(0,175) then Adjust.X = math.min(Adjust.X + Move,50) Changed = true end
+			if IsDisabledControlPressed(0,10) then Adjust.Zoom = math.min(Adjust.Zoom + Scale,3.0) Changed = true end
+			if IsDisabledControlPressed(0,11) then Adjust.Zoom = math.max(Adjust.Zoom - Scale,0.5) Changed = true end
+			if IsDisabledControlJustPressed(0,47) then Adjust.Fit = not Adjust.Fit Changed = true end
+			if IsDisabledControlJustPressed(0,45) then Adjust.Zoom,Adjust.X,Adjust.Y,Adjust.Fit = 1.0,0,0,false Changed = true end
+
+			if Changed then
+				Timeout = GetGameTimer() + Idle
+			end
+
+			if Inside ~= Property or not Objects[Selected] then
 				Adjusting = false
-			elseif IsDisabledControlJustPressed(0,177) or IsDisabledControlJustPressed(0,200) or GetGameTimer() > Timeout or not Inside or not Objects[Selected] then
+			elseif IsDisabledControlJustPressed(0,191) then
+				TriggerServerEvent("propertys:FrameAdjust",Property.."-"..Selected,Adjust)
 				Adjusting = false
+			elseif IsDisabledControlJustPressed(0,177) or IsDisabledControlJustPressed(0,200) then
+				Adjusting = false
+			elseif GetGameTimer() > Timeout then
+				Adjusting = false
+				TriggerEvent("Notify","Quadro","Ajuste cancelado por inatividade.","amarelo",5000)
+			end
+
+			if Objects[Selected] then
+				PictureSync(Selected,Objects[Selected])
 			end
 
 			Wait(0)

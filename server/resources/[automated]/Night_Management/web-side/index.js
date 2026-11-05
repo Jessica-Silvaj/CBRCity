@@ -40,7 +40,9 @@ $(document).ready(function () {
                     'PROPS': 'Props',
                     'ATMS': 'Atms',
                     'ROUBOS': 'Atms',
-                    'CASAS': 'Atms'
+                    'CASAS': 'Atms',
+                    'TELEPORTES': 'Atms',
+                    'RUAS': 'Atms'
                 };
                 // Props é um módulo novo (server-side/props.lua): libera junto com a categoria ClearArea
                 data.allowedCategories.Props = data.allowedCategories.Props || data.allowedCategories.ClearArea;

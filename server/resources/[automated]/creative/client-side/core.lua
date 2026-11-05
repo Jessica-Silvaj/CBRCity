@@ -99,6 +99,60 @@ local ALPHAS = {
 	{ vec3(-1891.97,-1729.96,0.54),100,53,300.0 }
 }
 -----------------------------------------------------------------------------------------------------------------------------------------
+-- ALPHAS E TELEPORTS DINÂMICOS: os valores acima valem até o painel gestor enviar a lista (Night_Management:worldSync)
+-----------------------------------------------------------------------------------------------------------------------------------------
+local SpawnedAlphas = {}
+
+local function ApplyAlphas()
+	for _,Blip in ipairs(SpawnedAlphas) do
+		if DoesBlipExist(Blip) then
+			RemoveBlip(Blip)
+		end
+	end
+	SpawnedAlphas = {}
+
+	for _,v in ipairs(ALPHAS) do
+		local Blip = AddBlipForRadius(v[1].x,v[1].y,v[1].z,v[4])
+		SetBlipAlpha(Blip,v[2])
+		SetBlipColour(Blip,v[3])
+		SpawnedAlphas[#SpawnedAlphas + 1] = Blip
+	end
+end
+
+local function ApplyTeleports()
+	local teleportData = {}
+	for _,v in ipairs(TELEPORT) do
+		table.insert(teleportData,{ v[1],2.5,"E","Pressione","para acessar" })
+	end
+
+	TriggerEvent("hoverfy:Clear")
+	TriggerEvent("hoverfy:Insert",teleportData)
+end
+
+RegisterNetEvent("Night_Management:worldSync")
+AddEventHandler("Night_Management:worldSync",function(Alphas,Teleports,Streets)
+	ALPHAS = {}
+	for _,a in ipairs(Alphas or {}) do
+		ALPHAS[#ALPHAS + 1] = { vec3(a.x + 0.0,a.y + 0.0,a.z + 0.0),math.floor(a.alpha),math.floor(a.color),a.radius + 0.0 }
+	end
+	ApplyAlphas()
+
+	TELEPORT = {}
+	for _,t in ipairs(Teleports or {}) do
+		local First = vec3(t.x1 + 0.0,t.y1 + 0.0,t.z1 + 0.0)
+		local Second = vec3(t.x2 + 0.0,t.y2 + 0.0,t.z2 + 0.0)
+		TELEPORT[#TELEPORT + 1] = { First,Second }
+		TELEPORT[#TELEPORT + 1] = { Second,First }
+	end
+	ApplyTeleports()
+
+	-- Sobrepõe os nomes fixos da lista de ruas abaixo
+	for _,s in ipairs(Streets or {}) do
+		local Hash = tonumber(s.hash) or GetHashKey(tostring(s.hash))
+		AddTextEntryByHash(Hash,tostring(s.name))
+	end
+end)
+-----------------------------------------------------------------------------------------------------------------------------------------
 -- ISLAND
 -----------------------------------------------------------------------------------------------------------------------------------------
 local ISLAND = {
@@ -547,7 +601,7 @@ CreateThread(function()
 		SetPlayerLockonRangeOverride(Pid,0.0)
 		SetCreateRandomCopsOnScenarios(false)
 		SetCreateRandomCopsNotOnScenarios(false)
-		SetPedInfiniteAmmoClip(Ped,false)
+		SetPedInfiniteAmmoClip(Ped,LocalPlayer.state.Arena and true or false)
 
 		if IsPlayerWantedLevelGreater(Pid,0) then
 			ClearPlayerWantedLevel(Pid)
@@ -590,21 +644,9 @@ CreateThread(function()
 		RefreshInterior(Interior)
 	end
 
-	for _,v in ipairs(ALPHAS) do
-		local Radius = v[1]
-		local Blip = AddBlipForRadius(Radius.x,Radius.y,Radius.z,v[4])
-		SetBlipAlpha(Blip,v[2])
-		SetBlipColour(Blip,v[3])
-	end
-
-
-
-	local teleportData = {}
-	for _,v in ipairs(TELEPORT) do
-		table.insert(teleportData,{ v[1],2.5,"E","Pressione","para acessar" })
-	end
-
-	TriggerEvent("hoverfy:Insert",teleportData)
+	ApplyAlphas()
+	ApplyTeleports()
+	TriggerServerEvent("Night_Management:worldLoad")
 
 	while true do
 		local TimeDistance = 999
@@ -675,6 +717,9 @@ CreateThread(function()
 			end
 		end
 
+		-- Não apaga entidades locais durante cutscenes (a cena usa peds e veículos próprios)
+		local InCutscene = IsCutsceneActive() or IsCutscenePlaying() or LocalPlayer.state.inCutscene
+		if not InCutscene then
 		for _,Entity in pairs(GetGamePool("CPed")) do
 			if (NetworkGetEntityOwner(Entity) == -1 or NetworkGetEntityOwner(Entity) == PlayerId()) and not DecorGetBool(Entity,"CREATIVE_PED") and not NetworkGetEntityIsNetworked(Entity) and not Protected(Entity) then
 				if IsPedInAnyVehicle(Entity) then
@@ -694,6 +739,7 @@ CreateThread(function()
 			if (NetworkGetEntityOwner(Vehicle) == -1 or NetworkGetEntityOwner(Vehicle) == PlayerId()) and not NetworkGetEntityIsNetworked(Vehicle) and GetVehicleNumberPlateText(Vehicle) ~= "PDMSPORT" and not Protected(Vehicle) then
 				DeleteEntity(Vehicle)
 			end
+		end
 		end
 
 		for Number = 1,121 do
@@ -720,6 +766,9 @@ end)
 CreateThread(function()
     while true do
         Wait(0)
+        while IsCutsceneActive() or IsCutscenePlaying() or LocalPlayer.state.inCutscene do
+            Wait(500)
+        end
         for _, area in ipairs(ClearAreaList) do
             if area.ClearPeds then
                 ClearAreaOfPeds(area.X + 0.0, area.Y + 0.0, area.Z + 0.0, area.Radius + 0.0, 1)

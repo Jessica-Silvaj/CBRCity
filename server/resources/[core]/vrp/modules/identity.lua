@@ -143,6 +143,7 @@ function vRP.UpgradeNames(Passport,Name,Lastname)
 	if Characters[source] then
 		Characters[source].Name = Name
 		Characters[source].Lastname = Lastname
+		Player(source).state:set("Name",Name.." "..Lastname,true)
 	end
 
 	vRP.Query("characters/UpdateName",{ Name = Name, Lastname = Lastname, Passport = Passport })

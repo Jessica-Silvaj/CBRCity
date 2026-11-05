@@ -29,26 +29,36 @@ local LoadResourceFile = LoadResourceFile
 local debug_getinfo = debug.getinfo
 local table_concat = table.concat
 local table_wipe = table.wipe
-
-local package = {
-    path = './?.lua;./?/init.lua',
-    preload = {},
-    loaded = {},
-}
-
 local sentinel = msgpack.sentinel()
 local chunkName = debug_getinfo(1, 'S').source
 local resourceName = GetCurrentResourceName()
 local baseIdx = 2
 
 for i = baseIdx, 32 do
-    local src = debug_getinfo(i, 'S').short_src
+    local src = debug_getinfo(i, 'S')?.short_src
 
-    if src == 'citizen:/scripting/lua/scheduler.lua' then
+    -- this may be fragile with breaking updates and especially "enhanced"
+    if not src or src == 'citizen:/scripting/lua/scheduler.lua' then
         baseIdx = i + 2
         break
     end
 end
+
+---@source https://github.com/citizenfx/fivem/blob/master/code/components/citizen-scripting-lua/src/LuaScriptRuntime.cpp
+local lua_require = require
+
+---@param name 'glm' | 'lmprof'
+---@return unknown
+local function loadBuiltin(name) return lua_require(name) end
+
+local package = {
+    path = './?.lua;./?/init.lua',
+    preload = {
+        glm = loadBuiltin,
+        lmprof = loadBuiltin,
+    },
+    loaded = {},
+}
 
 _ENV.package = package
 
@@ -130,23 +140,12 @@ local function loadModule(modName, env)
     return nil, err or 'unknown error'
 end
 
-local lua_require = require
-
 ---@alias PackageSearcher
 ---| fun(modName: string): function, any loader function and data
 ---| fun(modName: string): nil, string errmsg
 
 ---@type PackageSearcher[]
 package.searchers = {
-    function(modName)
-        local ok, result, data = pcall(lua_require, modName)
-
-        if ok then
-            return function() return result, data end
-        end
-
-        return nil, result
-    end,
     function(modName)
         if package.preload[modName] ~= nil then
             return package.preload[modName], ':preload:'
@@ -203,12 +202,14 @@ function require(modName)
             break
         end
 
-        err[#err + 1] = tostring(data)
+        if data then err[#err + 1] = tostring(data) end
     end
 
     if package.loaded[modName] == sentinel then
         package.loaded[modName] = nil
     end
+
+    table.insert(err, 1, ("module '%s' not found"):format(modName))
 
     error(("%s"):format(table_concat(err, "\n\t")), 2)
 end

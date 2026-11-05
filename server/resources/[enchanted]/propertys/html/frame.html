@@ -3,29 +3,102 @@
 <head>
 <meta charset="utf-8">
 <style>
-	html,body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #000 }
-	img { width: 100%; height: 100%; object-fit: cover; transform-origin: center }
+	html,body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #111 }
+	img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform-origin: center; visibility: hidden }
+	#backdrop { position: absolute; inset: -40px; background-size: cover; background-position: center; filter: blur(30px) brightness(.5); display: none }
+	#status { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: #fff; font: bold 8vmin sans-serif; text-align: center }
 </style>
 </head>
 <body>
+<div id="backdrop"></div>
 <img id="image" referrerpolicy="no-referrer">
-<div id="error" style="display:none;position:absolute;inset:0;align-items:center;justify-content:center;color:#fff;font:bold 64px sans-serif;text-align:center">Imagem não carregou</div>
+<div id="status"></div>
 <script>
 	const Picture = document.getElementById("image");
+	const Backdrop = document.getElementById("backdrop");
+	const Status = document.getElementById("status");
 	const Param = (Name) => decodeURIComponent((location.search.match(new RegExp("[?&]" + Name + "=([^&]*)")) || [])[1] || "");
+	const MaxRetries = 2;
 
-	function Apply(Adjust) {
-		Picture.style.objectFit = Adjust.Fit ? "contain" : "cover";
-		Picture.style.transform = "translate(" + (Adjust.X || 0) + "%," + (Adjust.Y || 0) + "%) scale(" + (Adjust.Zoom || 1) + ")";
+	let Current = "";
+	let Retries = 0;
+	let RetryTimer = null;
+	let Fit = false;
+
+	function UpdateBackdrop() {
+		const Show = Fit && Current && Picture.style.visibility === "visible";
+		Backdrop.style.display = Show ? "block" : "none";
+		Backdrop.style.backgroundImage = Show ? "url(\"" + Current + "\")" : "none";
 	}
 
-	Picture.onerror = () => { document.getElementById("error").style.display = "flex"; };
-	Picture.src = Param("url");
+	function Apply(Adjust) {
+		Fit = !!Adjust.Fit;
+		Picture.style.objectFit = Fit ? "contain" : "cover";
+		Picture.style.transform = "translate(" + (Adjust.X || 0) + "%," + (Adjust.Y || 0) + "%) scale(" + (Adjust.Zoom || 1) + ")";
+		UpdateBackdrop();
+	}
+
+	function Load(Url) {
+		clearTimeout(RetryTimer);
+		Current = Url;
+		Retries = 0;
+		Picture.style.visibility = "hidden";
+		Status.textContent = Url ? "Carregando..." : "";
+
+		if (Url) {
+			Picture.src = Url;
+		} else {
+			Picture.removeAttribute("src");
+		}
+
+		UpdateBackdrop();
+	}
+
+	Picture.onload = () => {
+		if (!Current) {
+			return;
+		}
+
+		Picture.style.visibility = "visible";
+		Status.textContent = "";
+		UpdateBackdrop();
+	};
+
+	Picture.onerror = () => {
+		if (!Current) {
+			return;
+		}
+
+		if (Retries < MaxRetries) {
+			Retries++;
+			const Url = Current;
+			RetryTimer = setTimeout(() => {
+				Picture.src = Url + (Url.includes("?") ? "&" : "?") + "retry=" + Retries;
+			}, 3000 * Retries);
+		} else {
+			Status.textContent = "Imagem não carregou";
+		}
+	};
+
 	Apply({ Zoom: parseFloat(Param("zoom")) || 1, X: parseFloat(Param("x")) || 0, Y: parseFloat(Param("y")) || 0, Fit: Param("fit") === "1" });
+	Load(Param("url"));
 
 	window.addEventListener("message", (Event) => {
-		if (Event.data && Event.data.Adjust) {
-			Apply(Event.data.Adjust);
+		const Data = Event.data;
+		if (!Data) {
+			return;
+		}
+
+		if (Data.Clear) {
+			Load("");
+		}
+
+		if (Data.Adjust) {
+			Apply(Data.Adjust);
+		}
+
+		if (Data.Url) {
+			Load(Data.Url);
 		}
 	});
 </script>

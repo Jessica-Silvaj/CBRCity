@@ -139,6 +139,34 @@
                 </div>
                 <div class="nav-category">
                     <div class="category-header">
+                        <span><i class="fa-solid fa-door-open" style="margin-right: 6px;"></i> TELEPORTES</span>
+                        <i class="fa-solid fa-chevron-down chevron"></i>
+                    </div>
+                    <div class="nav-items-wrapper">
+                        <div class="nav-item" data-page="create-teleport">
+                            <i class="fa-solid fa-plus"></i> Criar Teleporte
+                        </div>
+                        <div class="nav-item" data-page="manage-teleports">
+                            <i class="fa-solid fa-arrows-split-up-and-left"></i> Gerenciar Teleportes
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-category">
+                    <div class="category-header">
+                        <span><i class="fa-solid fa-road" style="margin-right: 6px;"></i> RUAS</span>
+                        <i class="fa-solid fa-chevron-down chevron"></i>
+                    </div>
+                    <div class="nav-items-wrapper">
+                        <div class="nav-item" data-page="create-street">
+                            <i class="fa-solid fa-plus"></i> Criar Rua
+                        </div>
+                        <div class="nav-item" data-page="manage-streets">
+                            <i class="fa-solid fa-signs-post"></i> Gerenciar Ruas
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-category">
+                    <div class="category-header">
                         <span><i class="fa-solid fa-money-bill-transfer" style="margin-right: 6px;"></i> ATMS</span>
                         <i class="fa-solid fa-chevron-down chevron"></i>
                     </div>
@@ -196,6 +224,12 @@
                         </div>
                         <div class="nav-item" data-page="manage-blips">
                             <i class="fa-solid fa-map"></i> Gerenciar Blips
+                        </div>
+                        <div class="nav-item" data-page="create-alpha">
+                            <i class="fa-solid fa-circle-dot"></i> Criar Alpha
+                        </div>
+                        <div class="nav-item" data-page="manage-alphas">
+                            <i class="fa-solid fa-circle-nodes"></i> Gerenciar Alphas
                         </div>
                     </div>
                 </div>
@@ -2027,6 +2061,184 @@
                     <div class="form-actions" id="stocks-pager" style="align-items: center; color: var(--text-muted);"></div>
                 </div>
                 <!-- ATMS -->
+                <div class="page-content" id="create-alpha" style="display: none;">
+                    <input type="hidden" id="edit-alpha-id" value="">
+
+                    <div class="form-group">
+                        <label>Nome do Blip Alpha (Identificação)</label>
+                        <input type="text" id="alpha-name" placeholder="Ex: Área Militar / Zona Especial">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Coordenada X</label>
+                            <input type="number" id="alpha-x" placeholder="X" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Coordenada Y</label>
+                            <input type="number" id="alpha-y" placeholder="Y" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Coordenada Z</label>
+                            <input type="number" id="alpha-z" placeholder="Z" step="0.01">
+                        </div>
+                        <div class="form-group btn-group-align">
+                            <button id="get-coords-alpha" class="btn-secondary"><i
+                                    class="fa-solid fa-location-crosshairs"></i> Pegar Atual</button>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Raio do Círculo (Metros)</label>
+                            <input type="number" id="alpha-radius" placeholder="Ex: 300.0" step="1.0" value="100.0">
+                        </div>
+                        <div class="form-group">
+                            <label>Cor (ID da Cor FiveM)</label>
+                            <input type="number" id="alpha-color" placeholder="Ex: 53" value="53">
+                        </div>
+                        <div class="form-group">
+                            <label>Opacidade / Alpha (0 a 255)</label>
+                            <input type="number" id="alpha-alpha" placeholder="Ex: 100" min="0" max="255" value="100">
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button id="save-alpha" class="btn-primary">Salvar Blip Alpha</button>
+                    </div>
+                </div>
+                <div class="page-content" id="manage-alphas" style="display: none;">
+                    <div class="table-container">
+                        <table id="alphas-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nome</th>
+                                    <th>Coordenadas</th>
+                                    <th>Raio</th>
+                                    <th>Cor</th>
+                                    <th>Alpha</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Rows generated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="page-content" id="create-teleport" style="display: none;">
+                    <input type="hidden" id="edit-teleport-id" value="">
+
+                    <div class="form-group">
+                        <label>Nome do Teleport</label>
+                        <input type="text" id="teleport-name" placeholder="Ex: Observatório / Entrada e Saída">
+                    </div>
+
+                    <div style="font-weight: 600; color: var(--primary); margin: 15px 0 5px 0;"><i
+                            class="fa-solid fa-circle-arrow-right"></i> Posição 1 (Entrada)</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>X 1</label>
+                            <input type="number" id="teleport-x1" placeholder="X1" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Y 1</label>
+                            <input type="number" id="teleport-y1" placeholder="Y1" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Z 1</label>
+                            <input type="number" id="teleport-z1" placeholder="Z1" step="0.01">
+                        </div>
+                        <div class="form-group btn-group-align">
+                            <button id="get-coords-teleport-1" class="btn-secondary"><i
+                                    class="fa-solid fa-location-crosshairs"></i> Pegar Pos 1</button>
+                        </div>
+                    </div>
+
+                    <div style="font-weight: 600; color: var(--primary); margin: 15px 0 5px 0;"><i
+                            class="fa-solid fa-circle-arrow-left"></i> Posição 2 (Saída / Destino)</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>X 2</label>
+                            <input type="number" id="teleport-x2" placeholder="X2" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Y 2</label>
+                            <input type="number" id="teleport-y2" placeholder="Y2" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Z 2</label>
+                            <input type="number" id="teleport-z2" placeholder="Z2" step="0.01">
+                        </div>
+                        <div class="form-group btn-group-align">
+                            <button id="get-coords-teleport-2" class="btn-secondary"><i
+                                    class="fa-solid fa-location-crosshairs"></i> Pegar Pos 2</button>
+                        </div>
+                    </div>
+
+                    <div class="form-actions" style="margin-top: 20px;">
+                        <button id="save-teleport" class="btn-primary">Salvar Teleport</button>
+                    </div>
+                </div>
+                <div class="page-content" id="manage-teleports" style="display: none;">
+                    <div class="table-container">
+                        <table id="teleports-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nome</th>
+                                    <th>Posição 1 (Entrada)</th>
+                                    <th>Posição 2 (Saída)</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Rows generated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="page-content" id="create-street" style="display: none;">
+                    <input type="hidden" id="edit-street-id" value="">
+
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 2;">
+                            <label>Hash da Rua (Hex ou Decimal, ex: 0x4B7B2734)</label>
+                            <input type="text" id="street-hash" placeholder="Ex: 0x4B7B2734 ou 1266362164">
+                        </div>
+                        <div class="form-group btn-group-align" style="flex: 1;">
+                            <button id="get-current-street" class="btn-secondary" style="width: 100%;"><i
+                                    class="fa-solid fa-location-crosshairs"></i> Pegar Rua Atual</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 10px;">
+                        <label>Nome Personalizado da Rua</label>
+                        <input type="text" id="street-name" placeholder="Ex: Avenida Paulista">
+                    </div>
+
+                    <div class="form-actions" style="margin-top: 20px;">
+                        <button id="save-street" class="btn-primary">Salvar Nome da Rua</button>
+                    </div>
+                </div>
+                <div class="page-content" id="manage-streets" style="display: none;">
+                    <div class="table-container">
+                        <table id="streets-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Hash</th>
+                                    <th>Nome da Rua</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Rows generated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
                 <div class="page-content" id="create-atm" style="display: none;">
                     <input type="hidden" id="edit-atm-id" value=""><div class="form-group"><label>Tipo de ponto</label><select id="atm-kind"><option value="atm">ATM</option><option value="agency">Agência</option></select></div>
 
@@ -3170,6 +3382,7 @@
     </template>
     <script src="index.js"></script>
     <script src="phone.js"></script>
+    <script src="world.js"></script>
 </body>
 
 </html>

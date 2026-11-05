@@ -85,7 +85,7 @@ Banned = {
 -----------------------------------------------------------------------------------------------------------------------------------------
 Currency = "R$"
 DiscordBot = true
-BaseMode = "steam"
+BaseMode = "license"
 Whitelisted = true
 Liberation = "id"
 DisconnectReason = 30
@@ -113,11 +113,17 @@ Maintenance = false
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- CHARACTER
 -----------------------------------------------------------------------------------------------------------------------------------------
-Cutscene = true
+MultiCharacter = true
+CutScene = false
 CreatorCoords = vec4(-793.42,326.06,210.79,357.17)
-SpawnCoords = {
-	vec4(-1070.1,-2793.79,20.96,331.66)
-}
+SpawnCoords = vec4(-1070.1,-2793.79,20.96,331.66)
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- IMAGES
+-----------------------------------------------------------------------------------------------------------------------------------------
+ScriptNationSkinshop = "https://jessica-silvaj.github.io/cbrcity-imagens/nation_skinshop/"
+ScriptNationBarbershop = "https://jessica-silvaj.github.io/cbrcity-imagens/nation_barbershop/"
+ScriptNationTattoos = "https://jessica-silvaj.github.io/cbrcity-imagens/nation_tattoos/"
+ScriptNationCreator = "https://jessica-silvaj.github.io/cbrcity-imagens/nation_creator/"
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- TEXTUREPACK
 -----------------------------------------------------------------------------------------------------------------------------------------

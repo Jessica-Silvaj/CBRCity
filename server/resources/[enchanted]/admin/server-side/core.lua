@@ -967,7 +967,41 @@ RegisterCommand("skin",function(source,Message)
 		end
 	end
 
+	local LowerModel = string.lower(tostring(Model))
+	local Sex = (LowerModel == "mp_f_freemode_01" or string.find(LowerModel, "_f_") or string.find(LowerModel, "female")) and "F" or "M"
+	exports.oxmysql:update_async("UPDATE characters SET Sex = ? WHERE id = ?",{ Sex,OtherPassport })
+
 	vRP.SkinCharacter(OtherPassport,Model)
+
+	if Model == "mp_f_freemode_01" or Model == "mp_m_freemode_01" then
+		if SkinshopInit and SkinshopInit[Model] then
+			vRP.Query("playerdata/SetData",{ Passport = OtherPassport, Name = "Clothings", Information = json.encode(SkinshopInit[Model]) })
+			if OtherSource then
+				TriggerClientEvent("skinshop:Apply", OtherSource, SkinshopInit[Model], true)
+			end
+		end
+
+		local defaultBarber = {
+			gender = (Sex == "F" and "female" or "male"),
+			shapeFirst = (Sex == "F" and 21 or 0),
+			shapeSecond = 0,
+			skinFirst = (Sex == "F" and 21 or 0),
+			skinSecond = 0,
+			shapeMix = 0.5,
+			skinMix = 0.5,
+			hair = (Sex == "F" and 4 or 1),
+			["hair-color"] = 0,
+			["hair-highlightcolor"] = 0,
+			eyes = 0
+		}
+		vRP.Query("playerdata/SetData",{ Passport = OtherPassport, Name = "Barbershop", Information = json.encode(defaultBarber) })
+		vRP.Query("playerdata/SetData",{ Passport = OtherPassport, Name = "nation_char", Information = json.encode(defaultBarber) })
+		if OtherSource then
+			TriggerClientEvent("barbershop:Apply", OtherSource, defaultBarber)
+			TriggerClientEvent("nation_barbershop:init", OtherSource, defaultBarber)
+		end
+	end
+
 	TriggerClientEvent("Notify",source,"Sucesso","Aplicação concluída.","verde",5000)
 	exports.discord:Embed("Skin","**[ADMIN]:** "..Passport.."\n**[PASSAPORTE]:** "..OtherPassport.."\n**[MODEL]:** "..Model.."\n**[DIAS]:** "..Days)
 end)

@@ -75,7 +75,25 @@ function tvRP.Skin(Hash)
 	local Ped = PlayerPedId()
 	local Model = GetHashKey(Hash)
 	if IsModelInCdimage(Model) and IsModelValid(Model) and LoadModel(Model) and GetEntityModel(Ped) ~= Model then
+		local currentHealth = GetEntityHealth(Ped)
+		local currentArmour = GetPedArmour(Ped)
+
 		SetPlayerModel(Pid,Model)
+		SetModelAsNoLongerNeeded(Model)
+
+		Ped = PlayerPedId()
+		SetPedDefaultComponentVariation(Ped)
+		SetEntityVisible(Ped,true)
+		ResetEntityAlpha(Ped)
+		SetPedMaxHealth(Ped,200)
+		SetEntityHealth(Ped,currentHealth)
+		SetPedArmour(Ped,currentArmour)
+
+		if Model == GetHashKey("mp_f_freemode_01") then
+			SetPedHeadBlendData(Ped,21,0,0,21,0,0,0.5,0.5,0.0,false)
+		elseif Model == GetHashKey("mp_m_freemode_01") then
+			SetPedHeadBlendData(Ped,0,0,0,0,0,0,0.5,0.5,0.0,false)
+		end
 	end
 
 	exports.vrp:ReloadCharacter()

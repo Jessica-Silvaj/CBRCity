@@ -864,15 +864,29 @@ end)
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- PROPERTYS:FRAME
 -----------------------------------------------------------------------------------------------------------------------------------------
+local FrameFormats = { png = true, jpg = true, jpeg = true, gif = true, webp = true }
+local FrameMaxSize = 15 * 1024 * 1024
+local FrameCooldown = {}
+
 local function FrameUrl(Url)
-	Url = Url and Url:gsub("^%s+",""):gsub("%s+$","")
-	if not Url or #Url > 300 or Url:find("[%s\"'<>\\]") then
+	if type(Url) ~= "string" then
 		return false
+	end
+
+	Url = Url:gsub("^%s+",""):gsub("%s+$","")
+	if #Url > 300 or Url:find("[%s\"'<>\\]") then
+		return false
+	end
+
+	-- Link da página do Imgur vira link direto.
+	local Imgur = Url:match("^https://imgur%.com/(%w+)/?$") or Url:match("^https://www%.imgur%.com/(%w+)/?$")
+	if Imgur then
+		Url = "https://i.imgur.com/"..Imgur..".png"
 	end
 
 	local Host,Path = Url:match("^https://([%w%.%-]+)(/[^?#]*)")
 	local Extension = Path and Path:lower():match("%.(%a+)$")
-	if not Host or not ({ png = true, jpg = true, jpeg = true, gif = true, webp = true })[Extension] then
+	if not Host or not FrameFormats[Extension] then
 		return false
 	end
 
@@ -886,22 +900,68 @@ local function FrameUrl(Url)
 	return false
 end
 
-RegisterServerEvent("propertys:Frame")
-AddEventHandler("propertys:Frame",function(_,Service)
-	local source = source
-	local Passport = vRP.Passport(source)
-	if not Passport or type(Service) ~= "string" then
+-- Confere o link antes de salvar. Falha de rede não bloqueia: só recusa o que o host confirmou ser inválido.
+local function FrameCheck(Url)
+	local Result = promise.new()
+	local Done = false
+	local function Finish(Reason)
+		if not Done then
+			Done = true
+			Result:resolve(Reason or false)
+		end
+	end
+
+	SetTimeout(8000,function() Finish() end)
+
+	PerformHttpRequest(Url,function(Status,_,Headers)
+		local Lower = {}
+		for Name,Value in pairs(Headers or {}) do
+			Lower[tostring(Name):lower()] = tostring(Value)
+		end
+
+		if Status == 404 or Status == 410 then
+			Finish("Imagem não encontrada. Confira o link.")
+		elseif Status >= 200 and Status < 300 and Lower["content-type"] and not Lower["content-type"]:lower():find("^image/") then
+			Finish("Esse link não é de uma imagem. Use o link direto.")
+		elseif (tonumber(Lower["content-length"]) or 0) > FrameMaxSize then
+			Finish("Imagem muito grande. O limite é de 15 MB.")
+		else
+			Finish()
+		end
+	end,"HEAD")
+
+	return Citizen.Await(Result)
+end
+
+local function FrameTarget(Passport,Service)
+	if type(Service) ~= "string" then
 		return false
 	end
 
 	local Property,Selected = Service:match("^(.+)%-(%w+)$")
-	if not Property or Interior[Passport] ~= Property or not Creative.Permission(Property) then
+	if not Property or Interior[Passport] ~= Property then
 		return false
 	end
 
 	Objects[Property] = Objects[Property] or vRP.GetSrvData("Probjects:"..Property,true)
 	local Data = Objects[Property][Selected]
 	if not Data or not Frames[Data.Object] then
+		return false
+	end
+
+	return Property,Selected,Data
+end
+
+RegisterServerEvent("propertys:Frame")
+AddEventHandler("propertys:Frame",function(_,Service)
+	local source = source
+	local Passport = vRP.Passport(source)
+	if not Passport then
+		return false
+	end
+
+	local Property,Selected = FrameTarget(Passport,Service)
+	if not Property or not Creative.Permission(Property) then
 		return false
 	end
 
@@ -913,6 +973,24 @@ AddEventHandler("propertys:Frame",function(_,Service)
 	local Url = FrameUrl(Keyboard[1])
 	if not Url then
 		TriggerClientEvent("Notify",source,"Quadro","Use o link direto da imagem (.png, .jpg, .gif ou .webp) do FiveManager, ImgBB ou Imgur.","amarelo",10000)
+		return false
+	end
+
+	if (FrameCooldown[Passport] or 0) > os.time() then
+		TriggerClientEvent("Notify",source,"Quadro","Aguarde alguns segundos para trocar a imagem.","amarelo",5000)
+		return false
+	end
+	FrameCooldown[Passport] = os.time() + 5
+
+	local Reason = FrameCheck(Url)
+	if Reason then
+		TriggerClientEvent("Notify",source,"Quadro",Reason,"amarelo",10000)
+		return false
+	end
+
+	-- Busca de novo: o quadro pode ter sido guardado enquanto o teclado estava aberto.
+	local Current,_,Data = FrameTarget(Passport,Service)
+	if not Current then
 		return false
 	end
 
@@ -938,6 +1016,27 @@ AddEventHandler("propertys:Frame",function(_,Service)
 			}
 		}
 	}),{ ["Content-Type"] = "application/json" })
+end)
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- PROPERTYS:FRAMECLEAR
+-----------------------------------------------------------------------------------------------------------------------------------------
+RegisterServerEvent("propertys:FrameClear")
+AddEventHandler("propertys:FrameClear",function(_,Service)
+	local source = source
+	local Passport = vRP.Passport(source)
+	if not Passport then
+		return false
+	end
+
+	local Property,Selected,Data = FrameTarget(Passport,Service)
+	if not Property or not Data.Image or not Creative.Permission(Property) then
+		return false
+	end
+
+	Data.Image = nil
+	Data.Adjust = nil
+	TriggerEvent("propertys:Adicionar",Property,Selected,Data)
+	TriggerClientEvent("Notify",source,"Quadro","Imagem removida.","verde",5000)
 end)
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- PROPERTYS:FRAMEADJUST

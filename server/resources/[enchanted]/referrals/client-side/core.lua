@@ -7,15 +7,27 @@ local Tunnel = module("vrp","lib/Tunnel")
 -----------------------------------------------------------------------------------------------------------------------------------------
 vSERVER = Tunnel.getInterface("referrals")
 -----------------------------------------------------------------------------------------------------------------------------------------
+-- VARIABLES
+-----------------------------------------------------------------------------------------------------------------------------------------
+local OnCloseCallback = nil
+-----------------------------------------------------------------------------------------------------------------------------------------
 -- REFERRALS:OPEN
 -----------------------------------------------------------------------------------------------------------------------------------------
-AddEventHandler("referrals:Open",function()
+AddEventHandler("referrals:Open",function(cb)
+	OnCloseCallback = cb
 	if vSERVER.Check() then
 		SetNuiFocus(true,true)
 		TransitionToBlurred(1000)
 		SetCursorLocation(0.5,0.5)
 		TriggerEvent("hud:Active",false)
 		SendNUIMessage({ Action = "Open", Payload = Origin })
+	else
+		TriggerEvent("referrals:Close")
+		if OnCloseCallback then
+			local CloseCallback = OnCloseCallback
+			OnCloseCallback = nil
+			CloseCallback()
+		end
 	end
 end)
 -----------------------------------------------------------------------------------------------------------------------------------------
@@ -30,4 +42,11 @@ RegisterNUICallback("Confirm",function(Data,Callback)
 
 	local Status = vSERVER.Confirm(Data.Origin,Data.Code)
 	Callback(Status or false)
+
+	TriggerEvent("referrals:Close")
+	if OnCloseCallback then
+		local CloseCallback = OnCloseCallback
+		OnCloseCallback = nil
+		CloseCallback()
+	end
 end)

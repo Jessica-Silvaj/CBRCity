@@ -98,25 +98,32 @@ function FinishRace(Vehicle)
 	DisplayRanking = true
 	PlaySoundFrontend(-1,"RACE_PLACED","HUD_AWARDS",true)
 
-	SetLocalPlayerAsGhost(false)
+	local Route = Selected
+	local Points = Seconds
+	local Model = nil
+
+	FreezeEntityPosition(PlayerPedId(),false)
 	if Vehicle and DoesEntityExist(Vehicle) then
-		SetNetworkVehicleAsGhost(Vehicle,false)
-		Vehicle = GetEntityArchetypeName(Vehicle)
+		FreezeEntityPosition(Vehicle,false)
+		Model = GetEntityArchetypeName(Vehicle)
 	end
 
-	vSERVER.Finish(Selected,Seconds,Vehicle)
-
-	SendNUIMessage({
-		Action = "Results",
-		Payload = vSERVER.Ranking(Selected,ResultFinish,true)
-	})
+	-- Libera o jogador antes de falar com o servidor: um erro lá não pode prender o cliente na corrida
+	StopCircuit(true)
 
 	SetTimeout(ResultFinish * 1000,function()
 		SendNUIMessage({ Action = "Close" })
 		DisplayRanking = false
 	end)
 
-	StopCircuit(true)
+	CreateThread(function()
+		vSERVER.Finish(Route,Points,Model)
+
+		SendNUIMessage({
+			Action = "Results",
+			Payload = vSERVER.Ranking(Route,ResultFinish,true)
+		})
+	end)
 end
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- NEXTCHECKPOINT
