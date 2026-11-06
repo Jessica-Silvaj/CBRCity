@@ -332,7 +332,7 @@ function CheckWinners2(tableId)
                         end
                     else
                         playerDraw(source, tableId, playerHand)
-                        ConfigPoker.DebugMsg('Díler kártyái nem játszottak.')
+                        ConfigPoker.DebugMsg('As cartas do dealer não foram jogadas.')
                     end
 
                     local pairMultiplier = ConfigPoker.GetPairMultiplier(playerHand)

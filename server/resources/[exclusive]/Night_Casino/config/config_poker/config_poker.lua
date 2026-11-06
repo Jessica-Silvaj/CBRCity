@@ -410,11 +410,11 @@ end
 
 ConfigPoker.formatHandValue = function(handValue)
     if handValue > 500 then
-        return 'Straight flush'
+        return 'Straight Flush'
     elseif handValue > 400 then
-        return '3 de um tipo'
+        return 'Trinca'
     elseif handValue > 300 then
-        return 'Straight'
+        return 'Sequência'
     elseif handValue > 200 then
         return 'Flush'
     elseif handValue > 100 then

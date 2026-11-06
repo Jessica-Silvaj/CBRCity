@@ -1894,6 +1894,13 @@ function setupSecondButtons(scaleform)
     PushScaleformMovieFunctionParameterInt(200)
     PopScaleformMovieFunctionVoid()
 
+    BeginScaleformMovieMethod(scaleform, 'SET_BACKGROUND_COLOUR')
+    ScaleformMovieMethodAddParamInt(0)
+    ScaleformMovieMethodAddParamInt(0)
+    ScaleformMovieMethodAddParamInt(0)
+    ScaleformMovieMethodAddParamInt(80)
+    EndScaleformMovieMethod()
+
     PushScaleformMovieFunction(scaleform, 'SET_DATA_SLOT')
     PushScaleformMovieFunctionParameterInt(1)
     Button(GetControlInstructionalButton(0, 177, true)) -- The button to display
@@ -1924,15 +1931,8 @@ function setupSecondButtons(scaleform)
     ButtonMessage(_U('place_pair_bet'))
     PopScaleformMovieFunctionVoid()
 
-    PushScaleformMovieFunction(scaleform, 'DRAW_INSTRUCTIONAL_BUTTONS')
-    PopScaleformMovieFunctionVoid()
-
-    PushScaleformMovieFunction(scaleform, 'SET_BACKGROUND_COLOUR')
-    PushScaleformMovieFunctionParameterInt(0)
-    PushScaleformMovieFunctionParameterInt(0)
-    PushScaleformMovieFunctionParameterInt(0)
-    PushScaleformMovieFunctionParameterInt(80)
-    PopScaleformMovieFunctionVoid()
+    BeginScaleformMovieMethod(scaleform, 'DRAW_INSTRUCTIONAL_BUTTONS')
+    EndScaleformMovieMethod()
 
     return scaleform
 end
@@ -1953,6 +1953,13 @@ function setupThirdButtons(scaleform)
     PushScaleformMovieFunctionParameterInt(200)
     PopScaleformMovieFunctionVoid()
 
+    BeginScaleformMovieMethod(scaleform, 'SET_BACKGROUND_COLOUR')
+    ScaleformMovieMethodAddParamInt(0)
+    ScaleformMovieMethodAddParamInt(0)
+    ScaleformMovieMethodAddParamInt(0)
+    ScaleformMovieMethodAddParamInt(80)
+    EndScaleformMovieMethod()
+
     PushScaleformMovieFunction(scaleform, 'SET_DATA_SLOT')
     PushScaleformMovieFunctionParameterInt(1)
     Button(GetControlInstructionalButton(0, 177, true)) -- The button to display
@@ -1965,15 +1972,8 @@ function setupThirdButtons(scaleform)
     ButtonMessage(_U('play_cards'))
     PopScaleformMovieFunctionVoid()
 
-    PushScaleformMovieFunction(scaleform, 'DRAW_INSTRUCTIONAL_BUTTONS')
-    PopScaleformMovieFunctionVoid()
-
-    PushScaleformMovieFunction(scaleform, 'SET_BACKGROUND_COLOUR')
-    PushScaleformMovieFunctionParameterInt(0)
-    PushScaleformMovieFunctionParameterInt(0)
-    PushScaleformMovieFunctionParameterInt(0)
-    PushScaleformMovieFunctionParameterInt(80)
-    PopScaleformMovieFunctionVoid()
+    BeginScaleformMovieMethod(scaleform, 'DRAW_INSTRUCTIONAL_BUTTONS')
+    EndScaleformMovieMethod()
 
     return scaleform
 end
@@ -1989,6 +1989,13 @@ function setupFirstButtons(scaleform)
     PushScaleformMovieFunction(scaleform, 'SET_CLEAR_SPACE')
     PushScaleformMovieFunctionParameterInt(200)
     PopScaleformMovieFunctionVoid()
+
+    BeginScaleformMovieMethod(scaleform, 'SET_BACKGROUND_COLOUR')
+    ScaleformMovieMethodAddParamInt(0)
+    ScaleformMovieMethodAddParamInt(0)
+    ScaleformMovieMethodAddParamInt(0)
+    ScaleformMovieMethodAddParamInt(80)
+    EndScaleformMovieMethod()
 
     PushScaleformMovieFunction(scaleform, 'SET_DATA_SLOT')
     PushScaleformMovieFunctionParameterInt(1)
@@ -2020,15 +2027,8 @@ function setupFirstButtons(scaleform)
     ButtonMessage(_U('place_bet'))
     PopScaleformMovieFunctionVoid()
 
-    PushScaleformMovieFunction(scaleform, 'DRAW_INSTRUCTIONAL_BUTTONS')
-    PopScaleformMovieFunctionVoid()
-
-    PushScaleformMovieFunction(scaleform, 'SET_BACKGROUND_COLOUR')
-    PushScaleformMovieFunctionParameterInt(0)
-    PushScaleformMovieFunctionParameterInt(0)
-    PushScaleformMovieFunctionParameterInt(0)
-    PushScaleformMovieFunctionParameterInt(80)
-    PopScaleformMovieFunctionVoid()
+    BeginScaleformMovieMethod(scaleform, 'DRAW_INSTRUCTIONAL_BUTTONS')
+    EndScaleformMovieMethod()
 
     return scaleform
 end
@@ -2143,10 +2143,15 @@ function ShowHelpNotification(msg, thisFrame, beep, duration)
 	end
 end
 
+RegisterNetEvent('poker:showNotification')
+AddEventHandler('poker:showNotification', function(msg)
+    Utils.ShowNotification(msg)
+end)
+
 AddEventHandler('onResourceStop', function(resourceName)
     if resourceName == GetCurrentResourceName() then
         TriggerEvent('hud:Active', true)
         TriggerEvent('ShowPlayerHud', true)
-        DisplayRadar(false)
+        DisplayRadar(true)
     end
 end)

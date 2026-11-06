@@ -25,16 +25,16 @@ Translations['pt'] = {
     ['input_place_bet'] = 'Quantas fichas você gostaria de apostar?',
     -- help msg
     ['help_sit_rulett'] = '~INPUT_CONTEXT~ Sente-se à mesa da roleta.',
-    ['help_rulett_all'] = '~INPUT_CELLPHONE_CANCEL~ Ficar de pé\n~INPUT_CONTEXT~ Mudar Camera\n~INPUT_LOOK_LR~ Selecione o número\n~INPUT_ATTACK~ Número da aposta\n~INPUT_CELLPHONE_UP~ Aumente a aposta\n~INPUT_CELLPHONE_DOWN~ Reduzir aposta\n~INPUT_JUMP~ Montante de aposta personalizado',
+    ['help_rulett_all'] = '~INPUT_CELLPHONE_CANCEL~ Ficar de pé\n~INPUT_CONTEXT~ Mudar Câmera\n~INPUT_LOOK_LR~ Selecione o número\n~INPUT_ATTACK~ Número da aposta\n~INPUT_CELLPHONE_UP~ Aumente a aposta\n~INPUT_CELLPHONE_DOWN~ Reduzir aposta\n~INPUT_JUMP~ Aposta personalizada',
     -- nui
-    ['starting_soon'] = 'O jogo vai começar em breve..',
-    ['game_going_on'] = 'O jogo está em andamento..',
+    ['starting_soon'] = 'O jogo vai começar em breve...',
+    ['game_going_on'] = 'O jogo está em andamento...',
     ['seconds'] = 'segundos.',
     -- formatted msg
-    ['won_chips'] = 'Você venceu %s chips. Mutiplicador: x%s',
-    ['placed_bet'] = 'Aposta feita com %s chips.'
-
+    ['won_chips'] = 'Você ganhou %s fichas. Multiplicador: x%s',
+    ['placed_bet'] = 'Aposta feita com %s fichas.'
 }
+Translations['br'] = Translations['pt']
 Translations['en'] = {
     ['limit_exceed'] = 'Your bet it too low or too high for this table.',
     ['invalid_bet'] = 'Invalid bet amount.',

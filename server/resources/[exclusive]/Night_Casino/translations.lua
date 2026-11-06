@@ -29,8 +29,8 @@ Translations['en'] = {
     ['lose'] = 'Você perdeu!',
     -- formatted notif
     ['dealer_not_qual'] = 'Empate.\nO negociador não se qualificou para o jogo.\nVocê recebeu %s fichas de volta.',
-    ['dealer_not_qual_ante'] = 'Empate.\nO negociador não se qualificou para o jogo.\nVocê recebeu %s fichas de volta. (Multiplicador Impar: x%s)',
-    ['player_won_ante'] = 'Sua mão venceu!\nVocê recebeu %s fichas. (Multiplicador Impar: x%s)',
+    ['dealer_not_qual_ante'] = 'Empate.\nO negociador não se qualificou para o jogo.\nVocê recebeu %s fichas de volta. (Multiplicador Ímpar: x%s)',
+    ['player_won_ante'] = 'Sua mão venceu!\nVocê recebeu %s fichas. (Multiplicador Ímpar: x%s)',
     ['player_won'] = 'Sua mão venceu!\nVocê recebeu %s fichas.',
     ['pair_won'] = 'Você ganhou %s fichas com sua aposta Pair Plus! (Multiplicador Par: x%s)',
     -- hud
@@ -39,11 +39,11 @@ Translations['en'] = {
     ['table_min_max'] = 'MIN/MAX:',
     ['remaining_time'] = 'TEMPO:',
     -- top left
-    ['waiting_for_players'] = 'Esperanto por ~b~jogadores~w~...\n',
-    ['clearing_table'] = 'Limpando a mesa..\n~b~Próximo jogo começará em breve.\n',
+    ['waiting_for_players'] = 'Esperando por ~b~jogadores~w~...\n',
+    ['clearing_table'] = 'Limpando a mesa...\n~b~Próximo jogo começará em breve.\n',
     ['dealer_showing_hand'] = 'O ~r~negociador~w~ está mostrando a mão.\n',
-    ['players_showing_hands'] = 'Revelando a mão dos jogadores..\n',
-    ['dealing_cards'] = 'Negociador está dando as cartas para os jogadores..\n',
+    ['players_showing_hands'] = 'Revelando a mão dos jogadores...\n',
+    ['dealing_cards'] = 'Negociador está dando as cartas para os jogadores...\n',
     -- inputs
     ['fold_cards'] = 'Desistir',
     ['play_cards'] = 'Continuar',
@@ -74,3 +74,6 @@ Translations['en'] = {
     ['rules'] = 'Regras do jogo',
     ['rules_info'] = 'Regras do jogo ou qualquer coisa que você deva saber.'
 }
+
+Translations['pt'] = Translations['en']
+Translations['br'] = Translations['en']

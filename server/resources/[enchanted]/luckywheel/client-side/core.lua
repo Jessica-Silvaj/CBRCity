@@ -9,6 +9,8 @@ local Object = nil
 local Model = "vw_prop_vw_luckywheel_02a"
 local PodiumVehicle = nil
 local PodiumObject = nil
+local PodiumGrounded = false
+local NextDuplicateCheck = 0
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- APPLYVEHICLECOLORS
 -----------------------------------------------------------------------------------------------------------------------------------------
@@ -28,6 +30,25 @@ local function ApplyVehicleColors(Vehicle)
 	-- Cor Secundaria RGB
 	if type(Podium.SecondaryColor) == "table" then
 		SetVehicleCustomSecondaryColour(Vehicle, Podium.SecondaryColor[1] or 0, Podium.SecondaryColor[2] or 0, Podium.SecondaryColor[3] or 0)
+	end
+end
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- REMOVEPODIUMDUPLICATES
+-----------------------------------------------------------------------------------------------------------------------------------------
+local function RemovePodiumDuplicates()
+	local Hash = GetHashKey(Podium.Model)
+
+	for _,Vehicle in ipairs(GetGamePool("CVehicle")) do
+		if Vehicle ~= PodiumVehicle and GetEntityModel(Vehicle) == Hash and #(GetEntityCoords(Vehicle) - Podium.Coords.xyz) <= 3.5 then
+			print(("[luckywheel] carro duplicado no pódio removido (em rede: %s)"):format(tostring(NetworkGetEntityIsNetworked(Vehicle))))
+
+			if NetworkGetEntityIsNetworked(Vehicle) then
+				NetworkRequestControlOfEntity(Vehicle)
+			end
+
+			SetEntityAsMissionEntity(Vehicle,true,true)
+			DeleteEntity(Vehicle)
+		end
 	end
 end
 -----------------------------------------------------------------------------------------------------------------------------------------
@@ -84,14 +105,35 @@ CreateThread(function()
 						SetVehicleCanBeUsedByFleeingPeds(PodiumVehicle, false)
 						SetVehicleHasBeenOwnedByPlayer(PodiumVehicle, true)
 						ApplyVehicleColors(PodiumVehicle)
-						SetVehicleOnGroundProperly(PodiumVehicle)
 						FreezeEntityPosition(PodiumVehicle, true)
 						SetEntityAsMissionEntity(PodiumVehicle, true, true)
 						SetModelAsNoLongerNeeded(GetHashKey(Podium.Model))
+						PodiumGrounded = false
 					end
 				end
 
-				if Podium.Rotate and DoesEntityExist(PodiumVehicle) then
+				if GetGameTimer() >= NextDuplicateCheck then
+					NextDuplicateCheck = GetGameTimer() + 2000
+					RemovePodiumDuplicates()
+				end
+
+				-- Só assenta com a colisão do interior carregada; antes disso o carro ficaria no ar
+				if not PodiumGrounded and DoesEntityExist(PodiumVehicle) then
+					RequestCollisionAtCoord(Podium.Coords.x, Podium.Coords.y, Podium.Coords.z)
+
+					if HasCollisionLoadedAroundEntity(PodiumVehicle) then
+						FreezeEntityPosition(PodiumVehicle, false)
+
+						if SetVehicleOnGroundProperly(PodiumVehicle) then
+							Wait(500)
+							PodiumGrounded = true
+						end
+
+						FreezeEntityPosition(PodiumVehicle, true)
+					end
+				end
+
+				if Podium.Rotate and PodiumGrounded and DoesEntityExist(PodiumVehicle) then
 					Sleep = 0
 
 					if not PodiumObject or PodiumObject == 0 or not DoesEntityExist(PodiumObject) then
@@ -116,6 +158,7 @@ CreateThread(function()
 					end
 					PodiumVehicle = nil
 					PodiumObject = nil
+					PodiumGrounded = false
 				end
 			end
 		end

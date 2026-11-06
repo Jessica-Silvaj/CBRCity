@@ -9,7 +9,6 @@ client_scripts {
     'src/menu/Menu.lua',
     'src/menu/MenuController.lua',
     'src/components/*.lua',
-    'sound/client/main.lua',
     'src/menu/elements/*.lua',
     'src/menu/items/*.lua',
     'src/menu/panels/*.lua',
@@ -23,7 +22,6 @@ client_scripts {
 server_scripts {
     '@vrp/lib/Utils.lua',
     'config/**/*.lua',
-    'sound/server/main.lua',
     'translations.lua',
     'shared/shared_utils.lua',
     'server/**/*.lua'
@@ -36,7 +34,5 @@ files {
     'html/js/*.js',
     'html/DEP/*.js',
     'html/img/**',
-    'html/ProximaNova.woff',
-    'sound/client/html/index.html',
-    'sound/client/html/sounds/*.ogg'
+    'html/ProximaNova.woff'
 }

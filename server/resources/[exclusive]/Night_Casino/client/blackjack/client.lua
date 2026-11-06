@@ -1,4 +1,4 @@
-﻿local Tunnel = module("vrp","lib/Tunnel")
+local Tunnel = module("vrp","lib/Tunnel")
 local Proxy = module("vrp","lib/Proxy")
 vRP = Proxy.getInterface("vRP")
 vSERVER = Tunnel.getInterface(GetCurrentResourceName())
@@ -195,6 +195,9 @@ function leaveBlackjack()
 	selectedBet = 1
 	hand = {}
 	splitHand = {}
+	TriggerEvent('hud:Active', true)
+	TriggerEvent('hud:active', true)
+	TriggerEvent('ShowPlayerHud', true)
 end
 
 function s2m(s)
@@ -223,6 +226,9 @@ AddEventHandler("onResourceStop", function(r)
 		for i,v in ipairs(spawnedObjects) do
 			DeleteEntity(v)
 		end
+		TriggerEvent('hud:Active', true)
+		TriggerEvent('hud:active', true)
+		TriggerEvent('ShowPlayerHud', true)
 	end
 end)
 
@@ -776,7 +782,7 @@ AddEventHandler("BLACKJACK:RequestBets", function(index, _timeLeft)
 		BeginScaleformMovieMethod(scaleform, "SET_DATA_SLOT")
 		ScaleformMovieMethodAddParamInt(2)
 		ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(1, 204, 0))
-		ScaleformMovieMethodAddParamPlayerNameString("Aposta maxima")
+		ScaleformMovieMethodAddParamPlayerNameString("Aposta máxima")
 		EndScaleformMovieMethod()
 
 		BeginScaleformMovieMethod(scaleform, "SET_DATA_SLOT")
@@ -930,7 +936,7 @@ AddEventHandler("BLACKJACK:RequestBets", function(index, _timeLeft)
 						end
 						return
 					else
-					 	DisplayHelpText("Você não possui chips.", 5000)
+					 	DisplayHelpText("Você não possui fichas.", 5000)
 					end
 				end
 			end
@@ -982,7 +988,7 @@ AddEventHandler("BLACKJACK:RequestMove", function(_timeLeft)
 			BeginScaleformMovieMethod(scaleform, "SET_DATA_SLOT")
 			ScaleformMovieMethodAddParamInt(3)
 			ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(1, 192, 0))
-			ScaleformMovieMethodAddParamPlayerNameString("Apostar")
+			ScaleformMovieMethodAddParamPlayerNameString("Dobrar")
 			EndScaleformMovieMethod()
 		end
 
@@ -1111,7 +1117,7 @@ AddEventHandler("BLACKJACK:RequestMove", function(_timeLeft)
 
 					return
 				else
-					DisplayHelpText("Você não tem dinheiro suficiente para dobrar.", 5000)
+					DisplayHelpText("Você não tem fichas suficientes para dobrar.", 5000)
 				end
 			end
 			if IsControlJustPressed(1, 209) and CanSplitHand(hand) == true then
@@ -1170,7 +1176,7 @@ AddEventHandler("BLACKJACK:RequestMove", function(_timeLeft)
 
 					return
 				else
-					DisplayHelpText("Você não tem dinheiro suficiente para dividir.", 5000)
+					DisplayHelpText("Você não tem fichas suficientes para dividir.", 5000)
 				end
 			end
 			
@@ -1189,9 +1195,9 @@ AddEventHandler("BLACKJACK:GameEndReaction", function(result)
 	Citizen.CreateThread(function()
 		
 		if #hand == 2 and handValue(hand) == 21 and result == "good" then
-			DisplayHelpText("Você fez Blackjack! ", 5000)
+			DisplayHelpText("Você fez Blackjack!", 5000)
 		elseif handValue(hand) > 21 and result ~= "good" then
-			DisplayHelpText("Você faliu.", 5000)
+			DisplayHelpText("Você estourou.", 5000)
 		else
 			DisplayHelpText("Você "..resultNames[result].." com "..handValue(hand)..".", 5000)
 		end
@@ -1346,38 +1352,37 @@ function ProcessTables()
 			for i,v in pairs(tables) do
 				local cord = v.coords
 				local highStakes = v.highStakes
+				local pCoords = GetEntityCoords(playerPed)
 				
-				if GetDistanceBetweenCoords(cord.x, cord.y, cord.z, GetEntityCoords(PlayerPedId()), true) < 3.0 then
-					Wait_Time = 5
+				if #(pCoords - vector3(cord.x, cord.y, cord.z)) < 4.0 then
+					Wait_Time = 0
 				
-					-- local pCoords = vector3(cord.x, cord.y, cord.z)
-					local pCoords = GetEntityCoords(PlayerPedId())
 					local tableObj = 0
 					
-					for i = 1 , #TableModels do
-						local model = TableModels[i]
-						tableObj = GetClosestObjectOfType(pCoords, 1.0, model, false, false, false)
-						if GetEntityCoords(tableObj) ~= vector3(0.0, 0.0, 0.0) then
+					for m = 1 , #TableModels do
+						local model = TableModels[m]
+						tableObj = GetClosestObjectOfType(cord.x, cord.y, cord.z, 2.5, model, false, false, false)
+						if tableObj and tableObj ~= 0 and DoesEntityExist(tableObj) then
 							break
 						end
 					end
 					
-					if GetEntityCoords(tableObj) ~= vector3(0.0, 0.0, 0.0) then
+					if tableObj and tableObj ~= 0 and DoesEntityExist(tableObj) then
 						closestChair = 1
-						local coords = GetWorldPositionOfEntityBone(tableObj, GetEntityBoneIndexByName(tableObj, "Chair_Base_0"..closestChair))
-						local rot = GetWorldRotationOfEntityBone(tableObj, GetEntityBoneIndexByName(tableObj, "Chair_Base_0"..closestChair))
-						dist = GetDistanceBetweenCoords(coords, GetEntityCoords(PlayerPedId()), true)
+						local coords = GetWorldPositionOfEntityBone(tableObj, GetEntityBoneIndexByName(tableObj, "Chair_Base_01"))
+						local rot = GetWorldRotationOfEntityBone(tableObj, GetEntityBoneIndexByName(tableObj, "Chair_Base_01"))
+						local dist = #(coords - pCoords)
 						
-						for i=1,4 do
-							local coords = GetWorldPositionOfEntityBone(tableObj, GetEntityBoneIndexByName(tableObj, "Chair_Base_0"..i))
-							if GetDistanceBetweenCoords(coords, GetEntityCoords(PlayerPedId()), true) < dist then
-								dist = GetDistanceBetweenCoords(coords, GetEntityCoords(PlayerPedId()), true)
-								closestChair = i
+						for c=1,4 do
+							local chairCoords = GetWorldPositionOfEntityBone(tableObj, GetEntityBoneIndexByName(tableObj, "Chair_Base_0"..c))
+							local chairDist = #(chairCoords - pCoords)
+							if chairDist < dist then
+								dist = chairDist
+								closestChair = c
+								coords = chairCoords
+								rot = GetWorldRotationOfEntityBone(tableObj, GetEntityBoneIndexByName(tableObj, "Chair_Base_0"..c))
 							end
 						end
-						
-						local coords = GetWorldPositionOfEntityBone(tableObj, GetEntityBoneIndexByName(tableObj, "Chair_Base_0"..closestChair))
-						local rot = GetWorldRotationOfEntityBone(tableObj, GetEntityBoneIndexByName(tableObj, "Chair_Base_0"..closestChair))
 						
 						g_coords = coords
 						g_rot = rot
@@ -1396,7 +1401,11 @@ function ProcessTables()
 							canSit = canSitDownCallback()
 						end
 
-						if GetDistanceBetweenCoords(coords, GetEntityCoords(PlayerPedId()), true) < 1.5 and not IsSeatOccupied(coords, 0.5) and canSit then
+						if dist < 1.7 and not IsSeatOccupied(coords, 0.5) then
+							DrawMarker(20, coords + vector3(0.0, 0.0, 1.0), 0.0, 0.0, 0.0, 180.0, 0.0, 0.0, 0.3, 0.3, 0.3, 255, 255, 255, 255, true, true, 2, true, nil, nil, false)
+						end
+
+						if dist < 1.5 and not IsSeatOccupied(coords, 0.5) and canSit then
 							if highStakes then
 								DisplayHelpText("Pressione ~INPUT_CONTEXT~ para jogar Blackjack de limite alto.")
 							else
@@ -1420,10 +1429,14 @@ function ProcessTables()
 								ClearDrawOrigin()
 							end
 							
-							if IsControlJustPressed(1, 51) then
+							if IsControlJustPressed(0, 38) or IsControlJustPressed(1, 51) then
 								if satDownCallback ~= nil then
 									satDownCallback()
 								end
+
+								TriggerEvent('hud:Active', false)
+								TriggerEvent('hud:active', false)
+								TriggerEvent('ShowPlayerHud', false)
 
 								local initPos = GetAnimInitialOffsetPosition("anim_casino_b@amb@casino@games@shared@player@", seatAnim, coords, rot, 0.01, 2)
 								local initRot = GetAnimInitialOffsetRotation("anim_casino_b@amb@casino@games@shared@player@", seatAnim, coords, rot, 0.01, 2)
@@ -1526,6 +1539,9 @@ function ProcessTables()
 										if standUpCallback ~= nil then
 											standUpCallback()
 										end
+										TriggerEvent('hud:Active', true)
+										TriggerEvent('hud:active', true)
+										TriggerEvent('ShowPlayerHud', true)
 
 										local scene = NetworkCreateSynchronisedScene(coords, rot, 2, false, false, 1065353216, 0, 1065353216)
 										NetworkAddPedToSynchronisedScene(PlayerPedId(), scene, "anim_casino_b@amb@casino@games@shared@player@", "sit_exit_left", 2.0, -2.0, 13, 16, 1148846080, 0)
@@ -1544,6 +1560,9 @@ function ProcessTables()
 											if standUpCallback ~= nil then
 												standUpCallback()
 											end
+											TriggerEvent('hud:Active', true)
+											TriggerEvent('hud:active', true)
+											TriggerEvent('ShowPlayerHud', true)
 											break
 										elseif leaveCheckCallback ~= nil then
 											if leaveCheckCallback() then
@@ -1553,6 +1572,9 @@ function ProcessTables()
 												if standUpCallback ~= nil then
 													standUpCallback()
 												end
+												TriggerEvent('hud:Active', true)
+												TriggerEvent('hud:active', true)
+												TriggerEvent('ShowPlayerHud', true)
 												break									
 											end
 										end

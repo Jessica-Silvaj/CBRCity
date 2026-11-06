@@ -128,6 +128,8 @@ createRulettAsztal = function(index, data)
             self.speakPed('MINIGAME_DEALER_GREET')
             DisplayRadar(false)
             TriggerEvent('ShowPlayerHud', false)
+            TriggerEvent('hud:Active', false)
+            TriggerEvent('hud:active', false)
             SendNUIMessage(
                 {
                     action = 'showRulettNui',
@@ -301,6 +303,8 @@ createRulettAsztal = function(index, data)
 
             DisplayRadar(true)
             TriggerEvent('ShowPlayerHud', true)
+            TriggerEvent('hud:Active', true)
+            TriggerEvent('hud:active', true)
         end
     end
 
@@ -1004,15 +1008,15 @@ function casinoNuiUpdateGame(rulettIndex, ido, statusz)
             SendNUIMessage(
                 {
                     action = 'setGameInfo',
-                    header = 'O jogo vai começar em breve..',
-                    szoveg = string.format('%s %s', ido, 'segundos.')
+                    header = 'O jogo vai começar em breve...',
+                    szoveg = string.format('%s segundos', ido)
                 }
             )
         else
             SendNUIMessage(
                 {
                     action = 'setGameInfo',
-                    header = 'O jogo está em andamento..',
+                    header = 'O jogo está em andamento...',
                     szoveg = nil
                 }
             )
