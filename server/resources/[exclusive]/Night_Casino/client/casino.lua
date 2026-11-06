@@ -172,15 +172,6 @@ function playSomeBackgroundAudioBaby()
 		while not RequestScriptAudioBank("DLC_VINEWOOD/CASINO_GENERAL", false, -1) do
 		  Citizen.Wait(0)
 		end
-		while not RequestScriptAudioBank("DLC_VINEWOOD/CASINO_SLOT_MACHINES_01", false, -1) do
-		  Citizen.Wait(0)
-		end
-		while not RequestScriptAudioBank("DLC_VINEWOOD/CASINO_SLOT_MACHINES_02", false, -1) do
-		  Citizen.Wait(0)
-		end
-		while not RequestScriptAudioBank("DLC_VINEWOOD/CASINO_SLOT_MACHINES_03", false, -1) do
-		  Citizen.Wait(0)
-		end
 	  end
 	  audioBanks()
 	  while inCasino do

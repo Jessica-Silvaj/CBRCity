@@ -270,7 +270,7 @@ function giveWinningChips(source, amount, szorzo)
 
     if amount > 0 then
     --    r_showNotification(source, _('won_chips', amount, szorzo))
-        TriggerClientEvent("Notify",source,"Sucesso","Você ganhou"..amount.." fichas. Multiplicador: "..szorzo.."","verde",5000)
+        TriggerClientEvent("Notify", source, "Sucesso", "Você ganhou " .. amount .. " fichas. Multiplicador: x" .. szorzo, "verde", 5000)
         giveChips(source, amount)
     end
 end
@@ -331,7 +331,7 @@ AddEventHandler(
                 end
             else
               --  r_showNotification(source, _U('not_enough_chips'))
-                TriggerClientEvent("Notify",source,"Atenção","Você não tem fichas suficientes para fazer uma aposta.","amarelo",5000)
+                TriggerClientEvent("Notify", source, "Aviso", "Você não tem fichas suficientes para fazer uma aposta.", "amarelo", 5000)
             end
         else
             TriggerClientEvent('Notify', source, "Erro", "Ocorreu um erro: mesa de roleta inexistente no servidor.","vermelho",5000)

@@ -68,11 +68,15 @@ end)
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- PAYMENT
 -----------------------------------------------------------------------------------------------------------------------------------------
+local Paid = {}
+local Owner = {}
+
 function Creative.Payment(Table)
 	local source = source
 	local Passport = vRP.Passport(source)
 	if Passport and Machines[Table] then
 		if vRP.TakeItem(Passport,"chips",Machines[Table]["Value"],true) then
+			Paid[Passport] = Table
 			return true
 		else
 			TriggerClientEvent("Notify",source,"Atenção","<b>Fichas</b> insuficientes.","vermelho",5000)
@@ -87,7 +91,11 @@ end
 function Creative.StartSlots(Table)
 	local source = source
 	local Passport = vRP.Passport(source)
-	if Passport and Machines[Table] then
+	-- O giro so existe depois de um pagamento confirmado nesta maquina
+	if Passport and Machines[Table] and Paid[Passport] == Table then
+		Paid[Passport] = nil
+		Owner[Table] = Passport
+
 		local Result = {
 			["a"] = math.random(16),
 			["b"] = math.random(16),
@@ -104,7 +112,7 @@ end
 function Creative.Winner(Table,Result)
 	local source = source
 	local Passport = vRP.Passport(source)
-	if Passport and not Active[Passport] and Machines[Table] then
+	if Passport and not Active[Passport] and Machines[Table] and Owner[Table] == Passport then
 		Active[Passport] = true
 
 		if Machines[Table]["Winner"] then
@@ -128,6 +136,7 @@ function Creative.Winner(Table,Result)
 			end
 
 			Machines[Table]["Winner"] = {}
+			Owner[Table] = nil
 		end
 
 		Active[Passport] = nil
